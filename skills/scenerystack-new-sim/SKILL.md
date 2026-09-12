@@ -66,12 +66,10 @@ Also check `package.json` `keywords` (often still the generic template list) and
 
 ## Keyboard help is a stub
 
-The template ships `*KeyboardHelpContent.ts` with only
-`BasicActionsKeyboardHelpSection` and a commented-out right column. The compliance
-gate only checks that the **file exists**, so a fork can ship a dialog that documents
-none of its sliders or playback controls. Before first release, fill in
-`SliderControlsKeyboardHelpSection` / `TimeControlsKeyboardHelpSection` (and
-sim-specific sections) per screen — see scenerystack-keyboard-help-dialog.
+The scaffolded `*KeyboardHelpContent.ts` documents nothing beyond Tab/Esc and will
+pass compliance unchanged — see scenerystack-keyboard-help-dialog for why and how to
+fix it. Do this **right after scaffold**, not at release time: it's easy to forget
+once the file exists and `tsc`/Biome go green.
 
 ## Rules
 

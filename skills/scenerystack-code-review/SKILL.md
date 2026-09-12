@@ -119,90 +119,44 @@ accessed through `src/i18n/StringManager.ts`.
 
 ### Repository Structure
 
-Compare against `SceneryStackTemplate`. Source lives in `src/`, not `js/`; tooling is Biome + Vite.
+Run the automated gate first — it already covers most of this, so don't re-derive file layout
+by hand:
 
-- [ ] Repo name matches the sim title (e.g. "The Ramp" → `TheRamp` per OpenLyceum naming).
-- [ ] Top-level layout matches the template (resource dirs may be absent if unused):
+- [ ] `bash ../Baton/scripts/check-repo-compliance.sh <SimDir>` prints `Compliance check
+  passed`. On its own this verifies: no root `LICENSE`/`CONTRIBUTING.md`; the `README.md`
+  six-section outline; CI/deploy workflow wiring and Dependabot; the bootstrap chain
+  (`src/{init,assert,splash,brand,main}.ts`, `main.ts` importing `./brand.js` first);
+  `<Prefix>Namespace.ts` / `<Prefix>Colors.ts` / `*Constants.ts` at `src/` root;
+  `src/preferences/` and `src/i18n/` file presence plus locale parity; `tests/` layout, the
+  memory-leak suite, and `--expose-gc`; `.githooks/`; the PWA manifest, assets, and
+  `index.html` meta; the `biome.json` schema pin; and repo security settings. If it fails,
+  fix that first — see [`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist" for the
+  full auto/manual split.
 
-  ```
-  my-sim/
-    doc/            model.md, implementation-notes.md, images/
-    public/         favicon.ico, icons/  (and any static assets)
-    scripts/        generate-icons.ts, rename-sim.ts, …
-    src/            (see below)
-    tests/
-    .githooks/
-    biome.json
-    index.html
-    package.json
-    tsconfig.json
-    tsconfig.scripts.json
-    tsconfig.test.json
-    vite.config.ts
-    vitest.config.ts
-    README.md
-    CLAUDE.md
-    CREDITS.md                  PhET / NAAP / original attribution (fleet standard)
-    SECURITY.md                 points at org security policy
-    .github/CODEOWNERS
-  ```
+What the gate can't judge — check these by eye:
 
-- [ ] No local `LICENSE` or `CONTRIBUTING.md` — org defaults from `OpenLyceum/.github` apply
-  (compliance fails if a root `LICENSE` is present).
-- [ ] `README.md` follows the six-section outline only: Features / Quick Start / Scripts /
-  Tech Stack / License / Contributing (no extra top-level `##` sections).
-- [ ] `src/` follows the template layout — one folder per screen (even single-screen), shared code in
-  `src/common/`, model/view split, preferences and i18n in their own folders:
-
-  ```
-  src/
-    main.ts                         entry point
-    SimColors.ts                    ProfileColorProperty instances
-    SimNamespace.ts
-    common/                         model/, view/ shared across screens
-    i18n/
-      StringManager.ts
-      strings_en.json   strings_fr.json   strings_es.json   …
-    preferences/
-      simQueryParameters.ts         QueryStringMachine schema
-      SimPreferencesModel.ts        Property instances seeded by the schema
-      SimPreferencesNode.ts         preferences UI
-    sim-screen/                     (renamed per screen)
-      SimScreen.ts
-      model/SimModel.ts
-      view/SimScreenView.ts
-      view/SimScreenSummaryContent.ts
-      view/SimKeyboardHelpContent.ts
-  ```
-
-- [ ] After `npm run rename` / `scaffold-screens` (or `create-sim.sh`), the `Sim` prefix has
-  been replaced consistently — no stray `Sim*` **filenames, class names, or exported type
-  aliases** remain (`grep -rn '\bSim[A-Z_]' src`). `tsc` and Biome will not flag leftover
-  `SimA11yStrings` / `SimPreferenceStrings` / `SimPanelOptions` — see scenerystack-new-sim.
-- [ ] Each screen's `*KeyboardHelpContent.ts` is **not** the template stub (only
-  `BasicActionsKeyboardHelpSection`). Sliders / playback / sim-specific shortcuts are
-  documented — compliance only checks the file exists (see scenerystack-keyboard-help-dialog).
-- [ ] Filenames use a single consistent prefix matching the sim (full name or an all-uppercase
-  abbreviation unique across repos, e.g. `TheRampConstants.ts` or `TRConstants.ts` — never mixed
-  forms like `TheRampConstants` and `TRColors` in one repo).
-- [ ] Static assets live under `public/`; icons are generated from `public/icons/icon.svg` via
-  `npm run icons` (not hand-edited PNGs that drift from the source SVG).
-- [ ] Sim-specific query parameters are declared once in `src/preferences/{prefix}QueryParameters.ts`
-  (see scenerystack-query-parameters), with public-facing ones marked `public: true`.
-- [ ] Colors live in `SimColors.ts` using `ProfileColorProperty` for theme-able values (see
-  scenerystack-color-profiles). Canvas painters / `addColorStop` / `fillStyle` for **theme
-  chrome** also go through `*Colors.ts` — raw hex in a view fails projector / dark profile.
-- [ ] Sim-specific preferences are `Property` instances in `SimPreferencesModel.ts`, initialized from
-  the query-parameter schema (see scenerystack-preferences).
-- [ ] Primary constants live in `src/{Prefix}Constants.ts`; any nested topical constants files
-  are documented in `CLAUDE.md` (see scenerystack-constants).
-- [ ] If the sim has GPU-only field state, the solver lives under a documented `src/common/gpu/`
-  (or equivalent) carve-out and parameters stay in `model/` (see scenerystack-model).
-- [ ] `package.json` has no unused dependencies.
-- [ ] `package.json`, `tsconfig*.json`, `vite.config.ts`, `vitest.config.ts`, and `biome.json` contain
-  no dev-only relaxations that should be removed before release (disabled lint rules, loosened
+- [ ] Repo name matches the sim title (e.g. "The Ramp" → `TheRamp`).
+- [ ] No stray `Sim*` **filenames, class names, or exported type aliases** survive
+  `rename`/`scaffold-screens` (`grep -rn '\bSim[A-Z_]' src`) — `tsc`/Biome won't flag
+  `SimA11yStrings` / `SimPreferenceStrings` / `SimPanelOptions` (see scenerystack-new-sim).
+- [ ] Each screen's `*KeyboardHelpContent.ts` is filled in, not the template stub — the gate
+  only checks the file exists (see scenerystack-keyboard-help-dialog).
+- [ ] Filenames use one consistent prefix (full name or an all-uppercase abbreviation unique
+  across repos) — never mixed forms like `TheRampConstants` and `TRColors` in one repo.
+- [ ] Icons are generated from `public/icons/icon.svg` via `npm run icons`, not hand-edited
+  PNGs that drift from the source.
+- [ ] Colors go through `SimColors.ts` `ProfileColorProperty`s, including canvas
+  `fillStyle`/`addColorStop` theme chrome — raw hex in a view fails projector/dark profile
+  (see scenerystack-color-profiles).
+- [ ] Public-facing query parameters are marked `public: true`; debug-only ones are not (see
+  scenerystack-query-parameters).
+- [ ] Any nested topical constants files (beyond the root `{Prefix}Constants.ts`) are
+  documented in `CLAUDE.md` (see scenerystack-constants).
+- [ ] GPU-only field state lives under a documented `src/common/gpu/` carve-out with
+  parameters in `model/` (see scenerystack-model).
+- [ ] `package.json` has no unused dependencies; no dev-only relaxations left in
+  `tsconfig*`/`vite.config.ts`/`vitest.config.ts`/`biome.json` (disabled lint rules, loosened
   `strict`/type checks, debug flags).
-- [ ] `.gitignore` covers `dist/`, `node_modules/`, and other generated output.
 - [ ] No stale branches that should be deleted.
 
 ### Coding Conventions
@@ -211,12 +165,9 @@ Compare against `SceneryStackTemplate`. Source lives in `src/`, not `js/`; tooli
   it meets project standards — no need to check every item exhaustively.
 - [ ] `npm run fix` (Biome) introduces no changes, i.e. formatting and import ordering are already
   clean.
-
-### Math Libraries
-
-- [ ] Format numbers with `toFixed` / `toFixedNumber` from `scenerystack/dot` (or
-  `Utils.toFixed` / `Utils.toFixedNumber`), never JavaScript's native `Number.toFixed`
-  (cross-browser rounding inconsistencies). See scenerystack-numerics.
+- [ ] Numbers are formatted with `toFixed`/`toFixedNumber` from `scenerystack/dot` (never
+  JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
+  scenerystack-numerics.
 
 ### Organization, Readability & Maintainability
 
