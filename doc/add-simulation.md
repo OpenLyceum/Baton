@@ -257,7 +257,7 @@ jq '[.repos[] | select(.isSimulation==true and .status=="active" and .lineage=="
 jq '[.repos[] | select(.isSimulation==true and .status=="active" and .lineage=="naap")] | length' structure/repos.json
 ```
 
-*(As of 2026-07-31 the fleet has **28** active sims: **14** original, **7** PhET, **7** NAAP.)*
+*(As of 2026-09-12 the fleet has **41** active sims: **26** original, **8** PhET, **7** NAAP.)*
 
 ### Auto-generated — no manual count edit
 
