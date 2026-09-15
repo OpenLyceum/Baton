@@ -155,6 +155,42 @@
       "status": "active"
     },
     {
+      "name": "CapacitorLab",
+      "displayName": "Capacitor Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore how a capacitor works: change plate area and separation, insert a dielectric, and build series and parallel combinations while watching charge, voltage, E-field and stored energy.",
+      "deployedUrl": "https://openlyceum.github.io/CapacitorLab",
+      "physicsTopics": [
+        "electricity",
+        "capacitance",
+        "electric field",
+        "dielectric",
+        "circuits"
+      ],
+      "screens": [
+        {
+          "id": "introduction",
+          "title": "Introduction"
+        },
+        {
+          "id": "dielectric",
+          "title": "Dielectric"
+        },
+        {
+          "id": "multiple-capacitors",
+          "title": "Multiple Capacitors"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "CarnotHeatEngine",
       "displayName": "Carnot Heat Engine",
       "type": "simulation",
