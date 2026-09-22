@@ -6,8 +6,7 @@
 #   - .github (org profile) → config/dependabot-actions.yml (actions-only; no package.json)
 #   - npm member repos      → config/dependabot-npm.yml
 #       • framework == "SceneryStack" (all sims + SceneryStackTemplate)
-#       • jscd48, tscd48, pyro, Almanach (other npm packages in the org)
-#   - pycd48                  → config/dependabot-pip.yml
+#       • Almanach (VitePress knowledge base)
 #
 # Writes sibling checkouts under FLEET_WORKSPACE; skips repos that are not
 # present locally (clone with clone-fleet.sh first). Commit/push is left to you
@@ -67,23 +66,20 @@ sync_file() {
   echo "Synced $target"
 }
 
-# npm repos: SceneryStack fleet + other org npm packages (see header comment).
+# npm repos: SceneryStack fleet + Almanach (see header comment).
 mapfile -t NPM_REPOS < <(
   jq -r '
     .repos[]
     | select(
         .name != "Baton" and .name != ".github" and
-        (
-          .framework == "SceneryStack" or
-          .name == "jscd48" or .name == "tscd48" or .name == "pyro" or .name == "Almanach"
-        )
+        (.framework == "SceneryStack" or .name == "Almanach")
       )
     | .name
   ' "$CATALOG" | sort
 )
 
-# Python pip repo(s) from the catalog.
-mapfile -t PIP_REPOS < <(jq -r '.repos[] | select(.name == "pycd48") | .name' "$CATALOG")
+# No pip-template targets in the catalog today (config/dependabot-pip.yml kept for future use).
+PIP_REPOS=()
 
 echo "Syncing Dependabot configs from $CONFIG_DIR"
 echo "Catalog: $CATALOG"

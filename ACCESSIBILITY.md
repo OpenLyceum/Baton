@@ -11,9 +11,9 @@ default.
 
 > **Scope:** every active SceneryStack TypeScript simulation in
 > [`structure/repos.json`](structure/repos.json) (`isSimulation` + `framework: SceneryStack`)
-> plus `SceneryStackTemplate`. As of 2026-09-12 that is 41 sims including ACPhasor,
-> BasicCoordinatesAndSeasons, CarnotHeatEngine, HabitableZones, LightPropagation, MotionsOfTheSun,
-> Oscilloscope, Precession, SpecialRelativity, SternGerlach, and Zenith.
+> plus `SceneryStackTemplate`. As of 2026-09-21 that is 42 sims including ACPhasor,
+> BasicCoordinatesAndSeasons, CapacitorLab, CarnotHeatEngine, HabitableZones, LightPropagation,
+> MotionsOfTheSun, Oscilloscope, Precession, SpecialRelativity, SternGerlach, and Zenith.
 >
 > **Fleet status:** structural Layer 1–2 coverage and Layer-3 keyboard drag for play-area
 > objects are expected on every active sim (verified weekly by the

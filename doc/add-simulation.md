@@ -75,7 +75,6 @@ Edit [`structure/repos.json`](../structure/repos.json). Insert a new object in `
   "framework": "SceneryStack",
   "description": "One or two sentences for the landing-page card (can be longer than GitHub’s 350-char About limit).",
   "shortDescription": "Optional shorter blurb used for the GitHub About sidebar (≤350 chars).",
-  "deployedUrl": "https://openlyceum.github.io/MyNewSim",
   "physicsTopics": ["topic-a", "topic-b"],
   "githubTopics": ["optional-extra-topic"],
   "screens": [
@@ -94,7 +93,7 @@ Edit [`structure/repos.json`](../structure/repos.json). Insert a new object in `
 | `upstream` | For `phet` / `naap` ports: `{ "org", "name", "url" }` pointing at the source lab. Otherwise `null`. |
 | `description` | Full blurb on the Pages card. |
 | `shortDescription` | Optional. GitHub About text (≤350 chars). When omitted, metadata sync uses `description` (truncated if needed). |
-| `deployedUrl` | Canonical Pages URL with lowercase `openlyceum` host (trailing slash optional). |
+| `deployedUrl` | Optional Pages URL override. **Omit** to derive `<pagesBase>/<name>`; set `null` if the repo is not deployed. |
 | `physicsTopics` | Required for simulations (non-empty). Up to three tags are shown on the card; all are slugified into GitHub topics. |
 | `githubTopics` | Optional extra kebab-case GitHub topics (e.g. `game`, `pwa`) beyond the base set + `physicsTopics`. |
 | `screens` | Required for simulations: `{ "id", "title" }` objects. `id` is kebab-case (usually `src/<id>/`). |
@@ -257,7 +256,7 @@ jq '[.repos[] | select(.isSimulation==true and .status=="active" and .lineage=="
 jq '[.repos[] | select(.isSimulation==true and .status=="active" and .lineage=="naap")] | length' structure/repos.json
 ```
 
-*(As of 2026-09-12 the fleet has **41** active sims: **26** original, **8** PhET, **7** NAAP.)*
+*(As of 2026-09-21 the fleet has **42** active sims: **27** original, **8** PhET, **7** NAAP.)*
 
 ### Auto-generated — no manual count edit
 
@@ -275,7 +274,7 @@ Regenerate the landing page after catalog changes: `npm run pages` (see §4).
 | Location | Repo | What to update |
 |---|---|---|
 | [`OpenLyceum/README.md`](https://github.com/OpenLyceum/OpenLyceum/blob/main/README.md) `## Layout` | OpenLyceum | Comma-separated sim names (§7) — **no total count** in that file |
-| [`.github/profile/README.md`](https://github.com/OpenLyceum/.github/blob/main/profile/README.md) | `.github` | Top stats row `` **N** simulations ``; add a table row under **NAAP**, **PhET**, or **Other simulations** (match `lineage`) |
+| [`.github/profile/README.md`](https://github.com/OpenLyceum/.github/blob/main/profile/README.md) | `.github` | Top stats row `` **N** simulations ``; add a table row under **NAAP**, **PhET**, or **Original** (match `lineage`) |
 | [`CONVENTIONS.md`](../CONVENTIONS.md) scope blockquote | Baton | `` As of YYYY-MM-DD that is N sims … `` — bump **N**, date, and example names if you use them |
 | [`ACCESSIBILITY.md`](../ACCESSIBILITY.md) scope blockquote | Baton | Same pattern as CONVENTIONS |
 
@@ -310,7 +309,7 @@ independently.
 **`.github` org profile** (hand-edited — separate PR)
 
 - [ ] `` **N** simulations `` count updated in `.github/profile/README.md`
-- [ ] Table row added under the correct section (NAAP / PhET / Other)
+- [ ] Table row added under the correct section (NAAP / PhET / Original)
 
 **Baton prose** (optional but recommended when the public count matters)
 
