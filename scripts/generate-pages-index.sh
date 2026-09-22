@@ -49,7 +49,6 @@ fi
 jq_program='
   .repos[]
   | select(.isSimulation == true and .status == "active")
-  | select(.name | test("cd48"; "i") | not)
   | select(.lineage == $category)
   | "\(.name)|\(.displayName // .name)|\(.deployedUrl // ($base + "/" + .name))|\((.name | explode | add) % 360)|\(.physicsTopics | join(","))@\(.description)"
 '

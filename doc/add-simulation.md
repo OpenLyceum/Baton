@@ -247,7 +247,7 @@ Some places still carry a **hand-maintained number** or sim list. Others are **c
 Run from `Baton/`:
 
 ```bash
-# Active SceneryStack sims (excludes SceneryStackTemplate, cd48, etc.)
+# Active SceneryStack sims (excludes SceneryStackTemplate and non-sims)
 jq '[.repos[] | select(.isSimulation==true and .status=="active")] | length' structure/repos.json
 
 # Landing-page buckets (must match lineage on each row)

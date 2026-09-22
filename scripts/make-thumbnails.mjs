@@ -47,7 +47,6 @@ mkdirSync(SCREENSHOTS_DIR, { recursive: true });
 const catalog = JSON.parse(readFileSync(REPOS_JSON, "utf8"));
 const sims = catalog.repos
   .filter((r) => r.isSimulation === true && r.status === "active")
-  .filter((r) => !/cd48/i.test(r.name))
   .map((r) => r.name)
   .filter((name) => only.length === 0 || only.includes(name));
 

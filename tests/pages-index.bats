@@ -85,14 +85,13 @@ page() {
   assert_output --partial ">1"
 }
 
-@test "excludes non-active, non-simulation, and cd48 rows" {
+@test "excludes non-active and non-simulation rows" {
   run_pages
   refute_output --partial "Epsilon Draft"
   page | grep -qv "Epsilon Draft"
   run page
   refute_output --partial "Epsilon Draft"
   refute_output --partial "Zeta Tool"
-  refute_output --partial "pycd48"
 }
 
 @test "footer reports the total across all three buckets" {
