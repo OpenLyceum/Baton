@@ -152,7 +152,7 @@ unless marked *(warn)*):
 
 Simulation READMEs use the fixed six-section outline above. Items marked *(warn)* — plus hardcoded
 colors and nested constants — surface as **warnings**, not failures: document each as a carve-out
-under `## Compliance carve-outs` in the sim's `CLAUDE.md`.
+under `## Compliance carve-outs` in the sim's `AGENTS.md`.
 
 Run locally against a checkout:
 

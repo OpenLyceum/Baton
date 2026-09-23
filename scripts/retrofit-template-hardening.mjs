@@ -88,7 +88,7 @@ function patchPackageJson() {
 
 // ── dependabot.yml ────────────────────────────────────────────────────────────
 
-const DEPENDABOT_IGNORE_BLOCK = `      # Forced in package.json overrides (see CLAUDE.md → package.json overrides).
+const DEPENDABOT_IGNORE_BLOCK = `      # Forced in package.json overrides (see AGENTS.md → package.json overrides).
       # Dependabot PRs would fight the pin / reopen known-accepted risk.
       - dependency-name: "lodash"
       - dependency-name: "three"
@@ -346,7 +346,7 @@ function patchReadme() {
   write(path, text);
 }
 
-// ── CLAUDE.md ─────────────────────────────────────────────────────────────────
+// ── AGENTS.md ─────────────────────────────────────────────────────────────────
 
 const OVERRIDES_SECTION = `
 ### \`package.json\` overrides
@@ -363,11 +363,11 @@ open PRs that fight the overrides. Revisit when SceneryStack drops or re-pins th
 | \`brace-expansion\` | \`~5.0.9\` | Transitive via \`vite-plugin-pwa\` / Workbox. Clears npm audit (originally GHSA-mh99-v99m-4gvg; keep ≥5.0.9 for GHSA-rgw5-rvv9-x895). |
 `;
 
-function patchClaude() {
-  const path = "CLAUDE.md";
+function patchAgents() {
+  const path = "AGENTS.md";
   let text = tryRead(path);
   if (!text) {
-    log("no CLAUDE.md — skip");
+    log("no AGENTS.md — skip");
     return;
   }
 
@@ -379,10 +379,10 @@ function patchClaude() {
       } else {
         text = text.replace(/(## Compliance carve-outs\n[\s\S]*?)(\n## )/, `$1\n${OVERRIDES_SECTION}$2`);
       }
-      log("CLAUDE.md: added package.json overrides section");
+      log("AGENTS.md: added package.json overrides section");
     } else {
       text += `\n## Compliance carve-outs\n${OVERRIDES_SECTION}`;
-      log("CLAUDE.md: appended Compliance carve-outs + overrides");
+      log("AGENTS.md: appended Compliance carve-outs + overrides");
     }
   }
 
@@ -396,7 +396,7 @@ function patchClaude() {
       } else {
         text = text.replace(/(## Commands\n)/, `$1${note}`);
       }
-      log("CLAUDE.md: added release skips-tests note");
+      log("AGENTS.md: added release skips-tests note");
     }
   }
 
@@ -529,7 +529,7 @@ function main() {
   patchViteConfig(pkgName, displayName, description);
   patchIndexHtml(displayName, description);
   patchReadme();
-  patchClaude();
+  patchAgents();
   const iconsPatched = patchGenerateIcons(themeHex);
 
   if (overridesChanged && process.env.SKIP_NPM_INSTALL !== "1") {

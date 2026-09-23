@@ -45,7 +45,7 @@ export const CONTROL_PANEL_VBOX_SPACING = 6;
 ## Where constants live
 
 Two layouts are accepted (CONVENTIONS.md §2); match the sim's existing choice and note any
-non-default layout in `CLAUDE.md`:
+non-default layout in `AGENTS.md`:
 
 - **Single root file (the template default).** All sim-wide values in
   `src/<Prefix>Constants.ts`. Larger domains group inside that one file with frozen
@@ -53,7 +53,7 @@ non-default layout in `CLAUDE.md`:
   `FONT_SIZE`) or ExtrasolarPlanets (layout + SI physics + slider ranges + presets).
 - **Root primary + documented nested extras.** The **primary** sim constants module lives
   at `src/<Prefix>Constants.ts`. Additional topical files are allowed when the domain
-  warrants it and `CLAUDE.md` says so — e.g. MazeGame's `maze-game/MazeGameLayoutConstants.ts`,
+  warrants it and `AGENTS.md` says so — e.g. MazeGame's `maze-game/MazeGameLayoutConstants.ts`,
   TheRamp's `common/model/RampPhysicsConstants.ts`, Resonance's
   `chladni-patterns/model/ChladniConstants.ts`, OpticsLab's optics/light-source constants,
   or OscillationsAndChaos' topical `common/view/*Constants.ts` files.

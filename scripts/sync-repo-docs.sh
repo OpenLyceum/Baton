@@ -3,7 +3,7 @@
 #
 # This is the counterpart to sync-claude-settings.sh / sync-dependabot.sh for the
 # references that live in prose and workflow files: CI badges, org LICENSE and
-# CONTRIBUTING links, the SECURITY.md catalog link, CLAUDE.md cross-links,
+# CONTRIBUTING links, the SECURITY.md catalog link, AGENTS.md cross-links,
 # package.json repository URLs, Pages URLs, and the `uses:` calls into Baton.
 #
 # The organization is read from structure/repos.json, so renaming the org is a

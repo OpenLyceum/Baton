@@ -151,7 +151,7 @@ What the gate can't judge — check these by eye:
 - [ ] Public-facing query parameters are marked `public: true`; debug-only ones are not (see
   scenerystack-query-parameters).
 - [ ] Any nested topical constants files (beyond the root `{Prefix}Constants.ts`) are
-  documented in `CLAUDE.md` (see scenerystack-constants).
+  documented in `AGENTS.md` (see scenerystack-constants).
 - [ ] GPU-only field state lives under a documented `src/common/gpu/` carve-out with
   parameters in `model/` (see scenerystack-model).
 - [ ] `package.json` has no unused dependencies; no dev-only relaxations left in
@@ -161,7 +161,7 @@ What the gate can't judge — check these by eye:
 
 ### Coding Conventions
 
-- [ ] Code generally follows SceneryStack/PhET conventions and the repo's CLAUDE.md guidance. Confirm
+- [ ] Code generally follows SceneryStack/PhET conventions and the repo's AGENTS.md guidance. Confirm
   it meets project standards — no need to check every item exhaustively.
 - [ ] `npm run fix` (Biome) introduces no changes, i.e. formatting and import ordering are already
   clean.

@@ -215,7 +215,7 @@ setup() {
   assert_output --partial "no *Constants.ts anywhere under src/"
 }
 
-@test "nested Constants.ts warns without a CLAUDE.md carve-out" {
+@test "nested Constants.ts warns without an AGENTS.md carve-out" {
   rm "$SIM/src/FixtureSimConstants.ts"
   echo "export default {};" >"$SIM/src/intro/IntroConstants.ts"
   run_compliance "$SIM"
@@ -226,7 +226,7 @@ setup() {
 @test "nested Constants.ts passes with a documented carve-out" {
   rm "$SIM/src/FixtureSimConstants.ts"
   echo "export default {};" >"$SIM/src/intro/IntroConstants.ts"
-  printf '# CLAUDE\n\n## Compliance carve-outs\n\nUses nested constants per screen.\n' >"$SIM/CLAUDE.md"
+  printf '# AGENTS\n\n## Compliance carve-outs\n\nUses nested constants per screen.\n' >"$SIM/AGENTS.md"
   run_compliance "$SIM"
   assert_success
   assert_output --partial "nested *Constants.ts layout documented"
@@ -259,7 +259,7 @@ setup() {
 
 @test "hardcoded color passes with a documented carve-out" {
   echo 'const c = "#ff0000";' >"$SIM/src/intro/view/IntroNode.ts"
-  printf '# CLAUDE\n\n## Compliance carve-outs\n\nHardcoded colors in the brand icon.\n' >"$SIM/CLAUDE.md"
+  printf '# AGENTS\n\n## Compliance carve-outs\n\nHardcoded colors in the brand icon.\n' >"$SIM/AGENTS.md"
   run_compliance "$SIM"
   assert_success
   assert_output --partial "hardcoded color carve-outs documented"

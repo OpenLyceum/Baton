@@ -4,7 +4,7 @@ This document defines the **single, shared codebase structure** every OpenLyceum
 SceneryStack simulation must follow, so that any contributor (or AI assistant) can move
 between sims and find everything in the same place. It is the structural companion to
 [ACCESSIBILITY.md](ACCESSIBILITY.md) (which governs the a11y pattern) and to the shared
-coding guidance in [.github/CLAUDE.md](https://github.com/OpenLyceum/.github/blob/main/CLAUDE.md).
+coding guidance in [.github/AGENTS.md](https://github.com/OpenLyceum/.github/blob/main/AGENTS.md).
 
 The canonical reference implementation lives in **`SceneryStackTemplate`**. When in doubt,
 copy from the template. New sims are forked from it via `npm run rename`, so they start
@@ -21,7 +21,7 @@ conformant by default.
 ## 1. Bootstrap chain
 
 `src/main.ts` must have `import "./brand.js"` as its **very first import**. Never reorder.
-See [.github/CLAUDE.md §"Bootstrap import chain"](https://github.com/OpenLyceum/.github/blob/main/CLAUDE.md)
+See [.github/AGENTS.md §"Bootstrap import chain"](https://github.com/OpenLyceum/.github/blob/main/AGENTS.md)
 for the full explanation. Every sim has all five bootstrap files:
 
 ```
@@ -53,11 +53,11 @@ src/
 - There is **no top-level `src/model/` or `src/view/`** — `model/`/`view/` live inside a
   screen folder (or `common/`).
 - Sim-specific extra root files are allowed when justified (e.g. `<Prefix>Icons.ts`,
-  `<Prefix>Strings.ts`); note them in the sim's `CLAUDE.md`.
+  `<Prefix>Strings.ts`); note them in the sim's `AGENTS.md`.
 - **Constants placement:** the default is a single `<Prefix>Constants.ts` at `src/` root.
   A sim may instead keep constants nested (split into topical files under `common/`, or a
   per-screen `model/`) when the domain warrants it — this is a documented-as-allowed
-  variation: note the layout in the sim's `CLAUDE.md` (as TheRamp, MazeGame,
+  variation: note the layout in the sim's `AGENTS.md` (as TheRamp, MazeGame,
   OscillationsAndChaos, and RadioWaves do; VariableStarPhotometry's root file with grouped
   `as const` objects is the same kind of documented variation). Constants must exist
   somewhere under `src/` — no magic numbers inline in model or view code.
@@ -118,10 +118,10 @@ tsconfig.test.json          extends tsconfig.json; include: ["tests"];
 - The setup file is `tests/setup.ts` (not a root `vitest.setup.ts`). Happy-dom sims wire it via
   `setupFiles: ["./tests/setup.ts"]`.
 - The vitest `environment` may vary by sim's needs (`happy-dom` is the template default;
-  `jsdom` or `node` are acceptable where justified) — document the choice in the sim's `CLAUDE.md`.
+  `jsdom` or `node` are acceptable where justified) — document the choice in the sim's `AGENTS.md`.
 - **Documented carve-out:** pure-math suites that alias `scenerystack` → `scenerystack/dot`
   (jsdom) or run under `node` (no DOM) may omit `tests/setup.ts` / `setupFiles` when no Canvas
-  or `init()` is needed — note that in the sim's `CLAUDE.md` (DopplerEffect, VariableStarPhotometry,
+  or `init()` is needed — note that in the sim's `AGENTS.md` (DopplerEffect, VariableStarPhotometry,
   WaveComposer).
 - **Memory-leak suite:** every sim ships `tests/memory-leak.test.ts` modeled on
   `SceneryStackTemplate` / `QubitSketch` (dispose in a function boundary → `WeakRef` → `forceGC`).
@@ -133,7 +133,7 @@ tsconfig.test.json          extends tsconfig.json; include: ["tests"];
 doc/model.md                physics, math, behavior (filled, not a stub)
 doc/implementation-notes.md  architecture, design decisions (filled)
 README.md                   six-section outline (Baton enforces order)
-CLAUDE.md                   sim-specific AI/contributor context only
+AGENTS.md                   sim-specific AI/contributor context only
 ```
 
 `README.md` uses the fixed outline `## Features / Quick Start / Scripts / Tech Stack /
@@ -166,11 +166,11 @@ public/screenshots/wide.png  narrow.png   ← 1280×720 and 720×1280; placehold
 | `package.json` | `vite-plugin-pwa ^1`, `sharp` + `png-to-ico` + `tsx`, `"pwa"` in `keywords`, `icons` script runs `tsx scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
 | `vite.config.ts` | `registerType: "autoUpdate"`; `includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"]`; manifest `id` (= `package.json` `name`), `categories: ["education", "science"]`, `display: "standalone"`, `display_override: ["window-controls-overlay", "standalone"]`, **no** `orientation`; PNG 192/512 + SVG `purpose: "maskable"`; `screenshots` wide + narrow; Workbox `maximumFileSizeToCacheInBytes` + `globPatterns` including `js,css,html,svg,png,woff2` |
 | `index.html` | `mobile-web-app-capable`, `apple-mobile-web-app-capable`, `theme-color` (must match `theme_color`), `description`, Open Graph + Twitter meta (`og:image` / `twitter:image` → `./icons/icon-512.png`), favicon + SVG icon + apple-touch-icon |
-| Single-file mode | `vite build --mode single` skips `VitePWA` (inlines into one HTML file). Omit this only when the bundle cannot be self-contained (document in `CLAUDE.md`) |
+| Single-file mode | `vite build --mode single` skips `VitePWA` (inlines into one HTML file). Omit this only when the bundle cannot be self-contained (document in `AGENTS.md`) |
 
 `theme_color` / icon art may be sim-specific. `background_color` is `#000000` unless the play area is light (document it). Extra Workbox `globPatterns` (audio) or `globIgnores` / `runtimeCaching` (large WASM) are allowed when documented.
 
-**Documented-as-allowed variations** (not violations — note each in the sim's `CLAUDE.md`):
+**Documented-as-allowed variations** (not violations — note each in the sim's `AGENTS.md`):
 sim-specific `vite.config.ts` plugins (e.g. TrackLab's OpenCV/video serving), `biome.json` /
 `.gitignore` additions for vendored binaries or local references, extra `package.json` scripts
 (`release` / `serve` / `watch` / domain checks), PWA extras listed above, and the a11y traversal choice (`pdomOrder`
@@ -224,7 +224,7 @@ rest are a quick manual scan.
 - [ ] `doc/model.md` + `doc/implementation-notes.md` exist and are filled. *(auto presence; manual content)*
 - [ ] `README.md` follows the six-section outline; no local `CONTRIBUTING.md` / `LICENSE`. *(auto)*
 - [ ] `biome.json` `$schema` matches the pinned `@biomejs/biome` (resync with `npx @biomejs/biome migrate --write`); `npm run lint` is green. *(auto)*
-- [ ] Any deliberate deviation is documented in the sim's `CLAUDE.md`. *(manual)*
+- [ ] Any deliberate deviation is documented in the sim's `AGENTS.md`. *(manual)*
 
 ## Verification
 

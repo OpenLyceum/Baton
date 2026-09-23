@@ -211,10 +211,10 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
   if compgen -G "src/*Constants.ts" >/dev/null; then
     pass "<Prefix>Constants.ts at src/ root"
   elif [ -n "$(find src -mindepth 2 -name '*Constants.ts' -print -quit)" ]; then
-    if [ -f CLAUDE.md ] && grep -qE '^## Compliance carve-outs' CLAUDE.md && grep -qiE 'nested constants' CLAUDE.md; then
-      pass "nested *Constants.ts layout documented in CLAUDE.md Compliance carve-outs"
+    if [ -f AGENTS.md ] && grep -qE '^## Compliance carve-outs' AGENTS.md && grep -qiE 'nested constants' AGENTS.md; then
+      pass "nested *Constants.ts layout documented in AGENTS.md Compliance carve-outs"
     else
-      warn "no root <Prefix>Constants.ts — nested constants found; document under CLAUDE.md ## Compliance carve-outs"
+      warn "no root <Prefix>Constants.ts — nested constants found; document under AGENTS.md ## Compliance carve-outs"
     fi
   else
     fail "no *Constants.ts anywhere under src/"
@@ -235,14 +235,14 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
 
   # Hardcoded colors in view code (heuristic — ProfileColorProperty entries belong in
   # <Prefix>Colors.ts). Transparent rgba(0,0,0,0) hit-areas and icon/brand palettes are
-  # accepted; anything else should be themed or documented as a carve-out in CLAUDE.md.
+  # accepted; anything else should be themed or documented as a carve-out in AGENTS.md.
   color_hits="$(grep -rEn '"#[0-9a-fA-F]{3,8}"|rgba?\(' src --include='*.ts' 2>/dev/null \
     | grep -vE 'Colors\.ts|Icon|brand\.ts|rgba\( *0, *0, *0, *0 *\)|rgba\(0,0,0,0\)' || true)"
   if [ -n "$color_hits" ]; then
-    if [ -f CLAUDE.md ] && grep -qE '^## Compliance carve-outs' CLAUDE.md && grep -qiE 'hardcoded colors' CLAUDE.md; then
-      pass "hardcoded color carve-outs documented in CLAUDE.md ($(echo "$color_hits" | wc -l | tr -d ' ') hit(s))"
+    if [ -f AGENTS.md ] && grep -qE '^## Compliance carve-outs' AGENTS.md && grep -qiE 'hardcoded colors' AGENTS.md; then
+      pass "hardcoded color carve-outs documented in AGENTS.md ($(echo "$color_hits" | wc -l | tr -d ' ') hit(s))"
     else
-      warn "possible hardcoded colors outside <Prefix>Colors.ts (theme or document under CLAUDE.md ## Compliance carve-outs):"
+      warn "possible hardcoded colors outside <Prefix>Colors.ts (theme or document under AGENTS.md ## Compliance carve-outs):"
       echo "$color_hits" | sed 's/^/  /'
     fi
   else

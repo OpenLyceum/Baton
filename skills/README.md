@@ -9,11 +9,11 @@ topic guides.
 
 These complement, not replace, the broader docs:
 
-- [`.github/CLAUDE.md`](https://github.com/OpenLyceum/.github/blob/main/CLAUDE.md) — the org-wide AI guide (tech stack, bootstrap chain, commands). Start there.
+- [`.github/AGENTS.md`](https://github.com/OpenLyceum/.github/blob/main/AGENTS.md) — the org-wide AI guide (tech stack, bootstrap chain, commands). Start there.
 - [`../CONVENTIONS.md`](../CONVENTIONS.md) — the structural convention (file layout, naming, the `preferences/` trio, tests).
 - [`../ACCESSIBILITY.md`](../ACCESSIBILITY.md) — the shared accessibility pattern.
 
-The skills go one level deeper than `CLAUDE.md`: API specifics, idioms, and pitfalls for a
+The skills go one level deeper than `AGENTS.md`: API specifics, idioms, and pitfalls for a
 single subsystem. When a skill is not specific enough, grep
 `Almanach/docs/public/llms.txt` (or `llms-full.txt`) in the local Almanach checkout.
 

@@ -73,7 +73,7 @@ GPU textures, and nothing advances without a `GPUDevice`. In that case:
 - Put the solver under `src/common/gpu/` (WGSL, bind layouts, engine), not
   `src/common/model/`.
 - One bridge node (e.g. `FluidFieldNode`) is allowed to touch both worlds.
-- Document the carve-out in the sim's `CLAUDE.md` so compliance reviewers do not
+- Document the carve-out in the sim's `AGENTS.md` so compliance reviewers do not
   "fix" it back into `model/`.
 
 References: FluidDynamics (WebGPU Stable Fluids), Resonance `WebGLParticleRenderer`.

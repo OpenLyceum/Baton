@@ -34,7 +34,7 @@ Tests live **only** under root `tests/` — never co-located next to source, nev
 
 **Documented carve-out:** pure-math suites that alias `scenerystack` → `scenerystack/dot`
 (jsdom) or run under `node` (no DOM) may omit `tests/setup.ts` / `setupFiles` when no Canvas
-or `init()` is needed — note that in the sim's `CLAUDE.md` (DopplerEffect,
+or `init()` is needed — note that in the sim's `AGENTS.md` (DopplerEffect,
 VariableStarPhotometry, WaveComposer). See CONVENTIONS §5.
 
 ## A model unit test
@@ -135,7 +135,7 @@ chromium.launch({
 Absence of `vulkaninfo` on the host is **not** evidence that WebGPU is unavailable —
 verify with a real browser launch. GPU engine suites may be slow on software rasterizers;
 keep them out of the default `npm test` path and document skip conditions in the sim's
-`CLAUDE.md`.
+`AGENTS.md`.
 
 ## Rules
 
@@ -144,7 +144,7 @@ keep them out of the default `npm test` path and document skip conditions in the
 - Test the model, not the view.
 - Import sim source through the `src/…/*.js` path (`verbatimModuleSyntax`).
 - Always include a `reset()` test for any model with state.
-- Document the vitest `environment` in the sim's `CLAUDE.md`; don't change it casually.
+- Document the vitest `environment` in the sim's `AGENTS.md`; don't change it casually.
 - Run `npm test` plus `npm run check && npm run build` before pushing.
 
 ## Common mistakes

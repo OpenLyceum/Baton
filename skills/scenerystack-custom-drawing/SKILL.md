@@ -72,7 +72,7 @@ wrong tool. Prefer, in order:
 2. **WebGL** (e.g. Resonance particle renderer) — many sprites / particles where a CPU
    buffer cannot keep up.
 3. **WebGPU compute** (e.g. FluidDynamics) — the field *is* GPU state; there is no CPU
-   model to step. Document the `src/common/gpu/` carve-out in the sim's `CLAUDE.md`
+   model to step. Document the `src/common/gpu/` carve-out in the sim's `AGENTS.md`
    (see scenerystack-model).
 
 Do **not** open a bare `<canvas>` / `CanvasRenderingContext2D` outside scenery — that
