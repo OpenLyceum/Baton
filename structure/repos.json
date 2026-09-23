@@ -725,6 +725,43 @@
       "status": "active"
     },
     {
+      "name": "MercuryElongations",
+      "displayName": "Mercury Elongations",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore why Mercury never appears far from the Sun. Synchronized planetarium and orbital views connect the Sun–Mercury angle in Berea's sky with real Earth and Mercury ephemerides.",
+      "deployedUrl": "https://openlyceum.github.io/MercuryElongations",
+      "physicsTopics": [
+        "astronomy",
+        "elongation",
+        "orbits",
+        "planetarium",
+        "ephemerides"
+      ],
+      "screens": [
+        {
+          "id": "planetarium",
+          "title": "Planetarium"
+        },
+        {
+          "id": "orbits",
+          "title": "Orbits"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Explore Mercury's elongation with synchronized planetarium and orbital views.",
+      "githubTopics": [
+        "astronomy",
+        "pwa"
+      ]
+    },
+    {
       "name": "MotionMatch",
       "displayName": "Motion Match",
       "type": "simulation",
@@ -1058,6 +1095,51 @@
         }
       ],
       "status": "active"
+    },
+    {
+      "name": "QuantumPotential",
+      "displayName": "Quantum Potential",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Interactive quantum mechanics lab: solve the 1D Schrödinger equation in real time for analytically solvable and multi-well potentials, with wave functions, probability densities, energy levels, and time evolution.",
+      "deployedUrl": "https://openlyceum.github.io/QuantumPotential",
+      "physicsTopics": [
+        "quantum mechanics",
+        "Schrodinger equation",
+        "potential wells",
+        "wave functions",
+        "bound states"
+      ],
+      "screens": [
+        {
+          "id": "intro",
+          "title": "Intro"
+        },
+        {
+          "id": "one-well",
+          "title": "One Well"
+        },
+        {
+          "id": "two-wells",
+          "title": "Two Wells"
+        },
+        {
+          "id": "many-wells",
+          "title": "Many Wells"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Explore bound states in potential wells with real-time solutions to the 1D Schrödinger equation.",
+      "githubTopics": [
+        "quantum",
+        "pwa"
+      ]
     },
     {
       "name": "QubitSketch",
