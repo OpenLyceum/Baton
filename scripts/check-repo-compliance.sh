@@ -579,6 +579,9 @@ PY
 import html, json, re
 pkg = json.load(open("package.json")).get("description", "")
 page = open("index.html").read()
+if pkg.startswith("A SceneryStack simulation:") or not pkg.strip():
+    print("package.json description is the rename-sim placeholder — write a real one-sentence description")
+    raise SystemExit
 cfg = open("vite.config.ts").read()
 out = []
 for attr in ('name="description"', 'property="og:description"', 'name="twitter:description"'):
@@ -588,11 +591,11 @@ for attr in ('name="description"', 'property="og:description"', 'name="twitter:d
 m = re.search(r'\n\s*description:\s*\n?\s*"((?:[^"\\]|\\.)*)"', cfg)
 if m and json.loads('"' + m.group(1) + '"') != pkg:
     out.append("vite.config.ts manifest description")
-print(", ".join(out))
+print("disagrees with package.json (use %SIM_DESCRIPTION% / package.json like the template): " + ", ".join(out) if out else "")
 PY
 )"
     if [ -n "$desc_problems" ]; then
-      new_rule "descriptions disagree with package.json (use %SIM_DESCRIPTION% / package.json like the template): $desc_problems"
+      new_rule "description: $desc_problems"
     else
       pass "index.html and manifest descriptions come from package.json"
     fi

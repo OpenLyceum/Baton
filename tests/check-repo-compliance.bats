@@ -507,7 +507,14 @@ strict_compliance() {
   sed -i 's|content="Fixture sim."|content="Something else."|' "$SIM/index.html"
   strict_compliance "$SIM"
   assert_failure
-  assert_output --partial "descriptions disagree with package.json"
+  assert_output --partial "description: disagrees with package.json"
+}
+
+@test "rename-sim placeholder description fails in strict mode" {
+  sed -i 's|"description": "Fixture sim."|"description": "A SceneryStack simulation: Fixture Sim."|' "$SIM/package.json"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "rename-sim placeholder"
 }
 
 @test "%SIM_DESCRIPTION% placeholder satisfies the description rule" {
