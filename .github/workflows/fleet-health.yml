@@ -1,7 +1,7 @@
 name: Fleet Health
 
-# Org-wide health check: clone every active simulation and run the standard
-# pre-PR trio (lint, type-check, build), then publish a pass/fail table to the
+# Org-wide health check: clone every active simulation and run lint, type-check,
+# build, unit tests and the fuzz smoke, then publish a pass/fail table to the
 # job summary. Catches a sim that a shared-workflow or dependency change quietly
 # broke. Read-only — uses the default token to clone public repos.
 #
@@ -77,7 +77,7 @@ jobs:
             fleet-health-npm-${{ runner.os }}-${{ matrix.sim }}-
             fleet-health-npm-${{ runner.os }}-
 
-      - name: Lint / type-check / build / test ${{ matrix.sim }}
+      - name: Lint / type-check / build / test / fuzz ${{ matrix.sim }}
         env:
           GH_TOKEN: ${{ github.token }}
           SIM: ${{ matrix.sim }}
@@ -100,7 +100,7 @@ jobs:
           status=0
 
           if ! gh repo clone "${{ github.repository_owner }}/$SIM" "$dir" -- --depth 1 --quiet; then
-            row="| $SIM | ❌ clone | — | — | — | — |"
+            row="| $SIM | ❌ clone | — | — | — | — | — |"
             status=1
           else
             # Reproducible install when a lockfile is present; fall back otherwise.
@@ -111,14 +111,19 @@ jobs:
             fi
 
             if [ "$inst" -ne 0 ]; then
-              row="| $SIM | $(icon 1) | — | — | — | — |"
+              row="| $SIM | $(icon 1) | — | — | — | — | — |"
               status=1
             else
               run_script "$dir" lint;  case $? in 0) lint=0 ;; 2) lint=2 ;; *) lint=1; status=1 ;; esac
               run_script "$dir" check; case $? in 0) chk=0 ;; 2) chk=2 ;; *) chk=1; status=1 ;; esac
               run_script "$dir" build; case $? in 0) bld=0 ;; 2) bld=2 ;; *) bld=1; status=1 ;; esac
               run_script "$dir" test;  case $? in 0) tst=0 ;; 2) tst=2 ;; *) tst=1; status=1 ;; esac
-              row="| $SIM | $(icon "$inst") | $(icon "$lint") | $(icon "$chk") | $(icon "$bld") | $(icon "$tst") |"
+              # 10 s pointer + 10 s keyboard fuzz with assertions on (?ea); catches runtime
+              # errors no unit test reaches (it found a NumberSpinner range bug on first run).
+              # Chromium comes from the sim's own Playwright so the browser revision matches.
+              ( cd "$dir" && npx playwright install --with-deps chromium >/dev/null 2>&1 ) || true
+              run_script "$dir" test:fuzz:quick; case $? in 0) fz=0 ;; 2) fz=2 ;; *) fz=1; status=1 ;; esac
+              row="| $SIM | $(icon "$inst") | $(icon "$lint") | $(icon "$chk") | $(icon "$bld") | $(icon "$tst") | $(icon "$fz") |"
             fi
           fi
 
@@ -153,8 +158,8 @@ jobs:
           {
             echo "# Fleet health report"
             echo
-            echo "| Repo | Install | Lint | Type-check | Build | Test |"
-            echo "|---|:--:|:--:|:--:|:--:|:--:|"
+            echo "| Repo | Install | Lint | Type-check | Build | Test | Fuzz |"
+            echo "|---|:--:|:--:|:--:|:--:|:--:|:--:|"
             find rows -name '*.md' -exec cat {} + 2>/dev/null | sort || true
           } >> "$GITHUB_STEP_SUMMARY"
 
