@@ -1,0 +1,51 @@
+{
+  "$comment": "Template-owned files and package.json surface for SceneryStack sims. Read by scripts/check-template-drift.mjs. The template repo is the source of content; this file only says WHAT must match and HOW. A sim approves a deviation by naming the path (or script) in backticks under its AGENTS.md '## Compliance carve-outs' section.",
+  "template": "SceneryStackTemplate",
+  "tokens": {
+    "packageName": "scenerystack-template",
+    "repoName": "SceneryStackTemplate"
+  },
+  "exact": [
+    ".gitattributes",
+    ".githooks/pre-commit",
+    ".githooks/pre-push",
+    ".github/CODEOWNERS",
+    ".github/dependabot.yml",
+    ".github/workflows/ci.yml",
+    ".github/workflows/deploy.yml",
+    ".claude/settings.json",
+    "SECURITY.md",
+    "tsconfig.scripts.json",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "scripts/generate-icons.ts",
+    "scripts/test-fuzz.ts",
+    "tests/setup.ts",
+    "tests/fuzz/fuzz.spec.ts",
+    "src/assert.ts",
+    "src/brand.ts",
+    "src/splash.ts"
+  ],
+  "linesSuperset": [".gitignore"],
+  "jsonExtend": {
+    "tsconfig.json": ["compilerOptions.types", "compilerOptions.lib"],
+    "tsconfig.test.json": ["compilerOptions.types"],
+    "biome.json": ["files.includes", "overrides"]
+  },
+  "templateOnly": {
+    "files": ["scripts/rename-sim.ts", "scripts/scaffold-screens.ts"],
+    "scripts": ["rename", "scaffold-screens"]
+  },
+  "forbidden": [".fuzz-playwright.config.ts", "CLAUDE.md", ".cursor", ".vscode/settings.json", ".eslintrc", ".eslintrc.json", ".eslintrc.cjs", "eslint.config.js", "eslint.config.mjs", ".prettierrc", ".prettierrc.json"],
+  "noTemplateCopies": {
+    "$comment": "Docs that must be sim-specific: a copy sharing at least `threshold` of its non-blank lines with the template's file is flagged.",
+    "threshold": 0.8,
+    "files": ["doc/model.md", "doc/implementation-notes.md", "doc/multi-screen.md", "doc/improvement-recommendations.md"]
+  },
+  "packageJson": {
+    "requiredScriptsFromTemplate": true,
+    "requiredDependenciesFromTemplate": true,
+    "matchKeys": ["type", "private", "license", "engines"],
+    "overridesSuperset": true
+  }
+}

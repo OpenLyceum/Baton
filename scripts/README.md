@@ -31,6 +31,7 @@ the monorepo checkout.
 | [`sync-claude-settings.sh`](sync-claude-settings.sh) | Roll the `scenerystack` Claude Code plugin out to sim repos' `.claude/settings.json` |
 | [`lib/repos.sh`](lib/repos.sh) | Bash helper functions for other scripts |
 | [`check-repo-compliance.sh`](check-repo-compliance.sh) | README/CI/structure compliance (bootstrap, i18n, memory-leak suite, KeyboardHelp, githooks, PWA, …) |
+| [`check-template-drift.sh`](check-template-drift.sh) | Content drift of template-owned files / scripts / deps vs SceneryStackTemplate (`--all`, `--fix`) |
 | [`check-skills.sh`](check-skills.sh) | Validate the `skills/` collection and its README index (Baton self-check) |
 | [`check-node-version.sh`](check-node-version.sh) | Assert fleet Node major agrees across workflows; with sibling checkouts, also engines.node / `@types/node` |
 | [`sync-dependabot.sh`](sync-dependabot.sh) | Copy Dependabot configs from `config/` to catalog npm/pip repos (see `structure/repos.json`) |
@@ -223,6 +224,31 @@ scripts/sync-claude-settings.sh --dry-run     # show what would change, write no
 scripts/sync-claude-settings.sh               # merge into each sibling repo
 scripts/sync-claude-settings.sh DopplerEffect # limit to named repo(s)
 ```
+
+## check-template-drift.sh
+
+Compares sims against the local `SceneryStackTemplate` checkout using
+[`config/template-manifest.json`](../config/template-manifest.json):
+
+| Manifest key | Rule |
+|---|---|
+| `exact` | File identical to the template after substituting the sim's package / repo name |
+| `linesSuperset` | Every template line present (`.gitignore`; extra lines allowed) |
+| `jsonExtend` | JSON equal to the template except the listed paths, whose arrays may only grow |
+| `templateOnly` | Template tooling (`rename`, `scaffold-screens`) must not linger in a sim |
+| `forbidden` | Dead or foreign files (`.fuzz-playwright.config.ts`, `CLAUDE.md`, ESLint/Prettier, `.cursor/`) |
+| `noTemplateCopies` | Sim docs sharing ≥80% of their lines with the template's copy |
+| `packageJson` | Every template script (same command), every template dependency (same major), `engines`/`license`/`type`, override keys |
+
+```bash
+scripts/check-template-drift.sh --all --quiet     # fleet report, exit 1 on drift
+scripts/check-template-drift.sh LadyBug           # one sim
+scripts/check-template-drift.sh --fix LadyBug     # copy exact files + scripts, drop template-only/forbidden files
+```
+
+A sim approves a deviation by naming the path (or script) in backticks under its
+`AGENTS.md` → `## Compliance carve-outs`. **Change template-owned files in the template
+first**, then propagate with `--fix`; never hand-edit one in a single sim.
 
 ## Self-check scripts
 
