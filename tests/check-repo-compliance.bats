@@ -414,6 +414,127 @@ setup() {
   assert_output --partial "src/model exists at src/ root"
 }
 
+# ── Standardization rules (warn by default, fail under COMPLIANCE_STRICT=1) ──
+
+strict_compliance() {
+  run env COMPLIANCE_STRICT=1 PATH="$STUB_BIN:$PATH" "$BATON_ROOT/scripts/check-repo-compliance.sh" "$1"
+}
+
+@test "compliant fixture passes the standardization rules in strict mode" {
+  strict_compliance "$SIM"
+  assert_success
+  refute_output --partial "FAIL:"
+}
+
+@test "standardization rules only warn outside strict mode" {
+  rm "$SIM/scripts/test-fuzz.ts"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "WARN: scripts/test-fuzz.ts is missing"
+}
+
+@test "missing fuzz runner fails in strict mode" {
+  rm "$SIM/scripts/test-fuzz.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "scripts/test-fuzz.ts is missing"
+}
+
+@test "old-style test:fuzz script fails in strict mode" {
+  sed -i 's|"tsx scripts/test-fuzz.ts"|"playwright test --project=chromium"|' "$SIM/package.json"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "test:fuzz must run tsx scripts/test-fuzz.ts"
+}
+
+@test "dead .fuzz-playwright.config.ts fails in strict mode" {
+  touch "$SIM/.fuzz-playwright.config.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial ".fuzz-playwright.config.ts is dead"
+}
+
+@test "missing tests/setup.ts fails in strict mode" {
+  rm "$SIM/tests/setup.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "tests/setup.ts is missing"
+}
+
+@test "missing tests/setup.ts passes with a documented carve-out" {
+  rm "$SIM/tests/setup.ts"
+  printf '## Compliance carve-outs\n\n- `tests/setup.ts`: node environment, no DOM\n' >"$SIM/AGENTS.md"
+  strict_compliance "$SIM"
+  assert_success
+}
+
+@test "missing es key-parity check fails in strict mode" {
+  sed -i '/stringsEs/d' "$SIM/src/i18n/StringManager.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "key-parity check for: es"
+}
+
+@test "hardcoded init.ts version fails in strict mode" {
+  echo 'export const v = { version: "1.0.0" };' >"$SIM/src/init.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "must take version from package.json"
+}
+
+@test "leftover exampleToggle fails in strict mode" {
+  echo 'export const exampleToggle = true;' >>"$SIM/src/preferences/fixtureSimQueryParameters.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "template placeholders left in src"
+}
+
+@test "export default class fails in strict mode" {
+  echo 'export default class Foo {}' >"$SIM/src/intro/model/Foo.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "export default class in src"
+}
+
+@test "extension-less relative import fails in strict mode" {
+  echo 'import { FixtureSimNamespace } from "./FixtureSimNamespace";' >"$SIM/src/Bad.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "relative imports must end in .js"
+}
+
+@test "unregistered constants fail in strict mode" {
+  echo 'export const FixtureSimConstants = {};' >"$SIM/src/FixtureSimConstants.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "must register with the namespace"
+}
+
+@test "theme-color disagreeing with the manifest fails in strict mode" {
+  sed -i 's|theme_color: "#1a1a2e"|theme_color: "#ffffff"|' "$SIM/vite.config.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "must equal the manifest theme_color"
+}
+
+@test "stale README Tech Stack version fails in strict mode" {
+  sed -i 's|^- SceneryStack$|- Biome 1|' "$SIM/README.md"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "README Tech Stack versions are stale: Biome 1 (package.json 2)"
+}
+
+@test "stray root file warns unless carved out" {
+  git -C "$SIM" init -q
+  touch "$SIM/home.png"
+  git -C "$SIM" add -A
+  run_compliance "$SIM"
+  assert_output --partial "Compliance carve-outs): home.png"
+  printf '## Compliance carve-outs\n\n- `home.png`: store listing art\n' >"$SIM/AGENTS.md"
+  run_compliance "$SIM"
+  refute_output --partial "root entries outside the template layout"
+}
+
 # ── Non-simulation repos ──────────────────────────────────────────────────────
 
 @test "npm repo without src/main.ts skips the simulation structure rules" {

@@ -120,14 +120,18 @@ EOF
   "name": "fixture-sim",
   "version": "1.0.0",
   "type": "module",
+  "keywords": ["simulation", "pwa"],
   "engines": { "node": ">=${major}" },
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:fuzz": "tsx scripts/test-fuzz.ts",
+    "icons": "tsx scripts/generate-icons.ts"
   },
   "devDependencies": {
     "@types/node": "^${major}.0.0",
-    "@biomejs/biome": "2.3.14"
+    "@biomejs/biome": "2.3.14",
+    "vite-plugin-pwa": "^1.0.0"
   }
 }
 EOF
@@ -152,13 +156,21 @@ EOF
 import "./brand.js";
 import "./init.js";
 EOF
-  for f in init assert splash brand; do
+  for f in assert splash brand; do
     echo "export {};" >"$dir/src/$f.ts"
   done
+  cat >"$dir/src/init.ts" <<'EOF'
+import { version } from "../package.json";
+export const simVersion = version;
+EOF
 
   echo "export default {};" >"$dir/src/FixtureSimNamespace.ts"
   echo "export default {};" >"$dir/src/FixtureSimColors.ts"
-  echo "export default {};" >"$dir/src/FixtureSimConstants.ts"
+  cat >"$dir/src/FixtureSimConstants.ts" <<'EOF'
+import { FixtureSimNamespace } from "./FixtureSimNamespace.js";
+export const FixtureSimConstants = {};
+FixtureSimNamespace.register("FixtureSimConstants", FixtureSimConstants);
+EOF
   echo "export default {};" >"$dir/src/FixtureSimKeyboardHelpContent.ts"
   echo "export default {};" >"$dir/src/intro/view/IntroScreenSummaryContent.ts"
 
@@ -166,12 +178,22 @@ EOF
   echo "export default {};" >"$dir/src/preferences/FixtureSimPreferencesNode.ts"
   echo "export default {};" >"$dir/src/preferences/fixtureSimQueryParameters.ts"
 
-  echo "export default {};" >"$dir/src/i18n/StringManager.ts"
+  cat >"$dir/src/i18n/StringManager.ts" <<'EOF'
+void (stringsEs satisfies typeof stringsEn);
+void (stringsEn satisfies typeof stringsEs);
+void (stringsFr satisfies typeof stringsEn);
+void (stringsEn satisfies typeof stringsFr);
+EOF
   for loc in en es fr; do
     echo '{}' >"$dir/src/i18n/strings_$loc.json"
   done
 
   echo "// dispose regression" >"$dir/tests/memory-leak.test.ts"
+  echo "// happy-dom mocks + init()" >"$dir/tests/setup.ts"
+  mkdir -p "$dir/tests/fuzz" "$dir/scripts"
+  echo "// fuzz smoke" >"$dir/tests/fuzz/fuzz.spec.ts"
+  echo "export default {};" >"$dir/playwright.config.ts"
+  echo "// fuzz runner" >"$dir/scripts/test-fuzz.ts"
   cat >"$dir/vitest.config.ts" <<'EOF'
 export default {
   test: { poolOptions: { forks: { execArgv: ["--expose-gc"] } } }
@@ -182,6 +204,60 @@ EOF
     printf '#!/usr/bin/env bash\nexit 0\n' >"$dir/.githooks/$hook"
     chmod +x "$dir/.githooks/$hook"
   done
+
+  cat >"$dir/.github/workflows/deploy.yml" <<EOF
+name: Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    uses: ${org}/Baton/.github/workflows/deploy.yml@main
+EOF
+
+  cat >"$dir/vite.config.ts" <<'EOF'
+import { VitePWA } from "vite-plugin-pwa";
+export default {
+  plugins: [
+    VitePWA({
+      registerType: "autoUpdate",
+      manifest: {
+        id: "fixture-sim",
+        theme_color: "#1a1a2e",
+        background_color: "#1a1a2e",
+        categories: ["education", "science"],
+        display_override: ["standalone"],
+        icons: ["icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg"],
+        screenshots: ["screenshots/wide.png", "screenshots/narrow.png"],
+      },
+    }),
+  ],
+};
+EOF
+
+  cat >"$dir/scripts/generate-icons.ts" <<'EOF'
+// writes public/screenshots/wide.png and public/screenshots/narrow.png
+EOF
+
+  mkdir -p "$dir/public/icons" "$dir/public/screenshots"
+  for f in favicon.ico icons/icon.svg icons/icon-192.png icons/icon-512.png icons/apple-touch-icon.png screenshots/wide.png screenshots/narrow.png; do
+    : >"$dir/public/$f"
+  done
+
+  cat >"$dir/index.html" <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="description" content="Fixture sim." />
+    <meta property="og:image" content="icons/icon-512.png" />
+    <meta name="twitter:image" content="icons/icon-512.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  </head>
+</html>
+EOF
 
   # Docs must read as filled in, not a copied stub: the check counts non-blank,
   # non-heading lines with no TODO/placeholder marker and wants at least five.

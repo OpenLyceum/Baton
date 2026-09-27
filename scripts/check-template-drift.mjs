@@ -229,7 +229,14 @@ function checkSim(repoName) {
     const lost = Object.keys(templatePkg.overrides ?? {}).filter((k) => !(k in (pkg.overrides ?? {})));
     if (lost.length) add("package", "overrides", `missing overrides: ${lost.join(", ")}`);
   }
-  if (pkgChanged) writeFileSync(join(simDir, "package.json"), `${JSON.stringify(pkg, null, 2)}\n`);
+  if (pkgChanged) {
+    // Template scripts first, in template order; sim-specific extras keep their relative order after.
+    const ordered = {};
+    for (const name of Object.keys(templatePkg.scripts)) if (name in pkg.scripts) ordered[name] = pkg.scripts[name];
+    for (const [name, cmd] of Object.entries(pkg.scripts)) if (!(name in ordered)) ordered[name] = cmd;
+    pkg.scripts = ordered;
+    writeFileSync(join(simDir, "package.json"), `${JSON.stringify(pkg, null, 2)}\n`);
+  }
 
   // template-only and forbidden files
   for (const rel of [...(isTemplate ? [] : manifest.templateOnly.files), ...manifest.forbidden]) {

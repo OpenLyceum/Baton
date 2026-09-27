@@ -33,11 +33,11 @@ extract() {
 VERSIONS[ci.yml]="$(extract "$WF/ci.yml" $'default:\\s*["\']\\K[0-9]+(?=["\'])' || true)"
 VERSIONS[deploy.yml]="$(extract "$WF/deploy.yml" $'default:\\s*["\']\\K[0-9]+(?=["\'])' || true)"
 # Other workflows: node-version on the setup-node step.
-for f in fleet-health.yml fleet-exec.yml optimize-assets.yml refresh-screenshots.yml; do
+for f in fleet-health.yml fleet-exec.yml optimize-assets.yml refresh-screenshots.yml baton-selfcheck.yml; do
   VERSIONS[$f]="$(extract "$WF/$f" $'node-version:\\s*["\']\\K[0-9]+(?=["\'])' || true)"
 done
 
-FILES=(ci.yml deploy.yml fleet-health.yml fleet-exec.yml optimize-assets.yml refresh-screenshots.yml)
+FILES=(ci.yml deploy.yml fleet-health.yml fleet-exec.yml optimize-assets.yml refresh-screenshots.yml baton-selfcheck.yml)
 
 echo "Declared Node versions:"
 for f in "${FILES[@]}"; do

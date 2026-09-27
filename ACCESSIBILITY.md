@@ -17,8 +17,10 @@ default.
 > SpecialRelativity, SternGerlach, and Zenith.
 >
 > **Fleet status:** structural Layer 1–2 coverage and Layer-3 keyboard drag for play-area
-> objects are expected on every active sim (verified weekly by the
-> [`fleet-health`](.github/workflows/fleet-health.yml) workflow). Layer-3 keyboard drag is
+> objects are expected on every active sim. Automation covers only part of this: the weekly
+> compliance audit checks that screen-summary and keyboard-help content exist, and the fuzz
+> smoke's keyboard run (`?fuzzBoard`) drives the parallel DOM; everything else is a manual
+> PDOM/keyboard review. Layer-3 keyboard drag is
 > required for **play-area objects and
 > primary secondary controls** (`RichDragListener` / `KeyboardDragListener` /
 > `KeyboardListener`). Pointer-only **chrome** (palette drag previews, axis-resize handles,

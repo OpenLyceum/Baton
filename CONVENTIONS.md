@@ -212,17 +212,23 @@ rest are a quick manual scan.
 - [ ] Bootstrap: `src/{init,assert,splash,brand,main}.ts` exist; `main.ts`'s first import is `./brand.js`. *(auto)*
 - [ ] `<Prefix>Namespace.ts` is at `src/` root, not in `common/`. *(auto)*
 - [ ] `<Prefix>Colors.ts` exists at `src/` root; constants exist (root file or documented nested layout); no hardcoded colors/magic pixels in views. *(partly manual)*
-- [ ] Screen folders are kebab-case with `model/` + `view/`; no top-level `src/model/` or `src/view/`. *(auto warn)*
+- [ ] Screen folders are kebab-case with `model/` + `view/`; no top-level `src/model/` or `src/view/`. *(top-level folders auto warn; the rest manual)*
 - [ ] `src/preferences/` has `<Prefix>PreferencesModel.ts`, `<prefix>QueryParameters.ts`, and ≥1 `*PreferencesNode.ts`. *(auto)*
-- [ ] `src/i18n/` has `StringManager.ts` + `strings_{en,es,fr}.json`; `npm run check` is green. *(auto)*
-- [ ] Any tests live only under root `tests/` with `tests/setup.ts`; no co-located / `__tests__/`. *(auto)*
+- [ ] `src/i18n/` has `StringManager.ts` + `strings_{en,es,fr}.json`, with a two-way `satisfies` key-parity pair for every non-English locale; `npm run check` is green. *(auto)*
+- [ ] `src/init.ts` takes `version` from `package.json`; no template placeholders (`exampleToggle`, `Sim*.ts`) remain. *(auto)*
+- [ ] TypeScript: named exports only (no `export default class`); relative imports end in `.js`; `<Prefix>Constants.ts` registers with the namespace. *(auto)*
+- [ ] Any tests live only under root `tests/` with `tests/setup.ts`; no co-located / `__tests__/`; a `test` script exists. *(auto)*
+- [ ] Fuzz smoke: `tests/fuzz/fuzz.spec.ts`, `playwright.config.ts`, `scripts/test-fuzz.ts`; `test:fuzz` runs `tsx scripts/test-fuzz.ts`. *(auto)*
 - [ ] `tests/memory-leak.test.ts` exists and `vitest.config.ts` enables `--expose-gc`. *(auto)*
 - [ ] `*KeyboardHelpContent.ts` exists under `src/` (Keyboard Shortcuts dialog). *(auto)*
 - [ ] `.githooks/{pre-commit,pre-push}` present; `prepare` sets `core.hooksPath`. *(auto)*
 - [ ] `.github/workflows/deploy.yml` calls Baton's reusable Pages deploy and allows `workflow_dispatch`. *(auto)*
 - [ ] PWA: `VitePWA` manifest has `id`, `categories`, `display_override`, screenshots, no `orientation`; `public/icons/` + `public/screenshots/{wide,narrow}.png` exist; `index.html` has theme-color + OG/Twitter. *(auto)*
 - [ ] `doc/model.md` + `doc/implementation-notes.md` exist and are filled. *(auto presence; manual content)*
-- [ ] `README.md` follows the six-section outline; no local `CONTRIBUTING.md` / `LICENSE`. *(auto)*
+- [ ] `README.md` follows the six-section outline and its Tech Stack versions match `package.json`; no local `CONTRIBUTING.md` / `LICENSE`. *(auto)*
+- [ ] Template-owned files (configs, fuzz, setup, bootstrap `assert`/`brand`/`splash`, workflows) match the template: `Baton/scripts/check-template-drift.sh <Sim>`. *(auto)*
+- [ ] Root layout matches the template (extra top-level entries listed under `AGENTS.md` → `## Compliance carve-outs`). *(auto warn)*
+- [ ] PWA `theme_color` equals `index.html` theme-color and the manifest has `background_color`. *(auto)*
 - [ ] `biome.json` `$schema` matches the pinned `@biomejs/biome` (resync with `npx @biomejs/biome migrate --write`); `npm run lint` is green. *(auto)*
 - [ ] Any deliberate deviation is documented in the sim's `AGENTS.md`. *(manual)*
 
@@ -231,6 +237,11 @@ rest are a quick manual scan.
 - **Automated gate:** `bash ../Baton/scripts/check-repo-compliance.sh <SimDir>` — run from the
   superproject root, this enforces the structural and config rules above (it also runs in CI via
   `Baton/.github/workflows/shared-compliance-check.yml`). It must print `Compliance check passed`.
+  Rules added in the 2026-09 standardization sweep warn by default; `COMPLIANCE_STRICT=1` makes
+  them fail (they become failures once the whole fleet passes).
+- **Template drift:** `Baton/scripts/check-template-drift.sh <Sim>` compares template-owned files,
+  `package.json` scripts and dependencies against `SceneryStackTemplate` using
+  `Baton/config/template-manifest.json`; `--fix` propagates template changes.
 - **Per sim:** `npm run lint && npm run check && npm run build`, plus `npm test` where tests exist.
 - **New sims:** `Baton/scripts/create-sim.sh` (or Use this template + `npm run rename` +
   `npm run scaffold-screens`) produces a sim that passes the

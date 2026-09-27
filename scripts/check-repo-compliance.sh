@@ -446,6 +446,152 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
     fi
   fi
 
+  # ── Standardization rules (2026-09 fleet sweep) ─────────────────────────────
+  # Added as warnings; promoted to failures once the whole fleet passes them.
+  # COMPLIANCE_STRICT=1 treats them as failures now (used by Baton's own tests).
+  new_rule() {
+    if [ "${COMPLIANCE_STRICT:-0}" = 1 ]; then fail "$1"; else warn "$1"; fi
+  }
+  carved_out() { # carved_out <token>: named in backticks under AGENTS.md ## Compliance carve-outs
+    [ -f AGENTS.md ] && awk '/^## Compliance carve-outs?[[:space:]]*$/{on=1;next} /^## /{on=0} on' AGENTS.md | grep -qF "\`$1\`"
+  }
+
+  # Fuzz smoke: the template's runner, spec and config (CONVENTIONS.md §5).
+  fuzz_ok=1
+  for f in tests/fuzz/fuzz.spec.ts playwright.config.ts scripts/test-fuzz.ts; do
+    [ -f "$f" ] || { new_rule "$f is missing (fleet fuzz smoke)"; fuzz_ok=0; }
+  done
+  grep -qE '"test:fuzz":\s*"tsx scripts/test-fuzz\.ts"' package.json || { new_rule "package.json test:fuzz must run tsx scripts/test-fuzz.ts"; fuzz_ok=0; }
+  [ -f .fuzz-playwright.config.ts ] && { new_rule ".fuzz-playwright.config.ts is dead — use FUZZ_PORT with playwright.config.ts"; fuzz_ok=0; }
+  [ "$fuzz_ok" -eq 1 ] && pass "fuzz smoke: runner, spec, config"
+
+  # A test script and the shared setup (CONVENTIONS.md §5).
+  if ! grep -qE '"test":\s*"' package.json; then
+    new_rule "package.json has no test script (CI would skip unit tests silently)"
+  elif [ ! -f tests/setup.ts ] && ! carved_out tests/setup.ts; then
+    new_rule "tests/setup.ts is missing (template setup) — or document it under AGENTS.md ## Compliance carve-outs"
+  else
+    pass "test script + tests/setup.ts"
+  fi
+
+  # Locale parity: every strings_<xx>.json has a satisfies pair against English.
+  if [ -f src/i18n/StringManager.ts ]; then
+    parity_missing=""
+    for f in src/i18n/strings_*.json; do
+      loc="$(basename "$f" .json)"; loc="${loc#strings_}"
+      [ "$loc" = en ] && continue
+      ident="strings$(printf '%s' "${loc:0:1}" | tr '[:lower:]' '[:upper:]')${loc:1}"
+      grep -qE "${ident} satisfies typeof stringsEn" src/i18n/StringManager.ts \
+        && grep -qE "stringsEn satisfies typeof ${ident}" src/i18n/StringManager.ts \
+        || parity_missing="$parity_missing $loc"
+    done
+    if [ -n "$parity_missing" ]; then
+      new_rule "StringManager.ts lacks the two-way satisfies key-parity check for:$parity_missing"
+    else
+      pass "StringManager.ts key-parity checks cover every locale"
+    fi
+  fi
+
+  # Version: init.ts reads it from package.json so releases cannot leave it stale.
+  if [ -f src/init.ts ] && ! grep -q 'from "../package.json"' src/init.ts; then
+    new_rule "src/init.ts must take version from package.json (import { version } from \"../package.json\")"
+  else
+    pass "init.ts version comes from package.json"
+  fi
+
+  # Template leftovers (the template itself legitimately ships them).
+  if grep -q '"name": "scenerystack-template"' package.json; then
+    leftovers=""
+  else
+    leftovers="$(grep -rlE '\bexampleToggle\b' src 2>/dev/null || true)"
+    leftovers="$leftovers $(find src -name 'Sim*.ts' 2>/dev/null | grep -E '/Sim(Panel|ButtonOptions|ControlOptions|Screen|ScreenView|Model)\.ts$' || true)"
+  fi
+  if [ -n "$(echo "$leftovers" | tr -d ' ')" ]; then
+    new_rule "template placeholders left in src: $(echo "$leftovers" | xargs)"
+  else
+    pass "no template placeholders (exampleToggle, Sim*.ts) left"
+  fi
+
+  # TS conventions: named exports, .js extensions on relative imports.
+  default_classes="$(grep -rlE '^export default (abstract )?class ' src --include='*.ts' 2>/dev/null || true)"
+  if [ -n "$default_classes" ]; then
+    new_rule "export default class in src (use named exports): $(echo "$default_classes" | head -5 | xargs)$([ "$(echo "$default_classes" | wc -l)" -gt 5 ] && echo ' …')"
+  else
+    pass "no default-exported classes"
+  fi
+  bad_imports="$(grep -rnE "(from|import) +['\"]\.\.?/[^'\"]*['\"]" src --include='*.ts' 2>/dev/null \
+    | grep -vE "['\"]\.\.?/[^'\"]*\.(js|json|css|svg|png|jpe?g|webp|mp3|wav|glsl|wgsl)(\?[a-z]+)?['\"]" || true)"
+  if [ -n "$bad_imports" ]; then
+    new_rule "relative imports must end in .js ($(echo "$bad_imports" | wc -l | tr -d ' ') hit(s), e.g. $(echo "$bad_imports" | head -1 | cut -c1-120))"
+  else
+    pass "relative imports use .js extensions"
+  fi
+
+  # Constants register with the namespace like every other module.
+  root_constants="$(find src -maxdepth 1 -name '*Constants.ts' | head -1)"
+  if [ -n "$root_constants" ] && ! grep -qE '\.register\(' "$root_constants"; then
+    new_rule "$root_constants must register with the namespace (<Prefix>Namespace.register(...))"
+  elif [ -n "$root_constants" ]; then
+    pass "$(basename "$root_constants") registers with the namespace"
+  fi
+
+  # index.html theme-color and the manifest agree; manifest has a background_color.
+  if [ -f index.html ] && [ -f vite.config.ts ]; then
+    html_theme="$(grep -oE 'name="theme-color"[^>]*content="#[0-9a-fA-F]{6}"' index.html | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]')"
+    manifest_theme="$(grep -oE 'theme_color:\s*"#[0-9a-fA-F]{6}"' vite.config.ts | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]')"
+    if [ -z "$manifest_theme" ] || [ "$html_theme" != "$manifest_theme" ]; then
+      new_rule "index.html theme-color ($html_theme) must equal the manifest theme_color ($manifest_theme)"
+    elif ! grep -qE 'background_color:\s*"' vite.config.ts; then
+      new_rule "PWA manifest is missing background_color"
+    else
+      pass "theme-color matches manifest theme_color"
+    fi
+  fi
+
+  # README Tech Stack versions must match the package.json majors.
+  stale_versions="$(python3 - <<'PY' 2>/dev/null || true
+import json, re
+pkg = json.load(open("package.json"))
+deps = {**pkg.get("dependencies", {}), **pkg.get("devDependencies", {})}
+tools = {"SceneryStack": "scenerystack", "Vite": "vite", "TypeScript": "typescript", "Biome": "@biomejs/biome",
+         "Vitest": "vitest", "Playwright": "@playwright/test", "vite-plugin-pwa": "vite-plugin-pwa"}
+text = open("README.md").read()
+m = re.search(r"^## Tech Stack\n(.*?)(?=^## |\Z)", text, re.S | re.M)
+out = []
+for line in (m.group(1) if m else "").splitlines():
+    for name, dep in tools.items():
+        if dep not in deps or not re.search(r"(\[|\b)" + re.escape(name) + r"(\]|\b)(?!-)", line):
+            continue
+        v = re.search(re.escape(name) + r"\]?(?:\([^)]*\))?\s*(?:\|\s*)?\^?~?v?(\d+)", line)
+        want = re.search(r"(\d+)", deps[dep]).group(1)
+        if v and v.group(1) != want:
+            out.append(f"{name} {v.group(1)} (package.json {want})")
+print("; ".join(out))
+PY
+)"
+  if [ -n "$stale_versions" ]; then
+    new_rule "README Tech Stack versions are stale: $stale_versions"
+  else
+    pass "README Tech Stack versions match package.json"
+  fi
+
+  # Root layout: anything outside the template's set must be carved out in AGENTS.md.
+  stray_root=""
+  while IFS= read -r entry; do
+    case "$entry" in
+      .git|.github|.githooks|.claude|.gitignore|.gitattributes|node_modules|dist|src|tests|doc|public|scripts|assets) ;;
+      AGENTS.md|README.md|CREDITS.md|SECURITY.md|package.json|package-lock.json|index.html|biome.json) ;;
+      tsconfig.json|tsconfig.test.json|tsconfig.scripts.json|vite.config.ts|vitest.config.ts|playwright.config.ts) ;;
+      playwright-report|test-results|coverage|.vite|.cache) ;;
+      *) carved_out "$entry" || carved_out "$entry/" || stray_root="$stray_root $entry" ;;
+    esac
+  done < <(git ls-files 2>/dev/null | cut -d/ -f1 | sort -u)
+  if [ -n "$stray_root" ]; then
+    warn "root entries outside the template layout (move, delete, or list under AGENTS.md ## Compliance carve-outs):$stray_root"
+  else
+    pass "root layout matches the template"
+  fi
+
   for d in src/model src/view; do
     [ -d "$d" ] && warn "$d exists at src/ root — model/ and view/ belong inside a screen folder"
   done

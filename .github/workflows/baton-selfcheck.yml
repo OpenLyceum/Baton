@@ -15,6 +15,8 @@ on:
       - ".claude-plugin/**"
       - "scripts/**"
       - "structure/**"
+      - "config/**"
+      - "tests/**"
       - ".github/workflows/**"
       - ".github/actions/**"
   pull_request:
@@ -23,6 +25,8 @@ on:
       - ".claude-plugin/**"
       - "scripts/**"
       - "structure/**"
+      - "config/**"
+      - "tests/**"
       - ".github/workflows/**"
       - ".github/actions/**"
 
@@ -71,3 +75,25 @@ jobs:
           set -euo pipefail
           find scripts -name '*.sh' -print0 \
             | xargs -0 shellcheck -x -S warning -e SC2034
+
+  bats:
+    # Behavioural tests for check-repo-compliance.sh and the Pages index generator.
+    # Each compliance rule has a test that breaks exactly that rule on a compliant
+    # fixture, so a rule that silently stops firing turns this job red.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.0.0
+        with:
+          # Mirrors the fleet Node default — bump all setup-node workflows together.
+          node-version: "24"
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - name: Validate the template manifest and drift checker
+        run: |
+          node -e 'JSON.parse(require("fs").readFileSync("config/template-manifest.json","utf8"))'
+          node --check scripts/check-template-drift.mjs
+      - name: Run bats suites
+        run: npx bats tests/
