@@ -537,6 +537,12 @@ PY
     pass "no template placeholders (exampleToggle, Sim*.ts) left"
   fi
 
+  # The template's sample TimeModel is for sims with a clock; unused, it is dead code.
+  if [ -f src/common/TimeModel.ts ] && ! grep -q '"name": "scenerystack-template"' package.json \
+    && [ -z "$(grep -rl 'TimeModel' src --include='*.ts' | grep -v '^src/common/TimeModel.ts$' || true)" ]; then
+    new_rule "src/common/TimeModel.ts is unused — delete it (and tests/TimeModel.test.ts) or compose it into a model"
+  fi
+
   # TS conventions: named exports, .js extensions on relative imports.
   default_classes="$(grep -rlE '^export default (abstract )?class ' src --include='*.ts' 2>/dev/null || true)"
   if [ -n "$default_classes" ]; then

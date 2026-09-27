@@ -523,6 +523,14 @@ strict_compliance() {
   assert_success
 }
 
+@test "unused template TimeModel fails in strict mode" {
+  mkdir -p "$SIM/src/common"
+  echo 'export class TimeModel {}' >"$SIM/src/common/TimeModel.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "src/common/TimeModel.ts is unused"
+}
+
 @test "export default class fails in strict mode" {
   echo 'export default class Foo {}' >"$SIM/src/intro/model/Foo.ts"
   strict_compliance "$SIM"
