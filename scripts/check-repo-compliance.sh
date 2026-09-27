@@ -536,7 +536,7 @@ PY
     pass "no default-exported classes"
   fi
   bad_imports="$(grep -rnE "(from|import) +['\"]\.\.?/[^'\"]*['\"]" src --include='*.ts' 2>/dev/null \
-    | grep -vE "['\"]\.\.?/[^'\"]*\.(js|json|css|svg|png|jpe?g|webp|mp3|wav|glsl|wgsl)(\?[a-z]+)?['\"]" || true)"
+    | grep -vE "['\"]\.\.?/[^'\"]*\.(js|json|css|svg|png|jpe?g|gif|webp|avif|mp3|wav|ogg|mp4|webm|glsl|wgsl|txt|csv|geojson)(\?[a-z]+)?['\"]" || true)"
   if [ -n "$bad_imports" ]; then
     new_rule "relative imports must end in .js ($(echo "$bad_imports" | wc -l | tr -d ' ') hit(s), e.g. $(echo "$bad_imports" | head -1 | cut -c1-120))"
   else
