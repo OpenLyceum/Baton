@@ -452,8 +452,24 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
   new_rule() {
     if [ "${COMPLIANCE_STRICT:-0}" = 1 ]; then fail "$1"; else warn "$1"; fi
   }
-  carved_out() { # carved_out <token>: named in backticks under AGENTS.md ## Compliance carve-outs
-    [ -f AGENTS.md ] && awk '/^## Compliance carve-outs?[[:space:]]*$/{on=1;next} /^## /{on=0} on' AGENTS.md | grep -qF "\`$1\`"
+  # carved_out <token>: an explicit AGENTS.md "## Compliance carve-outs" entry — a bullet that
+  # starts with `token`, or a "**Template drift**" bullet naming it (same rule as
+  # check-template-drift.mjs; a token merely mentioned in prose does not count).
+  carved_out() {
+    [ -f AGENTS.md ] || return 1
+    python3 - "$1" <<'PY'
+import re, sys
+token = sys.argv[1]
+text = open("AGENTS.md").read()
+for m in re.finditer(r"^## Compliance carve-outs?\s*$([\s\S]*?)(?=^## |\Z)", text, re.M):
+    for bullet in re.split(r"\n(?=\s*[-*] )", m.group(1)):
+        lead = re.match(r"\s*[-*] +`([^`\n]+)`", bullet)
+        if lead and lead.group(1).strip() == token:
+            sys.exit(0)
+        if re.match(r"\s*[-*] +\*\*Template drift", bullet, re.I) and f"`{token}`" in bullet:
+            sys.exit(0)
+sys.exit(1)
+PY
   }
 
   # Fuzz smoke: the template's runner, spec and config (CONVENTIONS.md §5).

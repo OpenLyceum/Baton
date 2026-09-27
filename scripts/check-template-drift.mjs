@@ -8,10 +8,10 @@
  * required package.json scripts/dependencies, template-only and forbidden files,
  * and docs that must not be verbatim template copies.
  *
- * A sim approves a deviation by naming the path or script in backticks under its
- * AGENTS.md "## Compliance carve-outs" section, e.g.
+ * A sim approves a deviation with an explicit bullet under its AGENTS.md
+ * "## Compliance carve-outs" section, e.g.
  *   - `tests/setup.ts`: adds a WebGPU mock
- *   - `build:single`: custom Vite config has no single-file mode
+ *   - **Template drift:** `build:single` omitted (no single-file mode); `videos/` holds sample clips
  *
  * Usage:
  *   node scripts/check-template-drift.mjs <Sim> [<Sim> …]
@@ -92,13 +92,26 @@ const setPath = (obj, path, value) => {
 };
 const stable = (v) => JSON.stringify(v);
 
-/** Parse backticked tokens in the sim's "## Compliance carve-outs" section(s). */
+/**
+ * Approved deviations from the sim's "## Compliance carve-outs" section(s). Only explicit
+ * entries count — a path merely mentioned in prose does not:
+ *   - `path/or-script`: reason              (bullet that starts with the token)
+ *   - **Template drift …:** `a`, `b`, `c`   (every token in a "Template drift" bullet)
+ */
 function carveOuts(simDir) {
   const text = readText(join(simDir, "AGENTS.md")) ?? "";
   const approved = new Set();
+  const norm = (t) => t.trim().replace(/^npm run /, "");
   const re = /^## Compliance carve-outs?\s*$([\s\S]*?)(?=^## |(?![\s\S]))/gm;
   for (const m of text.matchAll(re)) {
-    for (const t of m[1].matchAll(/`([^`\n]+)`/g)) approved.add(t[1].trim().replace(/^npm run /, ""));
+    const bullets = m[1].split(/\n(?=\s*[-*] )/);
+    for (const bullet of bullets) {
+      const lead = /^\s*[-*] +`([^`\n]+)`/.exec(bullet);
+      if (lead) approved.add(norm(lead[1]));
+      if (/^\s*[-*] +\*\*Template drift/i.test(bullet)) {
+        for (const t of bullet.matchAll(/`([^`\n]+)`/g)) approved.add(norm(t[1]));
+      }
+    }
   }
   return approved;
 }
