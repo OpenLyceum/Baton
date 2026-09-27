@@ -119,6 +119,7 @@ EOF
 {
   "name": "fixture-sim",
   "version": "1.0.0",
+  "description": "Fixture sim.",
   "type": "module",
   "keywords": ["simulation", "pwa"],
   "engines": { "node": ">=${major}" },

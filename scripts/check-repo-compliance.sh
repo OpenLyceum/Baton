@@ -367,7 +367,7 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
     pwa_ok=1
     grep -q 'vite-plugin-pwa' vite.config.ts || { fail "vite.config.ts must import vite-plugin-pwa"; pwa_ok=0; }
     grep -qE 'registerType:\s*"autoUpdate"' vite.config.ts || { fail "VitePWA registerType must be autoUpdate"; pwa_ok=0; }
-    grep -qE '^\s*id:\s*"' vite.config.ts || { fail "PWA manifest is missing id"; pwa_ok=0; }
+    grep -qE '^\s*id:\s*("|name,)' vite.config.ts || { fail "PWA manifest is missing id"; pwa_ok=0; }
     grep -q 'categories: \["education", "science"\]' vite.config.ts || { fail "PWA manifest categories must be [\"education\", \"science\"]"; pwa_ok=0; }
     grep -q 'display_override' vite.config.ts || { fail "PWA manifest is missing display_override"; pwa_ok=0; }
     grep -q 'screenshots:' vite.config.ts || { fail "PWA manifest is missing screenshots"; pwa_ok=0; }
@@ -570,6 +570,31 @@ PY
       new_rule "PWA manifest is missing background_color"
     else
       pass "theme-color matches manifest theme_color"
+    fi
+  fi
+
+  # One description: package.json feeds index.html (%SIM_DESCRIPTION%) and the manifest.
+  if [ -f index.html ] && [ -f vite.config.ts ]; then
+    desc_problems="$(python3 - <<'PY' 2>/dev/null || true
+import html, json, re
+pkg = json.load(open("package.json")).get("description", "")
+page = open("index.html").read()
+cfg = open("vite.config.ts").read()
+out = []
+for attr in ('name="description"', 'property="og:description"', 'name="twitter:description"'):
+    m = re.search(re.escape(attr) + r'\s+content="([^"]*)"', page)
+    if m and m.group(1) != "%SIM_DESCRIPTION%" and html.unescape(m.group(1)) != pkg:
+        out.append(f"index.html {attr.split('=')[1]}")
+m = re.search(r'\n\s*description:\s*\n?\s*"((?:[^"\\]|\\.)*)"', cfg)
+if m and json.loads('"' + m.group(1) + '"') != pkg:
+    out.append("vite.config.ts manifest description")
+print(", ".join(out))
+PY
+)"
+    if [ -n "$desc_problems" ]; then
+      new_rule "descriptions disagree with package.json (use %SIM_DESCRIPTION% / package.json like the template): $desc_problems"
+    else
+      pass "index.html and manifest descriptions come from package.json"
     fi
   fi
 

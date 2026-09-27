@@ -503,6 +503,19 @@ strict_compliance() {
   assert_output --partial "must use tests/helpers/memoryLeak.ts"
 }
 
+@test "index.html description disagreeing with package.json fails in strict mode" {
+  sed -i 's|content="Fixture sim."|content="Something else."|' "$SIM/index.html"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "descriptions disagree with package.json"
+}
+
+@test "%SIM_DESCRIPTION% placeholder satisfies the description rule" {
+  sed -i 's|name="description" content="Fixture sim."|name="description" content="%SIM_DESCRIPTION%"|' "$SIM/index.html"
+  strict_compliance "$SIM"
+  assert_success
+}
+
 @test "export default class fails in strict mode" {
   echo 'export default class Foo {}' >"$SIM/src/intro/model/Foo.ts"
   strict_compliance "$SIM"
