@@ -17,13 +17,14 @@
  *   node scripts/check-template-drift.mjs <Sim> [<Sim> …]
  *   node scripts/check-template-drift.mjs --all          # every local simulation in the catalog
  *   node scripts/check-template-drift.mjs --fix <Sim>    # copy exact files / scripts, remove forbidden files
+ *   node scripts/check-template-drift.mjs --dir <path> [--name <Repo>]   # a checkout outside the workspace (CI)
  *   options: --json, --quiet (only print sims with drift), --template <dir>
  *
  * Exit status: 0 when no unapproved drift, 1 otherwise, 2 on usage errors.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -39,6 +40,8 @@ let json = false;
 let quiet = false;
 let all = false;
 let templateDir = join(workspace, manifest.template);
+let simDirOverride = null;
+let simNameOverride = null;
 const sims = [];
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
@@ -47,6 +50,8 @@ for (let i = 0; i < args.length; i++) {
   else if (a === "--quiet") quiet = true;
   else if (a === "--all") all = true;
   else if (a === "--template") templateDir = resolve(args[++i] ?? "");
+  else if (a === "--dir") simDirOverride = resolve(args[++i] ?? "");
+  else if (a === "--name") simNameOverride = args[++i] ?? null;
   else if (a === "-h" || a === "--help") {
     console.log(readFileSync(fileURLToPath(import.meta.url), "utf8").split("*/")[0]);
     process.exit(0);
@@ -63,8 +68,11 @@ if (all) {
     }
   }
 }
+if (simDirOverride) {
+  sims.push(simNameOverride ?? basename(simDirOverride));
+}
 if (sims.length === 0) {
-  console.error("usage: check-template-drift.mjs [--fix] [--json] [--quiet] (--all | <Sim> …)");
+  console.error("usage: check-template-drift.mjs [--fix] [--json] [--quiet] (--all | --dir <path> | <Sim> …)");
   process.exit(2);
 }
 if (!existsSync(join(templateDir, "package.json"))) {
@@ -133,7 +141,7 @@ function git(simDir, ...a) {
 const templatePkg = JSON.parse(readFileSync(join(templateDir, "package.json"), "utf8"));
 
 function checkSim(repoName) {
-  const simDir = join(workspace, repoName);
+  const simDir = simDirOverride ?? join(workspace, repoName);
   const issues = [];
   const fixed = [];
   const pkgText = readText(join(simDir, "package.json"));

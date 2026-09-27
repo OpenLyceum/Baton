@@ -44,6 +44,29 @@ jobs:
           GITHUB_REPOSITORY="${{ github.repository_owner }}/$REPO" \
             bash .org-compliance/scripts/check-repo-compliance.sh "$PWD"
 
+      # Template drift is advisory in a sim's own CI: a template change would otherwise
+      # turn every sim red until it is propagated. The weekly fleet audit below fails
+      # on drift instead, which is the signal to run check-template-drift.sh --fix.
+      - name: Check out SceneryStackTemplate for the drift check
+        if: hashFiles('src/main.ts') != ''
+        uses: actions/checkout@v7.0.1
+        with:
+          repository: ${{ github.repository_owner }}/SceneryStackTemplate
+          path: .org-template
+
+      - name: Template drift (advisory)
+        if: hashFiles('src/main.ts') != ''
+        continue-on-error: true
+        run: |
+          REPO="${{ inputs.repo-name }}"
+          if [ -z "$REPO" ]; then
+            REPO="${{ github.event.repository.name }}"
+          fi
+          if ! node .org-compliance/scripts/check-template-drift.mjs --template .org-template --dir "$PWD" --name "$REPO"; then
+            echo "::warning title=Template drift::$REPO differs from SceneryStackTemplate — run Baton/scripts/check-template-drift.sh --fix $REPO (or add a Compliance carve-out)"
+            exit 1
+          fi
+
   # Org-wide audit (dispatch/schedule). Fan out one sim per runner so they audit in
   # parallel with isolated logs, mirroring fleet-health.yml: `discover` builds the
   # sim list from the catalog, `audit` checks each, `report` aggregates pass/fail.
@@ -74,6 +97,12 @@ jobs:
       - name: Check out Baton for the compliance script
         uses: actions/checkout@v7.0.1
 
+      - name: Check out SceneryStackTemplate for the drift check
+        uses: actions/checkout@v7.0.1
+        with:
+          repository: ${{ github.repository_owner }}/SceneryStackTemplate
+          path: .org-template
+
       - name: Audit ${{ matrix.sim }}
         env:
           GH_TOKEN: ${{ github.token }}
@@ -82,16 +111,21 @@ jobs:
           set -uo pipefail
           WORKDIR=$(mktemp -d)
           if ! gh repo clone "${{ github.repository_owner }}/$SIM" "$WORKDIR" -- --depth 1 --quiet; then
-            echo "| $SIM | ❌ clone |" > "row-$SIM.md"
+            echo "| $SIM | ❌ clone | – |" > "row-$SIM.md"
             exit 1
           fi
-          if GITHUB_REPOSITORY="${{ github.repository_owner }}/$SIM" ./scripts/check-repo-compliance.sh "$WORKDIR"; then
-            echo "| $SIM | ✅ |" > "row-$SIM.md"
-            rc=0
-          else
-            echo "| $SIM | ❌ |" > "row-$SIM.md"
+          rc=0
+          compliance="✅"
+          if ! GITHUB_REPOSITORY="${{ github.repository_owner }}/$SIM" ./scripts/check-repo-compliance.sh "$WORKDIR"; then
+            compliance="❌"
             rc=1
           fi
+          drift="✅"
+          if [ -f "$WORKDIR/src/main.ts" ] && ! node scripts/check-template-drift.mjs --template .org-template --dir "$WORKDIR" --name "$SIM"; then
+            drift="❌"
+            rc=1
+          fi
+          echo "| $SIM | $compliance | $drift |" > "row-$SIM.md"
           rm -rf "$WORKDIR"
           exit "$rc"
 
@@ -121,12 +155,12 @@ jobs:
           {
             echo "# Fleet compliance report"
             echo
-            echo "| Repo | Compliance |"
-            echo "|---|:--:|"
+            echo "| Repo | Compliance | Template drift |"
+            echo "|---|:--:|:--:|"
             find rows -name '*.md' -exec cat {} + 2>/dev/null | sort || true
           } >> "$GITHUB_STEP_SUMMARY"
 
           if find rows -name '*.md' -exec cat {} + 2>/dev/null | grep -q '❌'; then
-            echo "One or more simulations failed compliance — see the table above." >&2
+            echo "One or more simulations failed compliance or drifted from the template — see the table above (fix drift with scripts/check-template-drift.sh --fix <Sim>)." >&2
             exit 1
           fi
