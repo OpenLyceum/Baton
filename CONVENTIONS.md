@@ -101,13 +101,15 @@ Layout (match the template):
 
 ```
 tests/
-  setup.ts                  vitest setup (Canvas/Audio mocks + init) — see carve-out below
-  memory-leak.test.ts       WeakRef + --expose-gc dispose regression (fleet pattern)
+  setup.ts                  vitest setup (Canvas/Audio/Worker mocks + init) — template-owned
+  memory-leak.test.ts       describeDisposalLeaks([...]) over the sim's disposables
+  helpers/memoryLeak.ts     template-owned leak harness (forceGC, describeDisposalLeaks)
+  fuzz/fuzz.spec.ts         template-owned Playwright fuzz smoke (pointer + keyboard)
   **/*.test.ts              unit tests (mirror the source tree under tests/)
   **/*.spec.ts              Playwright specs, if any (e.g. tests/fuzz/)
 vitest.config.ts            root; include: ["tests/**/*.test.ts"];
                             execArgv: ["--expose-gc"] when a memory-leak suite is present
-tsconfig.test.json          extends tsconfig.json; include: ["tests"];
+tsconfig.test.json          extends tsconfig.json; include: ["tests", "src/**/*.d.ts"];
                             types: ["node", "vite/client", "vitest/globals"]
 ```
 
@@ -117,15 +119,16 @@ tsconfig.test.json          extends tsconfig.json; include: ["tests"];
   do **not** use `__tests__/` directories.
 - The setup file is `tests/setup.ts` (not a root `vitest.setup.ts`). Happy-dom sims wire it via
   `setupFiles: ["./tests/setup.ts"]`.
-- The vitest `environment` may vary by sim's needs (`happy-dom` is the template default;
-  `jsdom` or `node` are acceptable where justified) — document the choice in the sim's `AGENTS.md`.
-- **Documented carve-out:** pure-math suites that alias `scenerystack` → `scenerystack/dot`
-  (jsdom) or run under `node` (no DOM) may omit `tests/setup.ts` / `setupFiles` when no Canvas
-  or `init()` is needed — note that in the sim's `AGENTS.md` (DopplerEffect, VariableStarPhotometry,
-  WaveComposer).
-- **Memory-leak suite:** every sim ships `tests/memory-leak.test.ts` modeled on
-  `SceneryStackTemplate` / `QubitSketch` (dispose in a function boundary → `WeakRef` → `forceGC`).
-  Dynamic sims that add/remove nodes at runtime should expand it like `OpticsLab`.
+- Every sim runs Vitest on `happy-dom` with the template's `tests/setup.ts` and
+  `vitest.config.ts` (the 2026-09 sweep moved the former jsdom/node sims — DopplerEffect,
+  VariableStarPhotometry, WaveComposer, Resonance — onto it with no test changes beyond one
+  localStorage spy). A genuine need for another environment is a `## Compliance carve-outs`
+  entry naming `vitest.config.ts`.
+- **Memory-leak suite:** every sim ships `tests/memory-leak.test.ts` that passes its
+  disposables to `describeDisposalLeaks()` from `tests/helpers/memoryLeak.ts` (collected after
+  `dispose()`, repeated create/dispose cycles; `idempotentDispose: true` adds a double-dispose
+  check). Sim-specific scenarios follow in the same file using the shared `forceGC()` — never a
+  private copy. Dynamic sims that add/remove nodes at runtime should expand it like `OpticsLab`.
 
 ## 6. Documentation
 
