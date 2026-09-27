@@ -626,6 +626,17 @@ npm run fix
 echo ""
 echo "npm run check..."
 npm run check
+
+# rename/scaffold-screens are one-shot template tools: --fix drops them (and their
+# scripts) so the new sim starts with zero template drift; anything left fails here.
+echo ""
+echo "check-template-drift --fix..."
+TEMPLATE_DIR="$(repos_workspace_root)/SceneryStackTemplate"
+if [[ -f "$TEMPLATE_DIR/package.json" ]]; then
+  node "$SCRIPT_DIR/check-template-drift.mjs" --fix --dir "$PWD" --name "$REPO" --template "$TEMPLATE_DIR"
+else
+  echo "warning: no local SceneryStackTemplate at $TEMPLATE_DIR; run check-template-drift.sh --fix $REPO later" >&2
+fi
 fi  # end of the create-from-template branch (--existing skips it)
 
 CATALOG_PATH="$(repos_catalog_path)"
