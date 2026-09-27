@@ -39,7 +39,7 @@
   "forbidden": [".fuzz-playwright.config.ts", "CLAUDE.md", ".cursor", ".vscode/settings.json", ".eslintrc", ".eslintrc.json", ".eslintrc.cjs", "eslint.config.js", "eslint.config.mjs", ".prettierrc", ".prettierrc.json"],
   "noTemplateCopies": {
     "$comment": "Docs that must be sim-specific: a copy sharing at least `threshold` of its non-blank lines with the template's file is flagged.",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "files": ["doc/model.md", "doc/implementation-notes.md", "doc/multi-screen.md", "doc/improvement-recommendations.md"]
   },
   "packageJson": {

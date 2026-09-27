@@ -237,7 +237,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 | `jsonExtend` | JSON equal to the template except the listed paths, whose arrays may only grow |
 | `templateOnly` | Template tooling (`rename`, `scaffold-screens`) must not linger in a sim |
 | `forbidden` | Dead or foreign files (`.fuzz-playwright.config.ts`, `CLAUDE.md`, ESLint/Prettier, `.cursor/`) |
-| `noTemplateCopies` | Sim docs sharing ≥80% of their lines with the template's copy |
+| `noTemplateCopies` | Sim docs sharing ≥60% of their lines with the template's copy |
 | `packageJson` | Every template script (same command), every template dependency (same major), `engines`/`license`/`type`, override keys |
 
 ```bash
