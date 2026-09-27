@@ -188,7 +188,7 @@ EOF
     echo '{}' >"$dir/src/i18n/strings_$loc.json"
   done
 
-  echo "// dispose regression" >"$dir/tests/memory-leak.test.ts"
+  echo 'import { describeDisposalLeaks } from "./helpers/memoryLeak.js";' >"$dir/tests/memory-leak.test.ts"
   echo "// happy-dom mocks + init()" >"$dir/tests/setup.ts"
   mkdir -p "$dir/tests/fuzz" "$dir/scripts"
   echo "// fuzz smoke" >"$dir/tests/fuzz/fuzz.spec.ts"

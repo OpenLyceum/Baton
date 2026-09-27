@@ -219,7 +219,7 @@ rest are a quick manual scan.
 - [ ] TypeScript: named exports only (no `export default class`); relative imports end in `.js`; `<Prefix>Constants.ts` registers with the namespace. *(auto)*
 - [ ] Any tests live only under root `tests/` with `tests/setup.ts`; no co-located / `__tests__/`; a `test` script exists. *(auto)*
 - [ ] Fuzz smoke: `tests/fuzz/fuzz.spec.ts`, `playwright.config.ts`, `scripts/test-fuzz.ts`; `test:fuzz` runs `tsx scripts/test-fuzz.ts`. *(auto)*
-- [ ] `tests/memory-leak.test.ts` exists and `vitest.config.ts` enables `--expose-gc`. *(auto)*
+- [ ] `tests/memory-leak.test.ts` exists, lists the sim's disposables via `describeDisposalLeaks()` from the template-owned `tests/helpers/memoryLeak.ts` (no private `forceGC`), and `vitest.config.ts` enables `--expose-gc`. *(auto)*
 - [ ] `*KeyboardHelpContent.ts` exists under `src/` (Keyboard Shortcuts dialog). *(auto)*
 - [ ] `.githooks/{pre-commit,pre-push}` present; `prepare` sets `core.hooksPath`. *(auto)*
 - [ ] `.github/workflows/deploy.yml` calls Baton's reusable Pages deploy and allows `workflow_dispatch`. *(auto)*

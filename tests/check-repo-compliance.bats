@@ -496,6 +496,13 @@ strict_compliance() {
   assert_output --partial "left in src: src/i18n/strings_en.json"
 }
 
+@test "memory-leak suite with a private forceGC fails in strict mode" {
+  echo 'async function forceGC() {}' >"$SIM/tests/memory-leak.test.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "must use tests/helpers/memoryLeak.ts"
+}
+
 @test "export default class fails in strict mode" {
   echo 'export default class Foo {}' >"$SIM/src/intro/model/Foo.ts"
   strict_compliance "$SIM"

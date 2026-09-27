@@ -481,6 +481,15 @@ PY
   [ -f .fuzz-playwright.config.ts ] && { new_rule ".fuzz-playwright.config.ts is dead — use FUZZ_PORT with playwright.config.ts"; fuzz_ok=0; }
   [ "$fuzz_ok" -eq 1 ] && pass "fuzz smoke: runner, spec, config"
 
+  # Memory-leak suite on the shared harness, not a private forceGC copy (CONVENTIONS.md §5).
+  if [ -f tests/memory-leak.test.ts ]; then
+    if grep -qE 'function forceGC' tests/memory-leak.test.ts || ! grep -q 'helpers/memoryLeak' tests/memory-leak.test.ts; then
+      new_rule "tests/memory-leak.test.ts must use tests/helpers/memoryLeak.ts (describeDisposalLeaks / forceGC), not a local forceGC"
+    else
+      pass "memory-leak suite uses the shared harness"
+    fi
+  fi
+
   # A test script and the shared setup (CONVENTIONS.md §5).
   if ! grep -qE '"test":\s*"' package.json; then
     new_rule "package.json has no test script (CI would skip unit tests silently)"
