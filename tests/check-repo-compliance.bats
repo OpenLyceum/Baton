@@ -531,6 +531,17 @@ strict_compliance() {
   assert_output --partial "src/common/TimeModel.ts is unused"
 }
 
+@test "profileColor helper in Colors.ts fails in strict mode" {
+  cat >"$SIM/src/FixtureSimColors.ts" <<'EOF'
+function profileColor(name: string, a: string, b: string) {
+  return new ProfileColorProperty(FixtureSimNamespace, name, { default: a, projector: b });
+}
+EOF
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "wraps ProfileColorProperty in a helper"
+}
+
 @test "export default class fails in strict mode" {
   echo 'export default class Foo {}' >"$SIM/src/intro/model/Foo.ts"
   strict_compliance "$SIM"

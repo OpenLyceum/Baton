@@ -537,6 +537,13 @@ PY
     pass "no template placeholders (exampleToggle, Sim*.ts) left"
   fi
 
+  # Colors are declared inline (template form), not through a local factory helper.
+  colors_file="$(find src -maxdepth 1 -name '*Colors.ts' | head -1)"
+  if [ -n "$colors_file" ] && grep -qE '^(export )?(function \w+\(|const \w+ = \([^)]*\)[^=]*=>)' "$colors_file" \
+    && grep -qE 'new ProfileColorProperty\([^,]+, *\w+,' "$colors_file"; then
+    new_rule "$colors_file wraps ProfileColorProperty in a helper — declare each color inline like the template"
+  fi
+
   # The template's sample TimeModel is for sims with a clock; unused, it is dead code.
   if [ -f src/common/TimeModel.ts ] && ! grep -q '"name": "scenerystack-template"' package.json \
     && [ -z "$(grep -rl 'TimeModel' src --include='*.ts' | grep -v '^src/common/TimeModel.ts$' || true)" ]; then
