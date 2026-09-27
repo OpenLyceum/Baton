@@ -515,15 +515,15 @@ PY
     pass "init.ts version comes from package.json"
   fi
 
-  # Template leftovers (the template itself legitimately ships them).
+  # Template leftovers — placeholder preference/a11y strings and Sim* files (the template itself ships them).
   if grep -q '"name": "scenerystack-template"' package.json; then
     leftovers=""
   else
-    leftovers="$(grep -rlE '\bexampleToggle\b' src 2>/dev/null || true)"
+    leftovers="$(grep -rlE '\b(exampleToggle|exampleControl)\b' src 2>/dev/null || true)"
     leftovers="$leftovers $(find src -name 'Sim*.ts' 2>/dev/null | grep -E '/Sim(Panel|ButtonOptions|ControlOptions|Screen|ScreenView|Model)\.ts$' || true)"
   fi
   if [ -n "$(echo "$leftovers" | tr -d ' ')" ]; then
-    new_rule "template placeholders left in src: $(echo "$leftovers" | xargs)"
+    new_rule "template placeholders (exampleToggle, exampleControl, Sim*.ts) left in src: $(echo "$leftovers" | xargs)"
   else
     pass "no template placeholders (exampleToggle, Sim*.ts) left"
   fi

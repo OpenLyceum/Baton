@@ -486,7 +486,14 @@ strict_compliance() {
   echo 'export const exampleToggle = true;' >>"$SIM/src/preferences/fixtureSimQueryParameters.ts"
   strict_compliance "$SIM"
   assert_failure
-  assert_output --partial "template placeholders left in src"
+  assert_output --partial "left in src: src/preferences/fixtureSimQueryParameters.ts"
+}
+
+@test "leftover exampleControl a11y string fails in strict mode" {
+  echo '{"a11y":{"controls":{"exampleControl":"Example control"}}}' >"$SIM/src/i18n/strings_en.json"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "left in src: src/i18n/strings_en.json"
 }
 
 @test "export default class fails in strict mode" {
