@@ -447,10 +447,10 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
   fi
 
   # ── Standardization rules (2026-09 fleet sweep) ─────────────────────────────
-  # Added as warnings; promoted to failures once the whole fleet passes them.
-  # COMPLIANCE_STRICT=1 treats them as failures now (used by Baton's own tests).
+  # These fail. They shipped as warnings until every sim passed; that bar is met.
+  # COMPLIANCE_STRICT is accepted and ignored so older invocations keep working.
   new_rule() {
-    if [ "${COMPLIANCE_STRICT:-0}" = 1 ]; then fail "$1"; else warn "$1"; fi
+    fail "$1"
   }
   # carved_out <token>: an explicit AGENTS.md "## Compliance carve-outs" entry — a bullet that
   # starts with `token`, or a "**Template drift**" bullet naming it (same rule as
@@ -653,13 +653,13 @@ PY
     esac
   done < <(git ls-files 2>/dev/null | cut -d/ -f1 | sort -u)
   if [ -n "$stray_root" ]; then
-    warn "root entries outside the template layout (move, delete, or list under AGENTS.md ## Compliance carve-outs):$stray_root"
+    fail "root entries outside the template layout (move, delete, or list under AGENTS.md ## Compliance carve-outs):$stray_root"
   else
     pass "root layout matches the template"
   fi
 
   for d in src/model src/view; do
-    [ -d "$d" ] && warn "$d exists at src/ root — model/ and view/ belong inside a screen folder"
+    [ -d "$d" ] && fail "$d exists at src/ root — model/ and view/ belong inside a screen folder"
   done
 fi
 

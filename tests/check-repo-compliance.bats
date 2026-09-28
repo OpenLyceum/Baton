@@ -407,14 +407,14 @@ setup() {
   assert_output --partial "must be a versioned biomejs.dev/schemas"
 }
 
-@test "src/model at the src root warns" {
+@test "src/model at the src root fails" {
   mkdir -p "$SIM/src/model"
   run_compliance "$SIM"
-  assert_success
+  assert_failure
   assert_output --partial "src/model exists at src/ root"
 }
 
-# ── Standardization rules (warn by default, fail under COMPLIANCE_STRICT=1) ──
+# ── Standardization rules (failures; COMPLIANCE_STRICT is accepted and ignored) ──
 
 strict_compliance() {
   run env COMPLIANCE_STRICT=1 PATH="$STUB_BIN:$PATH" "$BATON_ROOT/scripts/check-repo-compliance.sh" "$1"
@@ -426,11 +426,11 @@ strict_compliance() {
   refute_output --partial "FAIL:"
 }
 
-@test "standardization rules only warn outside strict mode" {
+@test "missing fuzz runner fails without COMPLIANCE_STRICT" {
   rm "$SIM/scripts/test-fuzz.ts"
   run_compliance "$SIM"
-  assert_success
-  assert_output --partial "WARN: scripts/test-fuzz.ts is missing"
+  assert_failure
+  assert_output --partial "FAIL: scripts/test-fuzz.ts is missing"
 }
 
 @test "missing fuzz runner fails in strict mode" {
@@ -577,14 +577,16 @@ EOF
   assert_output --partial "README Tech Stack versions are stale: Biome 1 (package.json 2)"
 }
 
-@test "stray root file warns unless carved out" {
+@test "stray root file fails unless carved out" {
   git -C "$SIM" init -q
   touch "$SIM/home.png"
   git -C "$SIM" add -A
   run_compliance "$SIM"
+  assert_failure
   assert_output --partial "Compliance carve-outs): home.png"
   printf '## Compliance carve-outs\n\n- `home.png`: store listing art\n' >"$SIM/AGENTS.md"
   run_compliance "$SIM"
+  assert_success
   refute_output --partial "root entries outside the template layout"
 }
 
