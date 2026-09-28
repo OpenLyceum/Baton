@@ -149,7 +149,7 @@ License / Contributing` (enforced by Baton's compliance check). Do **not** add a
 |---|---|
 | `biome.json` | versioned `biomejs.dev` `$schema` matching the pinned `@biomejs/biome`; 2-space indent, 120-char width, double quotes, semicolons |
 | `tsconfig.json` / `tsconfig.scripts.json` / `tsconfig.test.json` | shared template versions (TS7, `erasableSyntaxOnly`, `verbatimModuleSyntax`); `check` runs `tsc` on all three |
-| `package.json` | Same scripts, dependency instances, and key order as `SceneryStackTemplate` (exact version specifiers). Sim-specific dependencies and scripts are appended after that shared block |
+| `package.json` | Same scripts, dependency instances, and key order as `SceneryStackTemplate` (exact version specifiers). Sim-specific dependencies and scripts are appended after that shared block. Keywords include `simulation`, `SceneryStack`, `interactive`, `physics`, `education`, `pwa` (that casing); other keywords may be added |
 | `.githooks/{pre-commit,pre-push}` | present; activated via `prepare` script on `npm install` |
 | `.github/workflows/ci.yml` | calls `OpenLyceum/Baton` reusable CI + shared security workflows |
 | `.github/workflows/deploy.yml` | calls `OpenLyceum/Baton` reusable Pages deploy; `on: push` to `main` **and** `workflow_dispatch` |
@@ -166,7 +166,7 @@ public/screenshots/wide.png  narrow.png   ← 1280×720 and 720×1280; placehold
 
 | Piece | Standard |
 |---|---|
-| `package.json` | `vite-plugin-pwa ^1`, `sharp` + `png-to-ico` + `tsx`, `"pwa"` in `keywords`, `icons` script runs `tsx scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
+| `package.json` | `vite-plugin-pwa ^1`, `sharp` + `png-to-ico` + `tsx`, the shared keyword set above, `icons` script runs `tsx scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
 | `vite.config.ts` | `registerType: "autoUpdate"`; `includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"]`; manifest `id` (= `package.json` `name`), `categories: ["education", "science"]`, `display: "standalone"`, `display_override: ["window-controls-overlay", "standalone"]`, **no** `orientation`; PNG 192/512 + SVG `purpose: "maskable"`; `screenshots` wide + narrow; Workbox `maximumFileSizeToCacheInBytes` + `globPatterns` including `js,css,html,svg,png,woff2` |
 | `index.html` | `mobile-web-app-capable`, `apple-mobile-web-app-capable`, `theme-color` (must match `theme_color`), `description`, Open Graph + Twitter meta (`og:image` / `twitter:image` → `./icons/icon-512.png`), favicon + SVG icon + apple-touch-icon |
 | Single-file mode | `vite build --mode single` skips `VitePWA` (inlines into one HTML file). Omit this only when the bundle cannot be self-contained (document in `AGENTS.md`) |
@@ -227,6 +227,7 @@ rest are a quick manual scan.
 - [ ] `.githooks/{pre-commit,pre-push}` present; `prepare` sets `core.hooksPath`. *(auto)*
 - [ ] `.github/workflows/deploy.yml` calls Baton's reusable Pages deploy and allows `workflow_dispatch`. *(auto)*
 - [ ] PWA: `VitePWA` manifest has `id`, `categories`, `display_override`, screenshots, no `orientation`; `public/icons/` + `public/screenshots/{wide,narrow}.png` exist; `index.html` has theme-color + OG/Twitter. *(auto)*
+- [ ] `package.json` keywords include `simulation`, `SceneryStack`, `interactive`, `physics`, `education`, `pwa`. *(auto)*
 - [ ] `doc/model.md` + `doc/implementation-notes.md` exist and are filled. *(auto presence; manual content)*
 - [ ] `README.md` follows the six-section outline and its Tech Stack versions match `package.json`; no local `CONTRIBUTING.md` / `LICENSE`. *(auto)*
 - [ ] Template-owned files (configs, fuzz, setup, bootstrap `assert`/`brand`/`splash`, workflows) match the template: `Baton/scripts/check-template-drift.sh <Sim>`. *(auto)*

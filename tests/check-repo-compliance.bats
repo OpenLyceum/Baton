@@ -414,6 +414,22 @@ setup() {
   assert_output --partial "src/model exists at src/ root"
 }
 
+# ── Keywords ──────────────────────────────────────────────────────────────────
+
+@test "package.json missing a shared keyword fails" {
+  sed -i 's/"physics", //' "$SIM/package.json"
+  run_compliance "$SIM"
+  assert_failure
+  assert_output --partial "package.json keywords: missing physics"
+}
+
+@test "package.json keyword with the wrong casing fails" {
+  sed -i 's/"SceneryStack"/"scenerystack"/' "$SIM/package.json"
+  run_compliance "$SIM"
+  assert_failure
+  assert_output --partial "wrong casing scenerystack (use SceneryStack)"
+}
+
 # ── Standardization rules (failures; COMPLIANCE_STRICT is accepted and ignored) ──
 
 strict_compliance() {

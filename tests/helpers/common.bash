@@ -121,7 +121,7 @@ EOF
   "version": "1.0.0",
   "description": "Fixture sim.",
   "type": "module",
-  "keywords": ["simulation", "pwa"],
+  "keywords": ["simulation", "SceneryStack", "interactive", "physics", "education", "pwa"],
   "engines": { "node": ">=${major}" },
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",

@@ -61,8 +61,9 @@ Typical survivors (confirmed across forks):
 - `SimA11yStrings` / `SimPreferenceStrings` in `src/i18n/StringManager.ts`
 - `SimPanelOptions` in `src/common/<Prefix>Panel.ts`
 
-Also check `package.json` `keywords` (often still the generic template list) and that
-`description` / `repository.url` match the new repo.
+Also check `package.json` `keywords`. Drop `template`. Keep `simulation`, `SceneryStack`,
+`interactive`, `physics`, `education`, and `pwa` with that casing, and add domain keywords
+around them. `description` / `repository.url` must match the new repo.
 
 ## Keyboard help is a stub
 

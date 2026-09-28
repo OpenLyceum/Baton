@@ -355,10 +355,40 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
   else
     pass "package.json icons script"
   fi
-  if ! grep -qE '"pwa"' package.json; then
-    fail "package.json keywords must include \"pwa\""
+  # Shared keyword set. Domain keywords may be added; casing is exact (SceneryStack, not scenerystack).
+  kw_problems="$(python3 - <<'PY'
+import json
+required = ["simulation", "SceneryStack", "interactive", "physics", "education", "pwa"]
+kws = json.load(open("package.json")).get("keywords")
+if not isinstance(kws, list):
+    print("keywords must be an array")
+    raise SystemExit
+folded = {}
+for kw in kws:
+    if isinstance(kw, str):
+        folded.setdefault(kw.lower(), []).append(kw)
+missing = []
+bad_case = []
+for kw in required:
+    if kw in kws:
+        continue
+    alts = [alt for alt in folded.get(kw.lower(), []) if alt != kw]
+    if alts:
+        bad_case.append(f"{alts[0]} (use {kw})")
+    else:
+        missing.append(kw)
+parts = []
+if missing:
+    parts.append("missing " + ", ".join(missing))
+if bad_case:
+    parts.append("wrong casing " + "; ".join(bad_case))
+print("; ".join(parts))
+PY
+)"
+  if [ -n "$kw_problems" ]; then
+    fail "package.json keywords: $kw_problems"
   else
-    pass "package.json keywords include pwa"
+    pass "package.json keywords include the shared set"
   fi
 
   if [ ! -f vite.config.ts ]; then
