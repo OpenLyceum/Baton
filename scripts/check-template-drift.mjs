@@ -5,7 +5,7 @@
  * Compares SceneryStack sims against SceneryStackTemplate using
  * config/template-manifest.json: template-owned files that must be identical
  * (after substituting the sim's package/repo name), files a sim may only extend,
- * required package.json scripts/dependencies, template-only and forbidden files,
+ * required package.json scripts/dependencies (exact versions, shared key order), template-only and forbidden files,
  * and docs that must not be verbatim template copies.
  *
  * A sim approves a deviation with an explicit bullet under its AGENTS.md
@@ -209,12 +209,28 @@ function checkSim(repoName) {
     if (problems.length) add("differs", rel, problems.join("; "));
   }
 
-  // package.json
+  // package.json — shared scripts, dependency instances, and key order match the template.
+  // Sim-specific scripts and packages are appended after that block (extras sorted).
   const pj = manifest.packageJson;
   let pkgChanged = false;
+  const templateScriptOrder = Object.keys(templatePkg.scripts).filter(
+    (name) => isTemplate || !manifest.templateOnly.scripts.includes(name),
+  );
+  const byName = (a, b) => a.localeCompare(b);
+  const applyOrder = (label, current, ordered) => {
+    if (stable(current ?? {}) === stable(ordered)) return;
+    if (fix) {
+      pkgChanged = true;
+      fixed.push(`${label} order`);
+      return true;
+    }
+    add("package", label, `${label} order differs from the template (shared entries first, sim-specific after)`);
+    return false;
+  };
+
   if (pj.requiredScriptsFromTemplate) {
-    for (const [name, cmd] of Object.entries(templatePkg.scripts)) {
-      if (manifest.templateOnly.scripts.includes(name)) continue;
+    for (const name of templateScriptOrder) {
+      const cmd = templatePkg.scripts[name];
       const cur = pkg.scripts?.[name];
       if (cur === cmd || approved.has(name)) continue;
       if (fix) {
@@ -233,14 +249,40 @@ function checkSim(repoName) {
       fixed.push(`script ${name} (template-only)`);
     } else add("template-only", name, "template-only script in a sim");
   }
+  {
+    const cur = pkg.scripts ?? {};
+    const ordered = {};
+    for (const name of templateScriptOrder) if (name in cur) ordered[name] = cur[name];
+    for (const name of Object.keys(cur).filter((n) => !(n in ordered)).sort(byName)) ordered[name] = cur[name];
+    if (applyOrder("scripts", cur, ordered)) pkg.scripts = ordered;
+  }
   if (pj.requiredDependenciesFromTemplate) {
-    const major = (v) => /(\d+)/.exec(v ?? "")?.[1];
     for (const field of ["dependencies", "devDependencies"]) {
       for (const [dep, ver] of Object.entries(templatePkg[field] ?? {})) {
         const cur = pkg.dependencies?.[dep] ?? pkg.devDependencies?.[dep];
-        if (cur === undefined) add("dependency", dep, `missing ${field} ${dep}@${ver}`);
-        else if (major(cur) !== major(ver)) add("dependency", dep, `${dep}@${cur} major ≠ template ${ver}`);
+        if (cur === undefined) {
+          if (fix) {
+            pkg[field] ??= {};
+            pkg[field][dep] = ver;
+            pkgChanged = true;
+            fixed.push(`${field} ${dep}`);
+          } else add("dependency", dep, `missing ${field} ${dep}@${ver}`);
+        } else if (cur !== ver) {
+          if (fix) {
+            for (const slot of ["dependencies", "devDependencies"]) {
+              if (pkg[slot]?.[dep] !== undefined) pkg[slot][dep] = ver;
+            }
+            pkgChanged = true;
+            fixed.push(`${dep}@${ver}`);
+          } else add("dependency", dep, `${dep}@${cur} ≠ template ${ver}`);
+        }
       }
+      const cur = pkg[field] ?? {};
+      const tplField = templatePkg[field] ?? {};
+      const ordered = {};
+      for (const dep of Object.keys(tplField)) if (dep in cur) ordered[dep] = cur[dep];
+      for (const dep of Object.keys(cur).filter((d) => !(d in ordered)).sort(byName)) ordered[dep] = cur[dep];
+      if (applyOrder(field, cur, ordered)) pkg[field] = ordered;
     }
   }
   for (const key of pj.matchKeys) {
@@ -249,15 +291,13 @@ function checkSim(repoName) {
   if (pj.overridesSuperset) {
     const lost = Object.keys(templatePkg.overrides ?? {}).filter((k) => !(k in (pkg.overrides ?? {})));
     if (lost.length) add("package", "overrides", `missing overrides: ${lost.join(", ")}`);
-  }
-  if (pkgChanged) {
-    // Template scripts first, in template order; sim-specific extras keep their relative order after.
+    const cur = pkg.overrides ?? {};
     const ordered = {};
-    for (const name of Object.keys(templatePkg.scripts)) if (name in pkg.scripts) ordered[name] = pkg.scripts[name];
-    for (const [name, cmd] of Object.entries(pkg.scripts)) if (!(name in ordered)) ordered[name] = cmd;
-    pkg.scripts = ordered;
-    writeFileSync(join(simDir, "package.json"), `${JSON.stringify(pkg, null, 2)}\n`);
+    for (const name of Object.keys(templatePkg.overrides ?? {})) if (name in cur) ordered[name] = cur[name];
+    for (const name of Object.keys(cur).filter((n) => !(n in ordered)).sort(byName)) ordered[name] = cur[name];
+    if (applyOrder("overrides", cur, ordered)) pkg.overrides = ordered;
   }
+  if (pkgChanged) writeFileSync(join(simDir, "package.json"), `${JSON.stringify(pkg, null, 2)}\n`);
 
   // template-only and forbidden files
   for (const rel of [...(isTemplate ? [] : manifest.templateOnly.files), ...manifest.forbidden]) {

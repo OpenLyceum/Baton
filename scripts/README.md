@@ -238,7 +238,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 | `templateOnly` | Template tooling (`rename`, `scaffold-screens`) must not linger in a sim |
 | `forbidden` | Dead or foreign files (`.fuzz-playwright.config.ts`, `CLAUDE.md`, ESLint/Prettier, `.cursor/`) |
 | `noTemplateCopies` | Sim docs sharing ≥60% of their lines with the template's copy |
-| `packageJson` | Every template script (same command), every template dependency (same major), `engines`/`license`/`type`, override keys |
+| `packageJson` | Every template script (same command), every template dependency (same version specifier), shared keys in template order with sim-specific entries after, `engines`/`license`/`type`, override keys |
 
 ```bash
 scripts/check-template-drift.sh --all --quiet     # fleet report, exit 1 on drift
