@@ -23,7 +23,7 @@ onReadyToLaunch(() => {
         supportsDynamicLocale: true,          // Language picker, switch without reload
       },
       audioOptions: {
-        supportsSound: true,                  // enables the tambo sound system
+        supportsSound: true,                  // initializes tambo; also set supportsSound in src/init.ts
       },
     }),
   });
@@ -35,6 +35,7 @@ Each flag is wired to existing framework behavior:
 - `supportsProjectorMode` activates the `projector:` profile in `*Colors.ts` (see scenerystack-color-profiles).
 - `supportsDynamicLocale` requires every visible string to be a `StringProperty` (see scenerystack-i18n).
 - `supportsInteractiveHighlights` turns on the mouse-hover focus outlines (see scenerystack-accessibility).
+- `audioOptions.supportsSound` initializes tambo and shows Audio preferences. It does **not** unmute playback. Also set `supportsSound: true` in `src/init.ts`; that flag is the default of `?supportsSound`, which is the initial value of `soundManager.enabledProperty` and what keeps the navigation-bar speaker enabled. Set both, to the same value. See scenerystack-sound.
 
 ## Custom preference controls
 

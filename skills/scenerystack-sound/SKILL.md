@@ -7,6 +7,29 @@ description: Use when adding sound to a simulation — UI feedback sounds, sonif
 
 Sound is handled by **`scenerystack/tambo`**. You register `SoundGenerator`s (most often a `SoundClip` wrapping an audio file) with the global `soundManager`; tambo plays them through the shared audio graph and respects the user's master sound toggle and the Preferences "Sound" control automatically. Never create raw `AudioContext`/`Audio` objects.
 
+## Turn sound on in both places
+
+A sim with sound sets `supportsSound: true` in **both** `src/init.ts` and `PreferencesModel` `audioOptions` in `src/main.ts`. The two flags do different jobs, and either one alone leaves sound silent or the navigation-bar speaker disabled:
+
+- **`init({ supportsSound: true })`** writes `simFeatures.supportsSound`, which is the default of the `?supportsSound` query parameter. That value is the initial state of `soundManager.enabledProperty`. It is also what keeps the navigation-bar speaker enabled (`audioManager.anySubcomponentEnabledProperty` stays false while that Property is false, and the speaker button disables itself).
+- **`audioOptions.supportsSound: true`** is what makes `Sim` call `soundManager.initialize()` and offer Audio preferences. It defaults from the same query parameter, so an `init`-only sim still initializes tambo — but a `main.ts`-only sim starts muted, because `enabledProperty` never leaves `false` and the speaker button is disabled. When sound is the only audio feature, the Preferences sound toggle is hidden too, so there is no in-sim control that can unmute it.
+
+```typescript
+// src/init.ts
+init({
+  supportsSound: true, // unmutes playback; pair with audioOptions in main.ts
+});
+
+// src/main.ts
+preferencesModel: new PreferencesModel({
+  audioOptions: {
+    supportsSound: true, // initializes tambo; pair with init.ts
+  },
+}),
+```
+
+A sim with no sound sets neither flag. `false` is the default; do not write `supportsSound: false` unless `audioOptions` is already present for another reason (voicing or custom audio controls) and sonification should stay off. In that case set `audioOptions.supportsSound: false` and leave `init` unset.
+
 ## Play a clip on an event
 
 ```typescript
@@ -50,6 +73,7 @@ preferences.uiSoundsEnabledProperty.link((enabled) => uiClick.setOutputLevel(ena
 
 ## Rules
 
+- Set `supportsSound: true` in both `src/init.ts` and `audioOptions`. One flag does not cover the other.
 - Register every generator with `soundManager.addSoundGenerator(...)`; don't touch the Web Audio API directly.
 - Sound is an enhancement, never required for understanding — the sim must be fully usable muted.
 - Import audio as the generated buffer module (`name_mp3.js`), not a file path or `<audio>` URL.
@@ -59,6 +83,7 @@ preferences.uiSoundsEnabledProperty.link((enabled) => uiClick.setOutputLevel(ena
 
 ## Common mistakes
 
+- Setting only `audioOptions.supportsSound` or only `init({ supportsSound })` → the sim launches, but clips stay muted or the navigation-bar speaker is disabled.
 - Newing up `new Audio(...)` / `AudioContext` instead of going through tambo → bypasses the master toggle and the audio graph.
 - A looping `SoundClip` that is `play()`ed but never `stop()`ped when the sim pauses → drone that ignores play/pause.
 - Creating a new clip on every collision → GC churn and overlapping voices; reuse one clip.
