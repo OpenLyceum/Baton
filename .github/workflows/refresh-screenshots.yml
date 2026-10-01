@@ -77,6 +77,9 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v8.1.1
         with:
+          # GITHUB_TOKEN cannot open PRs while can_approve_pull_request_reviews
+          # is off. FLEET_PAT is the org write token used by fleet-exec.
+          token: ${{ secrets.FLEET_PAT || github.token }}
           commit-message: "chore: refresh Pages screenshot thumbnails"
           title: "chore: refresh Pages screenshot thumbnails"
           body: |
