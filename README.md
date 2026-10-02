@@ -18,16 +18,19 @@ Pages simulation landing page.
 | [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) | Reusable GitHub Pages deploy workflow |
 | [`.github/workflows/shared-codeql.yml`](.github/workflows/shared-codeql.yml) | Reusable CodeQL analysis ([`doc/codeql.md`](doc/codeql.md)) |
 | [`.github/workflows/shared-dependency-review.yml`](.github/workflows/shared-dependency-review.yml) | Reusable dependency review |
-| [`.github/workflows/shared-compliance-check.yml`](.github/workflows/shared-compliance-check.yml) | README and repo-structure compliance audit |
+| [`.github/workflows/shared-compliance-check.yml`](.github/workflows/shared-compliance-check.yml) | README and repo-structure compliance audit; the weekly fleet run covers `active`, `draft` and `wip` sims, since structure rules apply from a sim's first commit |
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Build and deploy the org simulation index to GitHub Pages |
 | [`.github/workflows/optimize-assets.yml`](.github/workflows/optimize-assets.yml) | Regenerate WebP card thumbnails from screenshots and commit them back |
 | [`.github/workflows/refresh-screenshots.yml`](.github/workflows/refresh-screenshots.yml) | Weekly/manual refresh of card screenshots from live Pages → WebP thumbnails + `docs/index.html` (opens a PR) |
 | [`.github/workflows/fleet-exec.yml`](.github/workflows/fleet-exec.yml) | Fan a command across many repos and open one PR each (manual dispatch) |
-| [`.github/workflows/fleet-health.yml`](.github/workflows/fleet-health.yml) | Weekly lint / type-check / build / test of every simulation, reported as a table |
+| [`.github/workflows/fleet-health.yml`](.github/workflows/fleet-health.yml) | Weekly lint / type-check / build / test of every `active` simulation, reported as a table |
 | [`.github/workflows/gitlab-mirror.yml`](.github/workflows/gitlab-mirror.yml) | Daily push of every repo's git history to the GitLab backup group |
 | [`.github/workflows/sync-dependabot.yml`](.github/workflows/sync-dependabot.yml) | Validate the Dependabot templates |
 | [`.github/workflows/baton-selfcheck.yml`](.github/workflows/baton-selfcheck.yml) | Validate Baton's own invariants (skills, catalog schema, Node-version sync, script syntax) |
+| [`.github/dependabot.yml`](.github/dependabot.yml) | Dependabot for Baton itself (npm + Actions) |
 | [`scripts/`](scripts/) | Repo catalog tools, compliance checks, Dependabot/metadata sync, screenshots |
+| [`tests/`](tests/) | Bats tests for the scripts (`npx bats tests/`; run by `baton-selfcheck.yml`) |
+| [`screenshots/`](screenshots/) | Full-size sim screenshots the landing-page thumbnails are made from |
 | [`config/`](config/) | Canonical Dependabot, Claude-settings, and GitHub-repo-settings baselines |
 | [`structure/repos.json`](structure/repos.json) | Machine-readable catalog of org repositories |
 | [`structure/repos.schema.json`](structure/repos.schema.json) | JSON Schema for the catalog (`schemaVersion` 1.3.0) |
@@ -234,6 +237,8 @@ runs `setup-node` — bump them together:
 - [`.github/workflows/fleet-exec.yml`](.github/workflows/fleet-exec.yml) — `setup-node` step
 - [`.github/workflows/optimize-assets.yml`](.github/workflows/optimize-assets.yml) — `setup-node` step
 - [`.github/workflows/refresh-screenshots.yml`](.github/workflows/refresh-screenshots.yml) — `setup-node` step
+- [`.github/workflows/baton-selfcheck.yml`](.github/workflows/baton-selfcheck.yml) — `setup-node` step
+- [`.github/workflows/shared-compliance-check.yml`](.github/workflows/shared-compliance-check.yml) — `setup-node` steps (template drift)
 
 [`scripts/check-node-version.sh`](scripts/check-node-version.sh) enforces that they stay in
 sync (run in CI by [`baton-selfcheck.yml`](.github/workflows/baton-selfcheck.yml)), so a half-done

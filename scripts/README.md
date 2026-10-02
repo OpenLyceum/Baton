@@ -31,10 +31,12 @@ the monorepo checkout.
 | [`sync-claude-settings.sh`](sync-claude-settings.sh) | Roll the `scenerystack` Claude Code plugin out to sim repos' `.claude/settings.json` |
 | [`lib/repos.sh`](lib/repos.sh) | Bash helper functions for other scripts |
 | [`check-repo-compliance.sh`](check-repo-compliance.sh) | README/CI/structure compliance (bootstrap, i18n, memory-leak suite, KeyboardHelp, githooks, PWA, …) |
-| [`check-template-drift.sh`](check-template-drift.sh) | Content drift of template-owned files / scripts / deps vs SceneryStackTemplate (`--all`, `--fix`) |
+| [`check-template-drift.sh`](check-template-drift.sh) | Content drift of template-owned files / scripts / deps vs SceneryStackTemplate (`--all`, `--fix`); wraps [`check-template-drift.mjs`](check-template-drift.mjs), which reads `config/template-manifest.json` and honours AGENTS.md "Compliance carve-outs" |
 | [`check-skills.sh`](check-skills.sh) | Validate the `skills/` collection and its README index (Baton self-check) |
 | [`check-node-version.sh`](check-node-version.sh) | Assert fleet Node major agrees across workflows; with sibling checkouts, also engines.node / `@types/node` |
 | [`sync-dependabot.sh`](sync-dependabot.sh) | Copy Dependabot configs from `config/` to catalog npm/pip repos (see `structure/repos.json`) |
+| [`sync-repo-docs.sh`](sync-repo-docs.sh) | Rewrite org-qualified references in member repos (badges, LICENSE/CONTRIBUTING/SECURITY links, AGENTS.md cross-links, `repository` URLs, Pages URLs, `uses:` calls into Baton) to match the catalog; `--from OldOrg --dry-run` after an org rename |
+| [`retrofit-template-hardening.sh`](retrofit-template-hardening.sh) | Run [`retrofit-template-hardening.mjs`](retrofit-template-hardening.mjs) in the current sim (or under `fleet-exec`): idempotently ports hardening from SceneryStackTemplate; `SKIP_NPM_INSTALL`, `SKIP_ICONS`, `SKIP_CHECK` env switches |
 | [`generate-pages-index.sh`](generate-pages-index.sh) | Build `docs/index.html` simulation landing page |
 | [`make-thumbnails.mjs`](make-thumbnails.mjs) | Downscale `screenshots/*.png` to `docs/assets/*.webp` with sharp |
 | [`generate-screenshots.sh`](generate-screenshots.sh) | Capture each sim's screen to `<sim>/assets/screenshot.png` |

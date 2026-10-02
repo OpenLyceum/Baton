@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "screenshots/**"
       - "structure/repos.json"
       - "scripts/generate-pages-index.sh"
       - ".github/workflows/pages.yml"

@@ -58,7 +58,7 @@ Requires `gh` authenticated with access to update repository settings (`repo` sc
 | Secret scanning | on |
 | Secret scanning push protection | on |
 | Non-provider patterns / validity checks | off (matches fleet majority) |
-| Private vulnerability reporting | on (see [`SECURITY.md`](../SECURITY.md)) |
+| Private vulnerability reporting | on (see the org [`SECURITY.md`](https://github.com/OpenLyceum/.github/blob/main/SECURITY.md)) |
 
 ### Pages
 

@@ -1,4 +1,4 @@
-name: Sync Dependabot config
+name: Validate Dependabot templates
 
 on:
   workflow_dispatch:
@@ -6,7 +6,6 @@ on:
     branches: [main]
     paths:
       - "config/dependabot-*.yml"
-      - "scripts/sync-dependabot.sh"
 
 permissions:
   contents: read
@@ -26,6 +25,3 @@ jobs:
             grep -q '^version: 2$' "$file"
             grep -q '^updates:' "$file"
           done
-
-      - name: Validate sync script syntax
-        run: bash -n scripts/sync-dependabot.sh

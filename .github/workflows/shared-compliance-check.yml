@@ -34,14 +34,17 @@ jobs:
           repository: ${{ github.repository_owner }}/Baton
           path: .org-compliance
 
+      # Inputs and event fields reach the script through env, never by direct
+      # ${{ }} interpolation into the shell.
       - name: Run compliance checks
+        env:
+          INPUT_REPO: ${{ inputs.repo-name }}
+          CALLER_REPO: ${{ github.event.repository.name }}
+          OWNER: ${{ github.repository_owner }}
         run: |
-          REPO="${{ inputs.repo-name }}"
-          if [ -z "$REPO" ]; then
-            REPO="${{ github.event.repository.name }}"
-          fi
+          REPO="${INPUT_REPO:-$CALLER_REPO}"
           echo "Checking repository: $REPO"
-          GITHUB_REPOSITORY="${{ github.repository_owner }}/$REPO" \
+          GITHUB_REPOSITORY="$OWNER/$REPO" \
             bash .org-compliance/scripts/check-repo-compliance.sh "$PWD"
 
       # Template drift is advisory in a sim's own CI: a template change would otherwise
@@ -54,14 +57,20 @@ jobs:
           repository: ${{ github.repository_owner }}/SceneryStackTemplate
           path: .org-template
 
+      - uses: actions/setup-node@v7.0.0
+        if: hashFiles('src/main.ts') != ''
+        with:
+          # Mirrors the fleet Node default — bump all setup-node workflows together.
+          node-version: "24"
+
       - name: Template drift (advisory)
         if: hashFiles('src/main.ts') != ''
         continue-on-error: true
+        env:
+          INPUT_REPO: ${{ inputs.repo-name }}
+          CALLER_REPO: ${{ github.event.repository.name }}
         run: |
-          REPO="${{ inputs.repo-name }}"
-          if [ -z "$REPO" ]; then
-            REPO="${{ github.event.repository.name }}"
-          fi
+          REPO="${INPUT_REPO:-$CALLER_REPO}"
           if ! node .org-compliance/scripts/check-template-drift.mjs --template .org-template --dir "$PWD" --name "$REPO"; then
             echo "::warning title=Template drift::$REPO differs from SceneryStackTemplate — run Baton/scripts/check-template-drift.sh --fix $REPO (or add a Compliance carve-out)"
             exit 1
@@ -83,6 +92,9 @@ jobs:
         id: list
         run: |
           set -euo pipefail
+          # Deliberately wider than fleet-health.yml (active only): structure and
+          # README rules apply from a sim's first commit, while lint/build/test
+          # health is only tracked once a sim is active.
           matrix=$(jq -c '[.repos[] | select(.isSimulation == true and (.status == "active" or .status == "draft" or .status == "wip")) | .name]' structure/repos.json)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
@@ -103,20 +115,26 @@ jobs:
           repository: ${{ github.repository_owner }}/SceneryStackTemplate
           path: .org-template
 
+      - uses: actions/setup-node@v7.0.0
+        with:
+          # Mirrors the fleet Node default — bump all setup-node workflows together.
+          node-version: "24"
+
       - name: Audit ${{ matrix.sim }}
         env:
           GH_TOKEN: ${{ github.token }}
           SIM: ${{ matrix.sim }}
+          OWNER: ${{ github.repository_owner }}
         run: |
           set -uo pipefail
           WORKDIR=$(mktemp -d)
-          if ! gh repo clone "${{ github.repository_owner }}/$SIM" "$WORKDIR" -- --depth 1 --quiet; then
+          if ! gh repo clone "$OWNER/$SIM" "$WORKDIR" -- --depth 1 --quiet; then
             echo "| $SIM | ❌ clone | – |" > "row-$SIM.md"
             exit 1
           fi
           rc=0
           compliance="✅"
-          if ! GITHUB_REPOSITORY="${{ github.repository_owner }}/$SIM" ./scripts/check-repo-compliance.sh "$WORKDIR"; then
+          if ! GITHUB_REPOSITORY="$OWNER/$SIM" ./scripts/check-repo-compliance.sh "$WORKDIR"; then
             compliance="❌"
             rc=1
           fi

@@ -19,6 +19,10 @@ on:
 
 permissions:
   contents: write
+  # Pushes made with GITHUB_TOKEN do not trigger other workflows, so the
+  # thumbnail commit dispatches pages.yml explicitly (workflow_dispatch is the
+  # documented exception).
+  actions: write
 
 concurrency:
   group: optimize-assets-${{ github.ref }}
@@ -36,12 +40,17 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+        env:
+          # Thumbnails only need sharp; skip the Playwright browser download.
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Regenerate WebP thumbnails
         run: npm run thumbnails
 
       - name: Commit refreshed thumbnails
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -n "$(git status --porcelain docs/assets)" ]; then
             git config user.name "github-actions[bot]"
@@ -49,6 +58,7 @@ jobs:
             git add docs/assets
             git commit -m "chore: refresh WebP thumbnails [skip ci]"
             git push
+            gh workflow run pages.yml --ref "${GITHUB_REF_NAME}"
           else
             echo "Thumbnails already up to date."
           fi
