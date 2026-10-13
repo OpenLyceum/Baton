@@ -57,7 +57,7 @@ jobs:
           repository: ${{ github.repository_owner }}/SceneryStackTemplate
           path: .org-template
 
-      - uses: actions/setup-node@v7.0.0
+      - uses: actions/setup-node@v7.1.0
         if: hashFiles('src/main.ts') != ''
         with:
           # Mirrors the fleet Node default — bump all setup-node workflows together.
@@ -115,7 +115,7 @@ jobs:
           repository: ${{ github.repository_owner }}/SceneryStackTemplate
           path: .org-template
 
-      - uses: actions/setup-node@v7.0.0
+      - uses: actions/setup-node@v7.1.0
         with:
           # Mirrors the fleet Node default — bump all setup-node workflows together.
           node-version: "24"
