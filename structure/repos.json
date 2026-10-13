@@ -304,6 +304,33 @@
       "status": "active"
     },
     {
+      "name": "ElectricFieldMapper",
+      "displayName": "Electric Field Mapper",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore electric fields and potential from movable point charges with vector arrows, field lines, and a measuring probe.",
+      "deployedUrl": "https://openlyceum.github.io/ElectricFieldMapper",
+      "physicsTopics": [
+        "electrostatics",
+        "electric fields",
+        "electric potential",
+        "Coulomb's law"
+      ],
+      "screens": [
+        {
+          "id": "explore",
+          "title": "Explore"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "ElectricFieldOfDreams",
       "displayName": "Electric Field of Dreams",
       "type": "simulation",

@@ -58,7 +58,7 @@ jobs:
       matrix:
         sim: ${{ fromJson(needs.discover.outputs.matrix) }}
     steps:
-      - uses: actions/setup-node@v7.0.0
+      - uses: actions/setup-node@v7.1.0
         with:
           # Mirrors the fleet Node default — bump all setup-node workflows together.
           # See Baton/README.md ("Node version").
@@ -134,7 +134,7 @@ jobs:
 
       - name: Upload row
         if: always()
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: health-row-${{ matrix.sim }}
           path: row-${{ matrix.sim }}.md
@@ -146,7 +146,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download rows
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           pattern: health-row-*
           path: rows
