@@ -70,9 +70,13 @@ const resetAll = new ResetAllButton({
 });
 
 const timeControl = new TimeControlNode(model.isPlayingProperty, {
-  playPauseStepButtonOptions: { stepForwardButtonOptions: { listener: () => model.step(STEP_DT) } },
+  playPauseStepButtonOptions: { stepForwardButtonOptions: { listener: () => model.stepOnce() } },
 });
 ```
+
+`stepOnce()` above is a sim-owned method, not a framework API: implement it to advance one configured interval while retaining pause, or use the model's existing forced-step path. Verify the actual button callback advances time and state while ordinary paused frames do not. Transport enablement follows retained-history and duration bounds.
+
+Preset/harmonic actions must establish the state their result requires (for example enable the driver before setting a driven steady state). Test from a conflicting initial mode rather than only from the default.
 
 ## Themed Panel and Dialog
 

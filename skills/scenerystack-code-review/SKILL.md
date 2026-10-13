@@ -15,15 +15,13 @@ scenerystack-testing.
 
 ## How to run a review
 
-1. Create a GitHub issue titled **"Code Review"** labeled `dev:code-review`, assigned to the reviewer.
-2. Paste the **Checklist** section below into it (drop this skill's heading/intro).
-3. Fill in or delete **Specific Instructions**; replace each `{{ISSUE}}` with a real issue link.
-4. Delete or ~~strike through~~ items and whole sections that don't apply (e.g. the sim has no sounds).
-5. A checked box means **"reviewed"**, not "no problem here". File problems as side issues that
-   reference the review, or as `// REVIEW` comments in the code.
+Choose the requested scope: a targeted functional review follows the relevant model/control paths; a full pre-release CRC uses the checklist below. Read [Functional review checks](references/functional-review.md) when reviewing time controls, recordings, state transitions, numerical solvers, or resource lifecycles.
 
-When running this as an automated pass, work top-down: stop at the first **Build & Run** failure and
-report it, since later items assume a building sim.
+For a local/automated review, record scope, actionable findings, fixes, validation, and limitations in `doc/`. Create or update GitHub review/companion issues only when the user requests that workflow; a local review does not require them. For a release CRC, track missing designer/performance/accessibility sign-offs as release gaps without blocking unrelated source analysis.
+
+Use the existing scripts for lint, app/scripts/test type checks, tests, build, and applicable compliance checks. A failing prerequisite limits what can be validated: investigate/report it, and continue independent source analysis when useful. Distinguish pre-existing failures from regressions. Fix confirmed defects within the requested scope, preserve unrelated working-tree changes, and add focused regressions where they demonstrate the failure.
+
+Checked checklist boxes mean the item was reviewed; report any finding separately. Distinguish local compliance from unavailable remote security probes. Record actual Node version and any mismatch with the repository requirement. Dependency/security/configuration maintenance does not count as a functional review of physics or controls.
 
 ---
 
@@ -36,7 +34,7 @@ Delete if none.*
 
 ### Companion Issues
 
-These standard issues should exist and be complete. If any are missing, pause the review.
+For a full release CRC, track these companion deliverables and their sign-offs. Missing deliverables are release gaps; targeted functional reviews need only the relevant evidence.
 
 - [ ] `doc/model.md` — {{ISSUE}}. Describes the model for educators; reviewed by the sim designer.
 - [ ] `doc/implementation-notes.md` — {{ISSUE}}. Useful overview for future maintainers.
@@ -48,7 +46,7 @@ These standard issues should exist and be complete. If any are missing, pause th
 
 ### Build & Run
 
-*If any item here fails, pause the review.*
+*Report failing prerequisites and their effect on validation; continue independent source review where possible.*
 
 - [ ] `npm run check` passes (`tsc --noEmit` for app, scripts, and tests) with no type errors.
 - [ ] `npm run lint` (Biome) reports no errors.
@@ -129,8 +127,7 @@ by hand:
   `<Prefix>Namespace.ts` / `<Prefix>Colors.ts` / `*Constants.ts` at `src/` root;
   `src/preferences/` and `src/i18n/` file presence plus locale parity; `tests/` layout, the
   memory-leak suite, and `--expose-gc`; `.githooks/`; the PWA manifest, assets, and
-  `index.html` meta; the `biome.json` schema pin; and repo security settings. If it fails,
-  fix that first — see [`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist" for the
+  `index.html` meta; the `biome.json` schema pin; and repo security settings. Report failures and distinguish local checks from unavailable remote probes — see [`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist" for the
   full auto/manual split.
 
 What the gate can't judge — check these by eye:

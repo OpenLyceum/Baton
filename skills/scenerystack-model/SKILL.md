@@ -60,7 +60,19 @@ Expose read-only state to the view as `TReadOnlyProperty<T>` so the view can obs
 
 ## The frame loop
 
-`step(dt)` is called every animation frame with elapsed **seconds**. Keep physics here, integrate with `dt`, and gate on `isRunningProperty`. Some sims run a fixed-timestep loop (`model.step(FIXED_DT)`) inside the screen's step for numerical stability — follow the sim's existing pattern (see scenerystack-numerics).
+Joist calls the active screen model's `step(dt)` before the view's `step(dt)`, with elapsed **seconds**. Keep physics and playback gating here; subdivide inside the model when needed (see scenerystack-numerics). A view must not also advance that screen model.
+
+Expose an explicit manual-step path that bypasses the playback gate while preserving pause, such as `stepOnce()` or an existing force-step argument. Calling the ordinary gated `step()` from a paused Step button does nothing. Avoid toggling playback temporarily: listeners may start unrelated work.
+
+## State transitions, sampling, and history
+
+- Reset the physical state before reseeding samplers. Clear fractional integration/emission accumulators, derivative buffers, cached averages, measured rates, and pending strategy edits when the action starts a fresh run. Presets and Clear Counts need their own documented scope; do not reset unrelated preferences or tools.
+- On strategy changes, initialize from the current position and controls, then discard obsolete queued updates. Edits, undo, and redo must invalidate inspection cursors and caches that would otherwise show an old state.
+- A sampled readout updates after the newest sample is appended. Derived velocities/accelerations need timestamps consistent with their stencil. Cache invalidation includes clock changes, even while paused; refreshing a dirty field with `step(0)` must not advance physics.
+- Recording captures the current state at time zero before the first advance, including paused input edits and runs started by Step. Playback/seek applies the cursor state immediately and uses recorded state rather than a stale live-model end state.
+- Clamp the last recording interval to the remaining duration, capture the endpoint, and pause immediately. Step/seek stays within retained history. Use one time scale for scrubber track, handle, and pointer mapping; navigation starts from the displayed bounded time after duration changes.
+- Rewind of dissipative or chaotic motion restores saved state and physical parameters. Resuming branches history by discarding the old future. Reset/preset clears history even if time was already zero; timestamped trails trim on rewind and remain during pause.
+- Resumed acquisition uses each previous sample's end time, not sample count times the current interval. Capture per-sample settings so rate changes do not rewrite old timestamps.
 
 ## GPU-only state (documented carve-out)
 

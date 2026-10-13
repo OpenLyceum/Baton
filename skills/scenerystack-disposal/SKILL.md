@@ -60,6 +60,12 @@ speedProperty.dispose();   // unlinks from velocityProperty for you
 
 For a node tied 1:1 to a model element, link cleanup to the model element's own removal Emitter instead of writing manual bookkeeping.
 
+## Owned node trees and asynchronous resources
+
+Removing or disposing a parent is not evidence that every owned child, trace, tool, or derived accessibility Property was disposed. Inspect ownership explicitly. Unlink repaint listeners on global color Properties as well as model Properties, and dispose owned children that subscribe externally. When both are disposable, tear down views before models so unlinking still has live dependencies.
+
+For asynchronous acquisition (microphone, sensor, device), invalidate the current request on Stop, reset, screen deactivation, or disposal. A generation/token check after each await, including audio resume, prevents an obsolete completion from updating status or replacing a newer error. Release resources returned by stale requests without tearing down a newer session. Record ownership as soon as each resource is created so partial startup failures can stop tracks, disconnect nodes, and close owned contexts.
+
 ## Dynamic collections
 
 When the view mirrors a model `createObservableArray()`, add a node on `addItemAddedListener` and **dispose it** on `addItemRemovedListener`:
@@ -86,7 +92,7 @@ model.particles.addItemAddedListener((particle) => {
 - Remove a child from the scene graph **and** call `child.dispose()`; `removeChild` alone does not dispose.
 - Long-lived singletons (model, root ScreenView) don't need disposal — but anything they spawn per-object does.
 - Mark a class that must never be disposed with `isDisposable: false` so an accidental `dispose()` throws instead of silently half-tearing-down.
-- Listeners on a node's **own** child are fine to leave — they die with the node. The danger is linking to something *external* and longer-lived.
+- Owned children still require their own teardown when they subscribe externally; scene-graph ownership alone does not release global/model listeners.
 
 ## Common mistakes
 

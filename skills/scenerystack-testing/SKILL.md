@@ -87,7 +87,19 @@ Ship `tests/memory-leak.test.ts` modeled on SceneryStackTemplate / QubitSketch:
   boundaries, sign flips).
 - **`reset()` completeness:** after mutating state, `reset()` restores initial values.
 - **Derived quantities:** `DerivedProperty` recomputes when dependencies change.
-- **Not** Scenery layout/rendering — covered by build + optional fuzz.
+- **Rendering/layout:** use targeted browser tests when behavior depends on focus, input routing, or rendering; a build and random fuzz alone do not establish correctness.
+
+## Regressions from functional reviews
+
+Exercise the failing transition, not just a helper in isolation: paused Step, first recording snapshot after input edits, a final partial interval, duration shortened before backward Step, changed sample interval on resume, reset/release after sampling, or a mode switch with queued edits. Where practical, confirm the regression fails with the old behavior and passes after the fix.
+
+Use independent expected values (analytic formulas, finite differences, reference sampling) for numerical checks. Include zero/invalid dt and exact event endpoints. For cancellation, control promises so Stop/disposal happens during both acquisition and resume; then resolve/reject the old request while a newer one is active.
+
+Focus the actual PDOM target and press a key to prove a keyboard listener is reachable. For disposal, collect the real node/helper against still-live global/model Properties and repeat create/dispose cycles; collecting a stand-alone NumberProperty only validates the harness.
+
+Keep validation claims proportional to evidence: mocked sensor tests do not test hardware; shader/binding checks do not establish GPU solver accuracy; short fuzz does not replace deterministic transport or keyboard regressions. Record skipped integration checks and the runtime used.
+
+If running multiple browser suites concurrently, use distinct `FUZZ_PORT` values supported by the harness. Investigate resource-contention failures and repeat the affected suite in isolation rather than weakening timeouts or assertions without evidence.
 
 ## Optional Playwright fuzz
 
@@ -141,7 +153,7 @@ keep them out of the default `npm test` path and document skip conditions in the
 
 - Put tests only under root `tests/`, mirroring the source tree; setup file is
   `tests/setup.ts` (CONVENTIONS §5).
-- Test the model, not the view.
+- Prefer model tests for math/state; use browser interaction tests for focus and control wiring, and targeted view lifecycle tests for external listener cleanup.
 - Import sim source through the `src/…/*.js` path (`verbatimModuleSyntax`).
 - Always include a `reset()` test for any model with state.
 - Document the vitest `environment` in the sim's `AGENTS.md`; don't change it casually.

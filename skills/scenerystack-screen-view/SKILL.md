@@ -64,7 +64,7 @@ A single-screen sim still has exactly one `Screen` (the home-screen selector is 
 
 ## The ScreenView
 
-`ScreenView` is the root node. Build the scene graph in its constructor, position against `layoutBounds` (see scenerystack-layout), and forward the frame loop to the model in `step(dt)`:
+`ScreenView` is the root node. Build the scene graph in its constructor, position against `layoutBounds` (see scenerystack-layout), and use `step(dt)` for view-only updates. Joist steps the active screen model before its view; do not advance it again here:
 
 ```typescript
 import { ScreenView, type ScreenViewOptions } from "scenerystack/sim";
@@ -76,11 +76,9 @@ export class DopplerEffectScreenView extends ScreenView {
     // … add child nodes, controls, ResetAllButton (see scenerystack-ui-controls) …
   }
 
-  // called every animation frame; advance the model here (not in the model itself)
-  public override step(dt: number): void {
-    if (this.model.isPlayingProperty.value) {
-      this.model.step(dt);
-    }
+  // Joist already advanced the model. Update rendering/tools here if needed.
+  public override step(_dt: number): void {
+    // View-only animation updates.
   }
 
   public reset(): void { /* reset view-only state; model.reset() is called by ResetAllButton */ }
@@ -127,7 +125,8 @@ from the SVG brand icon (app icons still come from `npm run icons`).
 - Import `Sim` / `Screen` / `ScreenView` / `ScreenIcon` / `onReadyToLaunch` from
   **`scenerystack/sim`** (not a hand-rolled `joist` path).
 - The `Screen` constructor takes **factories** (`() => model`, `(model) => view`), not pre-built instances — let joist call them.
-- The `ScreenView` owns the per-frame `step(dt)` and decides whether to advance the model (gate on `isPlayingProperty`); the model's own `step` does the physics (see scenerystack-model).
+- Joist calls the active screen model's `step(dt)` and then the view's `step(dt)`. Gate playback in the model; never add a second model advance in the view (see scenerystack-model).
+- Graphs, trails, and simulation stopwatches follow changes in model time, including forced paused steps. Paused rendering frames add no samples; rewind trims samples from the abandoned future.
 - Set `backgroundColorProperty` from `*Colors.ts` so projector mode works (see scenerystack-color-profiles).
 - Use `optionize` with `ScreenOptions`/`ScreenViewOptions` as the parent type (see scenerystack-optionize).
 - Keep `main.ts`'s bootstrap import order intact — `./brand.js` first (CONVENTIONS §1).
@@ -137,9 +136,9 @@ from the SVG brand icon (app icons still come from `npm run icons`).
 ## Common mistakes
 
 - Passing `new Model()` / `new View()` instances to `Screen` instead of factory functions.
-- Calling `model.step(dt)` unconditionally in the ScreenView, ignoring play/pause.
+- Calling `model.step(dt)` from the ScreenView when joist already steps it → physics advances twice per frame.
 - Hardcoding the background color instead of a `ProfileColorProperty`.
-- Putting physics in `ScreenView.step` — it belongs in the model; the view only forwards `dt`.
+- Putting physics in `ScreenView.step` — it belongs in the model; the view updates presentation and tools.
 - Reordering `main.ts` imports so `brand.js` is no longer first → breaks the bootstrap chain.
 - Multi-screen sims with no `homeScreenIcon` / hardcoded bitmap icons that ignore `*Colors`.
 

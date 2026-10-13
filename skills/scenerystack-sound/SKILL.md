@@ -5,7 +5,7 @@ description: Use when adding sound to a simulation — UI feedback sounds, sonif
 
 # SceneryStack Sound
 
-Sound is handled by **`scenerystack/tambo`**. You register `SoundGenerator`s (most often a `SoundClip` wrapping an audio file) with the global `soundManager`; tambo plays them through the shared audio graph and respects the user's master sound toggle and the Preferences "Sound" control automatically. Never create raw `AudioContext`/`Audio` objects.
+Sound is handled by **`scenerystack/tambo`**. You register `SoundGenerator`s (most often a `SoundClip` wrapping an audio file) with the global `soundManager`; tambo plays them through the shared audio graph and respects the user's master sound toggle and the Preferences "Sound" control automatically. Use tambo for output sound. Microphone acquisition and analysis may need an owned Web Audio graph; that is a separate input-resource lifecycle, not a replacement for soundManager.
 
 ## Turn sound on in both places
 
@@ -74,7 +74,7 @@ preferences.uiSoundsEnabledProperty.link((enabled) => uiClick.setOutputLevel(ena
 ## Rules
 
 - Set `supportsSound: true` in both `src/init.ts` and `audioOptions`. One flag does not cover the other.
-- Register every generator with `soundManager.addSoundGenerator(...)`; don't touch the Web Audio API directly.
+- Register output generators with `soundManager.addSoundGenerator(...)`. Document direct Web Audio used for microphone acquisition/analysis and give it explicit cancellation and teardown (see scenerystack-disposal).
 - Sound is an enhancement, never required for understanding — the sim must be fully usable muted.
 - Import audio as the generated buffer module (`name_mp3.js`), not a file path or `<audio>` URL.
 - Reuse one `SoundClip` instance and call `play()` repeatedly; don't construct a clip per event.

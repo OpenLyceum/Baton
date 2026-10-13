@@ -16,7 +16,7 @@ private accumulator = 0;
 private static readonly FIXED_DT = 1 / 120;   // s — in *Constants.ts, not inline
 
 public step(dt: number): void {
-  if (!this.isRunningProperty.value) return;
+  if (!this.isRunningProperty.value || !Number.isFinite(dt) || dt <= 0) return;
   // clamp a huge dt (e.g. returning to a backgrounded tab) so we don't spiral
   this.accumulator += Math.min(dt, 0.1);
   while (this.accumulator >= SimModel.FIXED_DT) {
@@ -25,6 +25,14 @@ public step(dt: number): void {
   }
 }
 ```
+
+## Duration and boundary contracts
+
+Reject nonfinite durations before integration. A forward-only advance treats zero and negative durations as no-ops; do not force a minimum substep. A separate paused refresh may recompute dirty derived fields without changing time. If an API intentionally supports signed integration, subdivide by `abs(dt)` and apply the sign to each substep; keep that distinct from history-based rewind.
+
+Define what happens to excess frame time when catch-up is capped. Reset any residual accumulator for a fresh run. Include equality in event/recording-limit crossings so an event exactly at a frame endpoint is handled once rather than skipped.
+
+Keep input bounds distinct from integration bounds: a slider/drag range need not clamp solver state. If a physical wall is enabled while an object is outside it, resolve the contact immediately. Collision tests include all domain edges and out-of-domain positions, not only cells inside the grid.
 
 ## Choosing an integrator
 
@@ -39,6 +47,12 @@ private integrate(dt: number): void {
   this.position = this.position.plus(this.velocity.timesScalar(dt));  // then x with new v
 }
 ```
+
+## Solver and equation checks
+
+Preserve the state-vector layout used by every solver and mapper (for example interleaved position/velocity pairs). Splitting integrators such as PEFRL assume separable position/velocity dynamics; damping or velocity-dependent coupling may require an RK fallback. Check compatibility when parameters change, and keep the fallback on the selected timestep.
+
+Validate derivatives against an independent calculation, such as finite differences of position at zero and nonzero drive amplitude. Check analytical energy expressions independently of the force implementation. For grading discrete measurements, compare the unrounded answer to the expected tick with a small conversion tolerance; rounding to a tick first can award credit to invalid answers.
 
 ## dot utilities — don't reinvent
 
