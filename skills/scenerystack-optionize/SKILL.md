@@ -22,7 +22,7 @@ type HudNodeSelfOptions = {
 // public surface = my options + everything Panel accepts
 type HudNodeOptions = HudNodeSelfOptions & PanelOptions;
 
-export default class HudNode extends Panel {
+export class HudNode extends Panel {
   public constructor(model: MazeGameModel, providedOptions?: HudNodeOptions) {
     const options = optionize<HudNodeOptions, HudNodeSelfOptions, PanelOptions>()(
       {

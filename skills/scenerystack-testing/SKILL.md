@@ -1,6 +1,6 @@
 ---
 name: scenerystack-testing
-description: Use when adding or changing unit tests for a simulation — writing vitest specs for model/physics code, setting up the test harness, or adding fuzz/Playwright specs. Covers the standardized tests/ layout, vitest config, memory-leak suites (forceGC early-exit), what is worth testing, optional Playwright fuzz, and WebGPU launch flags for GPU sims.
+description: Use when adding or changing unit tests for a simulation — writing vitest specs for model/physics code, listing disposables in the memory-leak suite, or adding fuzz/Playwright specs. Covers the standardized tests/ layout, the template-owned setup and describeDisposalLeaks harness (idempotentDispose, forceGC early-exit), what is worth testing, pointer + keyboard fuzz, tests/browser specs, and WebGPU launch flags for GPU sims.
 ---
 
 # SceneryStack Testing
@@ -18,24 +18,26 @@ reference (CONVENTIONS §5).
 
 ```
 tests/
-  setup.ts                 vitest setup (Canvas/Audio mocks, init({ name }))
-                           — happy-dom default; see carve-out below
-  memory-leak.test.ts      WeakRef + --expose-gc dispose regression (fleet pattern)
-  **/*.test.ts             unit tests, mirroring the source tree under tests/
-  **/*.spec.ts             Playwright specs, if any (e.g. tests/fuzz/)
-vitest.config.ts           include: ["tests/**/*.test.ts"];
-                           setupFiles: ["./tests/setup.ts"]  // happy-dom sims
-                           execArgv: ["--expose-gc"]         // required with leak suite
+  setup.ts                 template-owned: Canvas/WebGPU-safe getContext, AudioContext and
+                           no-op Worker mocks, init({ name })
+  helpers/memoryLeak.ts    template-owned leak harness (forceGC, describeDisposalLeaks)
+  memory-leak.test.ts      lists the sim's disposables (fleet pattern)
+  **/*.test.ts             Vitest unit tests, mirroring the source tree under tests/
+  fuzz/fuzz.spec.ts        template-owned Playwright fuzz smoke (npm run test:fuzz)
+  browser/*.spec.ts        sim-specific Playwright specs (engine, focus, screenshots)
+vitest.config.ts           environment: "happy-dom"; include: ["tests/**/*.test.ts"];
+                           setupFiles: ["./tests/setup.ts"]; execArgv: ["--expose-gc"]
 ```
 
-Tests live **only** under root `tests/` — never co-located next to source, never in
-`__tests__/` (the compliance gate fails on those). Mirror the source path: a test for
+Tests live **only** under root `tests/`. Never co-locate them next to source or use
+`__tests__/`; the compliance gate fails both. Mirror the source path: a test for
 `src/optics-lab/model/Lens.ts` is `tests/optics-lab/model/Lens.test.ts`.
 
-**Documented carve-out:** pure-math suites that alias `scenerystack` → `scenerystack/dot`
-(jsdom) or run under `node` (no DOM) may omit `tests/setup.ts` / `setupFiles` when no Canvas
-or `init()` is needed — note that in the sim's `AGENTS.md` (DopplerEffect,
-VariableStarPhotometry, WaveComposer). See CONVENTIONS §5.
+Every sim runs Vitest under happy-dom with the shared `tests/setup.ts`; `jsdom` is no longer
+a fleet dependency. `setup.ts`, `helpers/memoryLeak.ts` and `fuzz/fuzz.spec.ts` are
+template-owned. Change them in SceneryStackTemplate and sync, never per sim
+(`Baton/scripts/check-template-drift.sh <Sim>` flags local edits). Biome allows `!` and
+skips `useExplicitType` under `tests/**`.
 
 ## A model unit test
 
@@ -68,17 +70,42 @@ describe("LensModel", () => {
 
 ## Memory-leak suite
 
-Ship `tests/memory-leak.test.ts` modeled on SceneryStackTemplate / QubitSketch:
+`tests/memory-leak.test.ts` lists the sim's disposables and hands them to the shared harness.
+Do not copy a private `forceGC`; the compliance gate fails a suite that bypasses
+`tests/helpers/memoryLeak.ts`.
 
-- Require `execArgv: ["--expose-gc"]` in `vitest.config.ts`.
-- Allocate inside a **function** boundary, call `dispose()`, hold a `WeakRef`, then
-  call `forceGC(ref)` (or `forceGC(refs)`) until the ref is cleared.
-- **Always pass the `WeakRef`(s) into `forceGC`.** The template helper early-exits once
-  every ref is collected. Calling `forceGC()` with no args runs all GC passes and can
-  exceed Vitest's `testTimeout` on a slow `gc()`.
-- Prefer disposing a real model (`TimeModel`, screen model, or a known disposable helper
-  like Resonance `ListenerTracker`). When the sim has no disposable model yet, dispose a
-  `NumberProperty` to keep the harness green and document the gap.
+```typescript
+import { NumberProperty } from "scenerystack/axon";
+import { ResistorNode } from "../src/common/view/ResistorNode.js";
+import { LabModel } from "../src/lab/model/LabModel.js";
+import { LabPreferencesModel } from "../src/preferences/LabPreferencesModel.js";
+import { describeDisposalLeaks } from "./helpers/memoryLeak.js";
+
+// Outlives every case, like model state outlives a node.
+const resistanceProperty = new NumberProperty(100);
+
+describeDisposalLeaks([
+  { name: "LabModel", create: () => new LabModel(new LabPreferencesModel()) },
+  { name: "ResistorNode", create: () => new ResistorNode(resistanceProperty) },
+]);
+```
+
+For each case the harness checks the instance is collected after `dispose()` and that
+repeated create/dispose cycles leave no survivors.
+
+- **List real objects.** Include every model or view class that links Properties, adds
+  listeners, or owns child nodes. Pass long-lived Properties in from outside, as the screen
+  would, so the test proves the object unlinks from state that outlives it.
+- **`idempotentDispose` is opt-in.** axon Properties and `Disposable` throw on a second
+  `dispose()` by design. Set `idempotentDispose: true` only for objects that promise it
+  (the template's `TimeModel`).
+- **Sim-specific leak tests** go below the `describeDisposalLeaks` call in the same file and
+  use the harness's exported `forceGC(ref)`. Always pass the `WeakRef`(s). Without them
+  `forceGC` runs every GC pass and can exceed Vitest's `testTimeout`. Allocate inside a
+  **function** (not a block) so V8 can collect the locals.
+- If the sim deleted the template's unused `TimeModel`, delete its `TimeModel` case and
+  `tests/TimeModel.test.ts` too. A suite that only disposes a stand-alone `NumberProperty`
+  proves the harness runs, nothing more. Record that gap.
 - Dynamic sims that add/remove nodes at runtime should expand the suite like OpticsLab.
 
 ## What to test
@@ -101,13 +128,20 @@ Keep validation claims proportional to evidence: mocked sensor tests do not test
 
 If running multiple browser suites concurrently, use distinct `FUZZ_PORT` values supported by the harness. Investigate resource-contention failures and repeat the affected suite in isolation rather than weakening timeouts or assertions without evidence.
 
-## Optional Playwright fuzz
+## Playwright fuzz and browser specs
 
 SceneryStackTemplate ships `tests/fuzz/fuzz.spec.ts` + `playwright.config.ts` +
 `scripts/test-fuzz.ts` with `npm run test:fuzz` / `test:fuzz:quick` / `test:fuzz:long`.
-Fuzz uses joist's `?fuzz&ea` query parameters (fuzz plus enable-assertions) and fails on
-console/`pageerror` or an assertion failure. Use it for pre-release / CRC stress; it is not
-required in the default CI path.
+The spec runs two modes: pointer fuzz (`?fuzz&ea`) and keyboard fuzz through the PDOM
+(`?fuzzBoard&ea`). Each fails on a console error, a `pageerror`, or an assertion. Fleet
+Health runs `test:fuzz:quick` for every sim, so a fuzz failure is a fleet-visible red, not
+an optional extra. The Playwright config also fixes a geolocation and enables WebGPU so
+sims that need either run deterministically.
+
+`test:fuzz` runs **only** `tests/fuzz/`. Put any other browser spec (WebGPU engines,
+focus routing, screenshot checks) in `tests/browser/` and run it with `npx playwright test
+tests/browser`. Keep it out of the fuzz smoke so a slow engine suite cannot time out Fleet
+Health.
 
 Duration is **30 seconds** by default. Change it without editing the spec:
 
@@ -118,17 +152,19 @@ npm run test:fuzz:long            # 300s
 npm run test:fuzz -- 90           # 90s
 npm run test:fuzz -- --duration 90
 FUZZ_DURATION=90 npm run test:fuzz
+FUZZ_PORT=5181 npm run test:fuzz  # parallel runs need distinct dev-server ports
 ```
 
 `scripts/test-fuzz.ts` forwards extra Playwright args (`npm run test:fuzz -- 60 --headed`).
 The Playwright test timeout is `FUZZ_DURATION + 120s` so a long run is not killed by the
-default 5-minute cap. Always include `&ea` in the fuzz URL — without it assertions are silent.
+default 5-minute cap. Always include `&ea` in a fuzz URL; without it assertions are silent.
+A CSP error in the console fails fuzz too. The template's `script-src-attr` hashes exist for
+exactly that reason (see its `vite.config.ts`).
 
 ## WebGPU / GPU sims in Playwright
 
 Headless Chromium often returns `null` from `navigator.gpu.requestAdapter()` unless
-launched with WebGPU enabled. For engine / screenshot suites (e.g. FluidDynamics
-`tests/fuzz/engine.spec.ts`):
+launched with WebGPU enabled. For engine / screenshot suites in `tests/browser/` (e.g. the FluidDynamics engine spec):
 
 ```typescript
 chromium.launch({
@@ -168,6 +204,10 @@ keep them out of the default `npm test` path and document skip conditions in the
 - Skipping the `reset()` test — the single highest-value model test.
 - Memory-leak helpers that allocate in a block scope (not a function) — V8 won't collect.
 - Calling `forceGC()` with no `WeakRef` args → suite times out instead of early-exiting.
+- A private `forceGC` copy in `memory-leak.test.ts` instead of `describeDisposalLeaks` → compliance failure.
+- `idempotentDispose: true` on an axon-backed object → the second `dispose()` throws by design.
+- A browser spec under `tests/fuzz/` → it runs inside every `test:fuzz` and Fleet Health smoke.
+- Editing `tests/setup.ts` or `tests/helpers/memoryLeak.ts` in one sim → template drift; change the template.
 - Assuming WebGPU works in Playwright without the launch flags above → adapter is `null`.
 
 Related skills: scenerystack-model, scenerystack-code-review, scenerystack-disposal,

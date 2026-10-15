@@ -35,6 +35,7 @@ export default DopplerEffectColors;
 - First arg is the sim **namespace** (`new Namespace("doppler-effect")` — the kebab-case sim id — exported as the default from `*Namespace.ts`, imported with the `.js` extension).
 - Second arg is a **unique string key** — this is the name shown in the color editor and used by phet-io. Keep it stable.
 - The third arg is a map of named profiles. `default` is required; `projector` enables Projector Mode (high-contrast, light background for classroom projectors).
+- Write each entry as an inline `new ProfileColorProperty(Namespace, key, { default, projector })`, as the template does. Do **not** wrap it in a local `profileColor(name, def, projector)` factory; the compliance gate fails that form, and the explicit `default:` / `projector:` labels keep the two profiles from being swapped by position.
 
 ## Two color families
 
@@ -178,6 +179,7 @@ Never put `textColorProperty` on button content that sits on `controlSurfaceColo
 ## Common mistakes
 
 - `fill: "red"` or `fill: new Color(...)` in a view → move it to `*Colors.ts`.
+- A `profileColor(...)` helper inside `*Colors.ts` → compliance failure; declare each `ProfileColorProperty` inline.
 - Reading `.value` to get a static `Color` and passing that — you lose reactivity. Pass the `Property` itself.
 - Forgetting a `projector:` value when `supportsProjectorMode` is on (projector mode silently falls back to `default`).
 - Leaving Checkbox / NumberDisplay / Text on framework black defaults → invisible on dark default panels; projector mode masks the bug.

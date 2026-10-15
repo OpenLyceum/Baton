@@ -59,6 +59,23 @@ new Text(speedLabel, { fill: SimColors.textColorProperty });
 
 Placeholder values may be plain values or `Property`s; mixing is fine.
 
+When the string is built on demand rather than bound to a node — an accessible response, a
+description sentence assembled in a listener, a formatter that returns `string` — fill the
+current pattern with `StringUtils.fillIn` (from `scenerystack/phetcommon`). Never chain
+`.replace("{{month}}", …)`; it skips missing-key checks and breaks on repeated placeholders.
+
+```typescript
+import { StringUtils } from "scenerystack/phetcommon";
+
+return StringUtils.fillIn(controls.datePatternStringProperty.value, {
+  month: monthName,
+  day: String(monthDay.dayOfMonth),
+});
+```
+
+Reading `.value` is correct here because the result is recomputed each call; use a
+`PatternStringProperty` for anything a node displays persistently.
+
 ## Units strings
 
 Unit suffixes are localized text — keep them in a `units` block (`{{value}} m/s`, `{{value}} Hz`, `{{value}}m`) and render with `PatternStringProperty`. Do **not** append `" m/s"` in code.
@@ -86,6 +103,7 @@ This only works if every visible string is a `StringProperty` passed to its node
 
 - Adding a key to `strings_en.json` only → `npm run check` fails (good — fix the other files).
 - `` `${value} m/s` `` or `label + unit` → not translatable; use a pattern string.
+- `pattern.replace("{{x}}", …)` by hand → use `StringUtils.fillIn` (or `PatternStringProperty`).
 - Caching `stringProperty.value` once at construction → text won't follow a locale change.
 
 Related skills: scenerystack-strings, scenerystack-preferences.

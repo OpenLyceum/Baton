@@ -62,10 +62,13 @@ For a full release CRC, track these companion deliverables and their sign-offs. 
 
 ### Memory Leaks
 
-- [ ] `tests/memory-leak.test.ts` exists and passes under `npm test` (WeakRef +
-  `execArgv: ["--expose-gc"]` in `vitest.config.ts` — see scenerystack-testing / CONVENTIONS §5).
-  Confirm `forceGC` is called **with** the `WeakRef`(s) so the helper early-exits (bare
-  `forceGC()` can hit Vitest's timeout).
+- [ ] `tests/memory-leak.test.ts` passes under `npm test` and hands the sim's **real**
+  disposables (models, and view nodes that link to longer-lived Properties) to
+  `describeDisposalLeaks()` from the template-owned `tests/helpers/memoryLeak.ts`. The gate
+  checks that the harness is used; only a reviewer can tell whether the list covers the
+  objects that matter. A suite that disposes only a `NumberProperty` or the template
+  `TimeModel` is a gap. `idempotentDispose: true` appears only on objects that promise it.
+  Extra leak tests pass their `WeakRef`(s) to `forceGC` (see scenerystack-testing).
 - [ ] A Chrome DevTools heap comparison shows no leak. Build with mangling disabled for readable names
   (e.g. `vite build --minify false`). Compare against the responsible dev's results: {{ISSUE}}.
 - [ ] Every SceneryStack component that registers internal observers/listeners is `dispose()`d where
@@ -109,7 +112,9 @@ accessed through `src/i18n/StringManager.ts`.
 - [ ] Negative numbers render correctly in RTL (`?stringTest=rtl`); use `StringUtils.toFixedLTR` /
   `toFixedNumberLTR` where needed.
 - [ ] No external redirect on `?stringTest=xss` (a crash/failed start is acceptable; a redirect is not).
-- [ ] No string concatenation for user-visible text — use `StringUtils.fillIn` with a pattern.
+- [ ] No string concatenation for user-visible text, and no hand-rolled
+  `.replace("{{x}}", …)`. Use `PatternStringProperty` for displayed text and
+  `StringUtils.fillIn` for strings built on demand (see scenerystack-i18n).
 - [ ] Named placeholders (`"{{value}} {{units}}"`), not numbered (`"{0} {1}"`).
 - [ ] String keys in `strings_en.json` follow project key conventions; keys are hard to change after
   publication.
@@ -127,8 +132,22 @@ by hand:
   `<Prefix>Namespace.ts` / `<Prefix>Colors.ts` / `*Constants.ts` at `src/` root;
   `src/preferences/` and `src/i18n/` file presence plus locale parity; `tests/` layout, the
   memory-leak suite, and `--expose-gc`; `.githooks/`; the PWA manifest, assets, and
-  `index.html` meta; the `biome.json` schema pin; and repo security settings. Report failures and distinguish local checks from unavailable remote probes — see [`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist" for the
+  `index.html` meta; the `biome.json` schema pin; and repo security settings. Its
+  standardization rules also fail on: template placeholders (`exampleToggle`,
+  `exampleControl`, `Sim*.ts`); a `profileColor()`-style helper in `<Prefix>Colors.ts`; an
+  unused template `TimeModel`; `export default class`; relative imports without `.js`;
+  `init.ts` not reading `version` from `package.json`; a description that is not
+  single-sourced from `package.json` (`index.html` `%SIM_DESCRIPTION%` and the manifest)
+  or still the rename placeholder; README Tech Stack majors that disagree with
+  `package.json`; and a missing `tests/setup.ts` or fuzz harness. Report failures and distinguish local checks from unavailable remote probes — see [`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist" for the
   full auto/manual split.
+
+- [ ] `bash ../Baton/scripts/check-template-drift.sh <SimDir>` reports no drift in
+  template-owned files (configs, `tests/setup.ts`, `tests/helpers/memoryLeak.ts`, fuzz,
+  bootstrap `assert`/`brand`/`splash`, workflows) or in `package.json` scripts, dependency
+  versions, and key order. `--fix` restores them. A deliberate deviation needs a
+  `**Template drift**` entry under `AGENTS.md` ## Compliance carve-outs; prose that merely
+  mentions the file does not count.
 
 What the gate can't judge — check these by eye:
 
@@ -142,9 +161,9 @@ What the gate can't judge — check these by eye:
   across repos) — never mixed forms like `TheRampConstants` and `TRColors` in one repo.
 - [ ] Icons are generated from `public/icons/icon.svg` via `npm run icons`, not hand-edited
   PNGs that drift from the source.
-- [ ] Colors go through `SimColors.ts` `ProfileColorProperty`s, including canvas
-  `fillStyle`/`addColorStop` theme chrome — raw hex in a view fails projector/dark profile
-  (see scenerystack-color-profiles).
+- [ ] Colors go through `<Prefix>Colors.ts` `ProfileColorProperty`s, including canvas
+  `fillStyle`/`addColorStop` theme chrome. Raw hex in a view fails the projector/dark
+  profile (see scenerystack-color-profiles). The gate only *warns* on hardcoded colors.
 - [ ] Public-facing query parameters are marked `public: true`; debug-only ones are not (see
   scenerystack-query-parameters).
 - [ ] Any nested topical constants files (beyond the root `{Prefix}Constants.ts`) are
@@ -165,6 +184,12 @@ What the gate can't judge — check these by eye:
 - [ ] Numbers are formatted with `toFixed`/`toFixedNumber` from `scenerystack/dot` (never
   JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
   scenerystack-numerics.
+- [ ] Text uses `PhetFont` (or a shared font constant), not CSS font strings such as
+  `"16px sans-serif"`. Canvas `ctx.font` strings are the exception.
+- [ ] No `!` non-null assertions in `src/` without a comment (Biome warns); prefer a narrowing
+  check or a throwing helper (see scenerystack-coding-conventions).
+- [ ] Sim preferences reach models and views through constructor/screen options, not a
+  `getInstance()` singleton or module-level getter (see scenerystack-preferences).
 
 ### Organization, Readability & Maintainability
 

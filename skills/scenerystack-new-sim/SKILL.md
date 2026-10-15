@@ -7,7 +7,9 @@ description: Use when creating a new OpenLyceum SceneryStack simulation from Sce
 
 New sims start from [`SceneryStackTemplate`](https://github.com/OpenLyceum/SceneryStackTemplate).
 Prefer **`Baton/scripts/create-sim.sh`** — it creates the repo (or adopts `--existing` /
-`--local-only`), runs rename + scaffold, `npm run fix`, and `npm run check`. Fleet
+`--local-only`), runs rename + scaffold, `npm run fix`, `npm run check`, and finishes with
+`check-template-drift --fix`, which drops the one-shot rename/scaffold scripts so the sim
+starts with zero template drift. Fleet
 onboarding (catalog, screenshot, Pages) is documented in
 [`Baton/doc/add-simulation.md`](../../doc/add-simulation.md); this skill covers the
 **code** bootstrap and the residue that `tsc`/Biome miss.
@@ -39,6 +41,8 @@ npm run rename -- --id my-new-sim --name "My New Sim"   # sim-level rename only
 npm run scaffold-screens -- --screens Intro,Lab         # optional --shared-model
 npm run fix                                             # required — see below
 npm run check && npm run build && npm test
+../Baton/scripts/check-template-drift.sh --fix MyNewSim # drop one-shot scripts, restore template-owned files
+bash ../Baton/scripts/check-repo-compliance.sh .
 ```
 
 `rename` rewrites package metadata / prefixes. `scaffold-screens` emits `src/<kebab>/`
@@ -60,6 +64,24 @@ Typical survivors (confirmed across forks):
 
 - `SimA11yStrings` / `SimPreferenceStrings` in `src/i18n/StringManager.ts`
 - `SimPanelOptions` in `src/common/<Prefix>Panel.ts`
+
+## Template placeholders the gate fails on
+
+The compliance gate rejects these leftovers. Clear them before the first push:
+
+- **Description.** Write one real sentence in `package.json` `description`; the rename
+  placeholder fails. `vite.config.ts` fills `index.html` (`%SIM_DESCRIPTION%`, Open Graph,
+  Twitter) and the PWA manifest from it. Never edit those copies by hand.
+- **`exampleToggle` / `exampleControl`.** Remove the example preference everywhere: model
+  Property, query parameter, strings in every locale, and the control in
+  `*PreferencesNode.ts`. Also remove the `exampleControl` a11y string. Keep the empty
+  preferences trio if the sim has no preferences (see scenerystack-preferences).
+- **`TimeModel`.** `src/common/TimeModel.ts` is a sample for sims with a clock. Compose it
+  into a model or delete it, together with `tests/TimeModel.test.ts` and its case in
+  `tests/memory-leak.test.ts`. Then list the sim's real disposables there (see
+  scenerystack-testing).
+- **Version.** `src/init.ts` already reads `version` from `package.json`. Bump the version with
+  `npm version`, never in `init.ts`.
 
 Also check `package.json` `keywords`. Drop `template`. Keep `simulation`, `SceneryStack`,
 `interactive`, `physics`, `education`, and `pwa` with that casing, and add domain keywords
@@ -94,6 +116,8 @@ once the file exists and `tsc`/Biome go green.
 - Leaving `Sim*` type aliases → compiles clean, fails CRC / human rename audit.
 - Shipping the keyboard-help stub unchanged → compliance green, dialog useless.
 - Calling `scaffold-screens` twice → prototype already deleted; add screens by hand.
+- Leaving `exampleToggle`, an unused `TimeModel`, or the placeholder description → compliance red.
+- Hand-editing `index.html` / manifest descriptions → they come from `package.json`; edit that.
 - Forgetting fleet onboarding (`repos.json`, screenshot, Pages) → sim invisible to
   bootstrap / landing page (follow `doc/add-simulation.md`, not this skill alone).
 

@@ -66,8 +66,11 @@ scenerystack-constants, scenerystack-color-profiles, scenerystack-strings, scene
   `lowerCamelCase.ts` for a singleton or utility export.
 - **No frame-rate assumptions** in model/view. The max `dt` is capped by the screen; there is no minimum
   `dt`, so handle arbitrarily small time steps. Step from the model's `step(dt)` chain (see
-  scenerystack-constants for the `TimeModel` pattern), never `setTimeout`/`setInterval`.
+  scenerystack-model), never `setTimeout`/`setInterval`.
 - Enumerations are **deeply immutable**; mutable enum values signal a design problem.
+- **Fonts are `PhetFont`** (`new PhetFont( 16 )`, `new PhetFont( { size: 14, weight: "bold" } )`), usually
+  held in `<Prefix>Constants.ts`. Never pass CSS font strings such as `"16px sans-serif"` to scenery
+  nodes. Only a raw Canvas `ctx.font` takes a string; read it from the `PhetFont` (`font.toCSS()`).
 
 ## Documentation
 
@@ -161,15 +164,19 @@ of the class; long multi-line statics may go at the bottom.
 
 ### Exports and imports
 
+**Classes use named exports** — never `export default class` (the compliance gate fails it).
+Default exports are reserved for the template's singleton objects: `<Prefix>Namespace`,
+`<Prefix>Colors`, and `<prefix>QueryParameters`.
+
 Because the project transpiles per-file (`isolatedModules`), **export types separately** with
 `export type` (either at the declaration or at end of file). For **imports, combine** all names — values
-and types — from one file into a single statement:
+and types — from one file into a single statement, and end relative paths in `.js`:
 
 ```ts
 export type BallNodeOptions = SelfOptions & NodeOptions;
-export default class BallNode extends Node { ... }
+export class BallNode extends Node { ... }
 
-import BallNode, { type BallNodeOptions } from "./BallNode.js";  // ✅ one statement
+import { BallNode, type BallNodeOptions } from "./BallNode.js";  // ✅ one statement
 ```
 
 ### Assertions
@@ -190,15 +197,23 @@ them (and `@returns`); otherwise omit them entirely.
 
 ### Non-null assertion (`!`)
 
-Use judiciously. Prefer values that can't be null in the first place. When `!` is needed, comment why
-it's safe, and add a runtime `assert` guard when it isn't obvious (e.g. `null < 50` is `true`). Factor
-out a variable instead of repeating the same assertion.
+Biome's `noNonNullAssertion` warns on `!` in `src/` (QuantumPotential raises it to an error); the
+template turns it off only for `tests/**`.
+Prefer values that can't be null in the first place, then narrow with a check that fails loudly. Under
+`noUncheckedIndexedAccess`, array reads are `T | undefined`; a small throwing helper (QuantumPotential's
+`defined()`) keeps hot loops readable without `!`. Factor out a variable instead of repeating the check.
 
 ```ts
 // activeParticle is always set before this runs — see initializeRound().
-assert && assert( this.activeParticle !== null );
-this.activeParticle!.reset();
+const particle = this.activeParticle;
+assert && assert( particle !== null, "initializeRound() must run first" );
+if ( particle ) { particle.reset(); }
+
+const energy = defined( energies[ n ] );   // throws on a missing element instead of `energies[ n ]!`
 ```
+
+When `!` is genuinely needed, comment why it's safe; a sim that silences the rule for dense numeric
+kernels says so in its `AGENTS.md`.
 
 ### Excess property checking
 

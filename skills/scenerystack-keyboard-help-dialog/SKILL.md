@@ -15,7 +15,7 @@ Define shortcuts once as `HotkeyData` (see scenerystack-accessibility), then bui
 import { KeyboardHelpSection, KeyboardHelpSectionRow } from "scenerystack/scenery-phet";
 import MazeGameHotkeyData from "./MazeGameHotkeyData.js";
 
-export default class MazeGameKeyboardHelpSection extends KeyboardHelpSection {
+export class MazeGameKeyboardHelpSection extends KeyboardHelpSection {
   public constructor(strings: KeyboardHelpStrings) {
     const moveRow = KeyboardHelpSectionRow.fromHotkeyData(MazeGameHotkeyData.MOVE_PARTICLE, {
       labelStringProperty: strings.controlParticleStringProperty,        // visible label

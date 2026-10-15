@@ -30,7 +30,7 @@ folder is well-formed and listed here.
 |---|---|
 | [`scenerystack-coding-conventions`](scenerystack-coding-conventions/SKILL.md) | Writing/reviewing TypeScript — naming, constructor signatures, optionize, access modifiers, type inference, assertions, read-vs-write Property APIs. |
 | [`scenerystack-code-review`](scenerystack-code-review/SKILL.md) | Running a pre-release Code Review (CRC) on a sim — build/fuzz, memory leaks, performance, i18n, structure conformance, rename residue, keyboard-help stubs, accessibility. |
-| [`scenerystack-testing`](scenerystack-testing/SKILL.md) | Adding/changing unit tests — `vitest` specs for model/physics code, the fleet-standard `tests/` layout + memory-leak suite (`forceGC` early-exit), optional Playwright fuzz, WebGPU launch flags. |
+| [`scenerystack-testing`](scenerystack-testing/SKILL.md) | Adding/changing unit tests — `vitest` specs for model/physics code, the fleet-standard `tests/` layout, listing disposables for the shared `describeDisposalLeaks` harness, pointer + keyboard fuzz, `tests/browser/` specs, WebGPU launch flags. |
 
 ### Model & math
 
