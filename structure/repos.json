@@ -792,6 +792,54 @@
       ]
     },
     {
+      "name": "MolScope",
+      "displayName": "MolScope",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "A browser molecular viewer in the spirit of Jmol: explore small molecules, proteins, DNA and crystals in 3D, measure bonds and angles, and drive it with Jmol-style scripts.",
+      "deployedUrl": "https://openlyceum.github.io/MolScope",
+      "physicsTopics": [
+        "chemistry",
+        "molecular structure",
+        "proteins",
+        "DNA",
+        "crystallography",
+        "unit cells",
+        "chemical bonding",
+        "molecular geometry",
+        "molecular vibrations"
+      ],
+      "screens": [
+        {
+          "id": "molecules",
+          "title": "Molecules"
+        },
+        {
+          "id": "biomolecules",
+          "title": "Biomolecules"
+        },
+        {
+          "id": "crystals",
+          "title": "Crystals"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Jmol-style 3D molecular viewer: small molecules, proteins, DNA and crystals, with measurements and Jmol scripting.",
+      "githubTopics": [
+        "jmol",
+        "molecular-viewer",
+        "pdb",
+        "cif",
+        "pwa"
+      ]
+    },
+    {
       "name": "MotionMatch",
       "displayName": "Motion Match",
       "type": "simulation",
