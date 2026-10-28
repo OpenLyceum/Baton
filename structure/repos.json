@@ -1522,7 +1522,6 @@
         "UV-Vis spectroscopy",
         "molecular vibrations",
         "molecular orbitals",
-        "Hückel theory",
         "particle in a box"
       ],
       "screens": [
@@ -1550,7 +1549,8 @@
         "nmr",
         "infrared",
         "uv-vis",
-        "pwa"
+        "pwa",
+        "huckel-theory"
       ]
     },
     {
