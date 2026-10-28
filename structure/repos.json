@@ -1502,6 +1502,58 @@
       "status": "active"
     },
     {
+      "name": "SpectroscopyLab",
+      "displayName": "Spectroscopy Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Read infrared, NMR and UV-Vis spectra against a 3D molecule: click a peak to see the atoms, vibration or orbital behind it.",
+      "deployedUrl": "https://openlyceum.github.io/SpectroscopyLab",
+      "physicsTopics": [
+        "chemistry",
+        "spectroscopy",
+        "infrared spectroscopy",
+        "NMR spectroscopy",
+        "UV-Vis spectroscopy",
+        "molecular vibrations",
+        "molecular orbitals",
+        "particle in a box"
+      ],
+      "screens": [
+        {
+          "id": "infrared",
+          "title": "Infrared"
+        },
+        {
+          "id": "nmr",
+          "title": "NMR"
+        },
+        {
+          "id": "uv-vis",
+          "title": "UV-Vis"
+        },
+        {
+          "id": "unknowns",
+          "title": "Unknowns"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "IR, ¹H NMR and UV-Vis spectra linked to a 3D molecule: normal modes, splitting patterns, Hückel orbitals, and an identify-the-unknown game.",
+      "githubTopics": [
+        "spectroscopy",
+        "nmr",
+        "infrared",
+        "uv-vis",
+        "pwa",
+        "huckel-theory"
+      ]
+    },
+    {
       "name": "StandingWaves",
       "displayName": "Standing Waves",
       "type": "simulation",
