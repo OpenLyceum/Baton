@@ -650,6 +650,55 @@
       "status": "active"
     },
     {
+      "name": "LightAndAtoms",
+      "displayName": "Light and Atoms",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Light and atoms for General Chemistry: the electromagnetic spectrum with c = λν and E = hν, a Bohr hydrogen atom that emits and absorbs photons, and the line spectra of gases and flames through a spectroscope.",
+      "deployedUrl": "https://openlyceum.github.io/LightAndAtoms",
+      "physicsTopics": [
+        "chemistry",
+        "light",
+        "electromagnetic spectrum",
+        "photons",
+        "Bohr model",
+        "atomic spectra",
+        "emission spectra",
+        "absorption spectra",
+        "flame tests"
+      ],
+      "screens": [
+        {
+          "id": "spectrum",
+          "title": "EM Spectrum"
+        },
+        {
+          "id": "hydrogen-atom",
+          "title": "Hydrogen Atom"
+        },
+        {
+          "id": "line-spectra",
+          "title": "Line Spectra"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Gen Chem light and atoms: drag a photon across the EM spectrum, watch a Bohr hydrogen atom emit and absorb, and identify gases from their line spectra.",
+      "githubTopics": [
+        "chemistry",
+        "general-chemistry",
+        "electromagnetic-spectrum",
+        "bohr-model",
+        "atomic-spectra",
+        "pwa"
+      ]
+    },
+    {
       "name": "LightPropagation",
       "displayName": "Light Propagation",
       "type": "simulation",
