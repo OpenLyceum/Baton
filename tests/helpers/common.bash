@@ -123,6 +123,7 @@ EOF
   "type": "module",
   "keywords": ["simulation", "SceneryStack", "interactive", "physics", "education", "pwa"],
   "engines": { "node": ">=${major}" },
+  "devEngines": { "runtime": { "name": "node", "version": ">=${major}", "onFail": "error" } },
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
     "test": "vitest run",

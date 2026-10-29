@@ -143,6 +143,20 @@ setup() {
   assert_output --partial "engines.node must be >="
 }
 
+@test "missing devEngines.runtime fails" {
+  sed -i '/"devEngines"/d' "$SIM/package.json"
+  run_compliance "$SIM"
+  assert_failure
+  assert_output --partial "devEngines.runtime must be"
+}
+
+@test "devEngines.runtime that only warns fails" {
+  sed -i 's/"onFail": "error"/"onFail": "warn"/' "$SIM/package.json"
+  run_compliance "$SIM"
+  assert_failure
+  assert_output --partial "devEngines.runtime must be"
+}
+
 @test "missing @types/node fails" {
   sed -i '/@types\/node/d' "$SIM/package.json"
   run_compliance "$SIM"
