@@ -1169,8 +1169,12 @@
       ],
       "screens": [
         {
-          "id": "periodic-trends",
-          "title": "Periodic Trends"
+          "id": "trends",
+          "title": "Trends"
+        },
+        {
+          "id": "shielding",
+          "title": "Shielding"
         }
       ],
       "status": "active"
