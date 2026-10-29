@@ -443,6 +443,49 @@
       "shortDescription": "Electrochemistry for General Chemistry: galvanic cells, the Nernst equation and electrolysis with Faraday's law."
     },
     {
+      "name": "EquilibriumLab",
+      "displayName": "Equilibrium Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Gen Chem chemical equilibrium: watch a mixture react until Q reaches K with the forward and reverse rates equal, work ICE tables against a live simulation, push a mixture at equilibrium with Le Chatelier stresses and see whether Q or K moved, and find ΔH° and ΔS° from a van 't Hoff plot.",
+      "deployedUrl": "https://openlyceum.github.io/EquilibriumLab",
+      "physicsTopics": [
+        "chemical equilibrium",
+        "equilibrium constant",
+        "reaction quotient",
+        "ICE table",
+        "Le Chatelier principle",
+        "van t Hoff equation",
+        "chemistry"
+      ],
+      "screens": [
+        {
+          "id": "approach",
+          "title": "Approach"
+        },
+        {
+          "id": "ice-table",
+          "title": "ICE Table"
+        },
+        {
+          "id": "le-chatelier",
+          "title": "Le Chatelier"
+        },
+        {
+          "id": "vant-hoff",
+          "title": "Van 't Hoff"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Chemical equilibrium for General Chemistry: watch Q approach K, work ICE tables, apply Le Chatelier stresses, and find ΔH° and ΔS° from a van 't Hoff plot."
+    },
+    {
       "name": "ExtrasolarPlanets",
       "displayName": "Extrasolar Planets",
       "type": "simulation",
