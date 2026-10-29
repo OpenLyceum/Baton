@@ -158,6 +158,48 @@
       "status": "active"
     },
     {
+      "name": "CalorimetryLab",
+      "displayName": "Calorimetry Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Gen Chem thermochemistry: drop a hot metal into water to find its specific heat, measure ΔH of neutralization, dissolving salts and Mg + HCl in a coffee-cup calorimeter with drift-line extrapolation, calibrate a bomb calorimeter with benzoic acid and burn fuels, and build ΔH from reversed and scaled step reactions with Hess's law.",
+      "deployedUrl": "https://openlyceum.github.io/CalorimetryLab",
+      "physicsTopics": [
+        "thermochemistry",
+        "calorimetry",
+        "specific heat",
+        "enthalpy",
+        "Hess law",
+        "chemistry"
+      ],
+      "screens": [
+        {
+          "id": "specific-heat",
+          "title": "Specific Heat"
+        },
+        {
+          "id": "coffee-cup",
+          "title": "Coffee Cup"
+        },
+        {
+          "id": "bomb",
+          "title": "Bomb Calorimeter"
+        },
+        {
+          "id": "hess-law",
+          "title": "Hess's Law"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Calorimetry and Hess's law for General Chemistry: specific heat, coffee-cup and bomb calorimetry, and building ΔH from step reactions."
+    },
+    {
       "name": "CapacitorLab",
       "displayName": "Capacitor Lab",
       "type": "simulation",
