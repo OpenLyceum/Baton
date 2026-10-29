@@ -86,7 +86,7 @@ jobs:
       - uses: actions/setup-node@v7.1.0
         with:
           # Mirrors the fleet Node default — bump all setup-node workflows together.
-          node-version: "24"
+          node-version: "26"
           cache: npm
       - run: npm ci --no-audit --no-fund
         env:
