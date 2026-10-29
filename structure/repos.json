@@ -364,6 +364,43 @@
       "status": "active"
     },
     {
+      "name": "Electrochemistry",
+      "displayName": "Electrochemistry",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Gen Chem electrochemistry: build galvanic cells from nine half-cells and watch them run down, follow the Nernst equation on a plot of E against log Q to equilibrium, and test Faraday's law with copper and silver plating and the electrolysis of copper(II) chloride and water.",
+      "deployedUrl": "https://openlyceum.github.io/Electrochemistry",
+      "physicsTopics": [
+        "electrochemistry",
+        "galvanic cells",
+        "Nernst equation",
+        "electrolysis",
+        "chemistry"
+      ],
+      "screens": [
+        {
+          "id": "galvanic-cell",
+          "title": "Galvanic Cell"
+        },
+        {
+          "id": "nernst",
+          "title": "Nernst"
+        },
+        {
+          "id": "electrolysis",
+          "title": "Electrolysis"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Electrochemistry for General Chemistry: galvanic cells, the Nernst equation and electrolysis with Faraday's law."
+    },
+    {
       "name": "ExtrasolarPlanets",
       "displayName": "Extrasolar Planets",
       "type": "simulation",
