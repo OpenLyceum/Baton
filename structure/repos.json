@@ -1150,6 +1150,36 @@
       "status": "active"
     },
     {
+      "name": "PeriodicTrends",
+      "displayName": "Periodic Trends",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Gen Chem periodic trends from hydrogen to krypton: click an element or drag across a period or down a group to watch atomic radius, ionization energy, electron affinity and electronegativity change, explained through effective nuclear charge (Slater's rules) and shielding.",
+      "deployedUrl": "https://openlyceum.github.io/PeriodicTrends",
+      "physicsTopics": [
+        "periodic trends",
+        "effective nuclear charge",
+        "chemistry"
+      ],
+      "screens": [
+        {
+          "id": "trends",
+          "title": "Trends"
+        },
+        {
+          "id": "shielding",
+          "title": "Shielding"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "PlateTectonics",
       "displayName": "Plate Tectonics",
       "type": "simulation",
