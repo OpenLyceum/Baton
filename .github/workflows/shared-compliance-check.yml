@@ -61,7 +61,7 @@ jobs:
         if: hashFiles('src/main.ts') != ''
         with:
           # Mirrors the fleet Node default — bump all setup-node workflows together.
-          node-version: "24"
+          node-version: "26"
 
       - name: Template drift (advisory)
         if: hashFiles('src/main.ts') != ''
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/setup-node@v7.1.0
         with:
           # Mirrors the fleet Node default — bump all setup-node workflows together.
-          node-version: "24"
+          node-version: "26"
 
       - name: Audit ${{ matrix.sim }}
         env:

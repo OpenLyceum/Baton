@@ -75,7 +75,7 @@ Options:
                        the superproject (and push the sim bootstrap if not --local-only)
   -h, --help           Show this help
 
-Requires: gh (unless --local-only), jq, npm, Node 24+.
+Requires: gh (unless --local-only), jq, npm, Node 26+.
   --onboard also needs Baton npm deps + Playwright Chromium for screenshots.
 EOF
 }

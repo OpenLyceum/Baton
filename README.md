@@ -134,7 +134,7 @@ unless marked *(warn)*):
   [`shared-dependency-review.yml`](.github/workflows/shared-dependency-review.yml) and
   [`shared-codeql.yml`](.github/workflows/shared-codeql.yml); `.github/workflows/deploy.yml`
   calls the reusable Pages deploy and allows `workflow_dispatch`; `.github/dependabot.yml` present.
-- **Node pins** — `engines.node` is `>=24` and `@types/node` major is `24` (matching the fleet Node
+- **Node pins** — `engines.node` is `>=26`, `devEngines.runtime` requires Node `>=26` with `onFail: "error"`, and `@types/node` major is `26` (matching the fleet Node
   version); a `.nvmrc` / `.node-version`, if present, agrees.
 - **SceneryStack structure** (sims only) — the five-file bootstrap chain with `main.ts` importing
   `./brand.js` first; `<Prefix>Namespace.ts`, `<Prefix>Colors.ts`, and `*Constants.ts` at the `src/`
@@ -228,7 +228,7 @@ Cross-repo automation, all driven from the catalog:
 
 ## Node version
 
-The default Node version for the fleet is **`"24"`**, declared in every Baton workflow that
+The default Node version for the fleet is **`"26"`**, declared in every Baton workflow that
 runs `setup-node` — bump them together:
 
 - [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — `node-version` input default
@@ -247,8 +247,9 @@ OpenLyceum workspace), it also asserts each `package.json` matches the same majo
 
 Member repos must keep:
 
-- `engines.node`: `>=24` (floor matching the workflow major)
-- `@types/node`: major **24** (Dependabot ignores `@types/node` major bumps — bump
+- `engines.node`: `>=26` (floor matching the workflow major)
+- `devEngines.runtime`: `{ "name": "node", "version": ">=26", "onFail": "error" }` — npm refuses to install or run scripts on an older local Node (copied from SceneryStackTemplate)
+- `@types/node`: major **26** (Dependabot ignores `@types/node` major bumps — bump
   SceneryStackTemplate and repos together when CI `node-version` changes; see `config/dependabot-npm.yml`)
 
 [`scripts/check-repo-compliance.sh`](scripts/check-repo-compliance.sh) fails a sim if those pins

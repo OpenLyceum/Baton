@@ -121,22 +121,25 @@ if [ -f package.json ]; then
 
   # Node engine / @types/node must track Baton's fleet Node major (ci.yml default).
   # When this script is checked out from Baton (.org-compliance/…), read the major
-  # from that tree; otherwise fall back to 24.
+  # from that tree; otherwise fall back to 26.
   CI_YML="$SCRIPT_DIR/../.github/workflows/ci.yml"
   if [ -f "$CI_YML" ]; then
     EXPECTED_NODE_MAJOR="$(grep -oP 'default:\s*["'\'']\K[0-9]+' "$CI_YML" | head -n1 || true)"
   fi
-  EXPECTED_NODE_MAJOR="${EXPECTED_NODE_MAJOR:-24}"
+  EXPECTED_NODE_MAJOR="${EXPECTED_NODE_MAJOR:-26}"
 
   PKG_META="$(python3 -c "
 import json
 p = json.load(open('package.json'))
 engines = (p.get('engines') or {}).get('node') or ''
 types = (p.get('devDependencies') or {}).get('@types/node') or (p.get('dependencies') or {}).get('@types/node') or ''
-print(engines + '\t' + types)
+rt = (p.get('devEngines') or {}).get('runtime') or {}
+dev = rt.get('version', '') + '|' + rt.get('onFail', '') if rt.get('name') == 'node' else ''
+print(engines + '\t' + types + '\t' + dev)
 ")"
-  ENGINES_NODE="${PKG_META%%$'\t'*}"
-  TYPES_NODE="${PKG_META#*$'\t'}"
+  ENGINES_NODE="$(cut -f1 <<<"$PKG_META")"
+  TYPES_NODE="$(cut -f2 <<<"$PKG_META")"
+  DEV_RUNTIME="$(cut -f3 <<<"$PKG_META")"
 
   if [ -z "$ENGINES_NODE" ]; then
     fail "package.json engines.node is missing (expected >=${EXPECTED_NODE_MAJOR})"
@@ -144,6 +147,13 @@ print(engines + '\t' + types)
     fail "engines.node must be >=${EXPECTED_NODE_MAJOR} to match fleet Node (found: $ENGINES_NODE)"
   else
     pass "engines.node is $ENGINES_NODE"
+  fi
+
+  # devEngines makes npm refuse to install/run scripts on an older local Node.
+  if [[ "$DEV_RUNTIME" =~ ^\>=${EXPECTED_NODE_MAJOR}(\.0\.0)?\|error$ ]]; then
+    pass "devEngines.runtime requires Node >=${EXPECTED_NODE_MAJOR} (onFail: error)"
+  else
+    fail "devEngines.runtime must be { name: node, version: >=${EXPECTED_NODE_MAJOR}, onFail: error } (found: ${DEV_RUNTIME:-missing})"
   fi
 
   if [ -z "$TYPES_NODE" ]; then

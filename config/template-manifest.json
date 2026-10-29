@@ -83,7 +83,8 @@
       "type",
       "private",
       "license",
-      "engines"
+      "engines",
+      "devEngines"
     ],
     "overridesSuperset": true
   }
