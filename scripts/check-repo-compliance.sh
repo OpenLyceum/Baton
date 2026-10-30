@@ -361,7 +361,7 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
     pass "vite-plugin-pwa in package.json"
   fi
   if ! grep -qE '"icons":\s*".*scripts/generate-icons\.ts' package.json; then
-    fail "package.json icons script must run tsx scripts/generate-icons.ts"
+    fail "package.json icons script must run node scripts/generate-icons.ts"
   else
     pass "package.json icons script"
   fi
@@ -517,7 +517,7 @@ PY
   for f in tests/fuzz/fuzz.spec.ts playwright.config.ts scripts/test-fuzz.ts; do
     [ -f "$f" ] || { new_rule "$f is missing (fleet fuzz smoke)"; fuzz_ok=0; }
   done
-  grep -qE '"test:fuzz":\s*"tsx scripts/test-fuzz\.ts"' package.json || { new_rule "package.json test:fuzz must run tsx scripts/test-fuzz.ts"; fuzz_ok=0; }
+  grep -qE '"test:fuzz":\s*"node scripts/test-fuzz\.ts"' package.json || { new_rule "package.json test:fuzz must run node scripts/test-fuzz.ts"; fuzz_ok=0; }
   [ -f .fuzz-playwright.config.ts ] && { new_rule ".fuzz-playwright.config.ts is dead — use FUZZ_PORT with playwright.config.ts"; fuzz_ok=0; }
   [ "$fuzz_ok" -eq 1 ] && pass "fuzz smoke: runner, spec, config"
 
@@ -590,7 +590,9 @@ PY
     new_rule "src/common/TimeModel.ts is unused — delete it (and tests/TimeModel.test.ts) or compose it into a model"
   fi
 
-  # TS conventions: named exports, .js extensions on relative imports.
+  # TS conventions: named exports, an explicit extension on relative imports.
+  # .js is the fleet default (bundler resolution). .ts is allowed where Node runs the
+  # module directly — Node's type stripper does not map a .js specifier onto a .ts file.
   default_classes="$(grep -rlE '^export default (abstract )?class ' src --include='*.ts' 2>/dev/null || true)"
   if [ -n "$default_classes" ]; then
     new_rule "export default class in src (use named exports): $(echo "$default_classes" | head -5 | xargs)$([ "$(echo "$default_classes" | wc -l)" -gt 5 ] && echo ' …')"
@@ -598,11 +600,11 @@ PY
     pass "no default-exported classes"
   fi
   bad_imports="$(grep -rnE "(from|import) +['\"]\.\.?/[^'\"]*['\"]" src --include='*.ts' 2>/dev/null \
-    | grep -vE "['\"]\.\.?/[^'\"]*\.(js|json|css|svg|png|jpe?g|gif|webp|avif|mp3|wav|ogg|mp4|webm|glsl|wgsl|txt|csv|geojson)(\?[a-z]+)?['\"]" || true)"
+    | grep -vE "['\"]\.\.?/[^'\"]*\.(js|ts|json|css|svg|png|jpe?g|gif|webp|avif|mp3|wav|ogg|mp4|webm|glsl|wgsl|txt|csv|geojson)(\?[a-z]+)?['\"]" || true)"
   if [ -n "$bad_imports" ]; then
-    new_rule "relative imports must end in .js ($(echo "$bad_imports" | wc -l | tr -d ' ') hit(s), e.g. $(echo "$bad_imports" | head -1 | cut -c1-120))"
+    new_rule "relative imports must end in .js or .ts ($(echo "$bad_imports" | wc -l | tr -d ' ') hit(s), e.g. $(echo "$bad_imports" | head -1 | cut -c1-120))"
   else
-    pass "relative imports use .js extensions"
+    pass "relative imports use .js or .ts extensions"
   fi
 
   # Constants register with the namespace like every other module.

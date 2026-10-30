@@ -42,7 +42,7 @@ runs:
 
         // Only fail the build for high/critical vulnerabilities in DIRECT
         // dependencies. Transitive-only highs/criticals (e.g. an upstream
-        // advisory against a dep pulled in by vite/tsx) are reported as a
+        // advisory against a dep pulled in by vite) are reported as a
         // non-blocking warning so a single ecosystem advisory does not red-wall
         // every sim at once. Resolve them via the offending dep's update.
         const vulns = audit.vulnerabilities ?? {};

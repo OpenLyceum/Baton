@@ -100,7 +100,7 @@ once the file exists and `tsc`/Biome go green.
   `organizeImports` noise from rename/scaffold does not land red.
 - Always `npm run fix` after a manual rename/scaffold — `check` alone is not enough.
 - Run `npm ci` (or `npm install`) in the new tree — do **not** rsync the template's
-  `node_modules` (partial tree → `tsx: not found`).
+  `node_modules` (partial tree → missing dev binaries).
 - `git init` the sim **before** `npm install` if starting from a bare copy — the
   template `prepare` script sets `core.hooksPath` and will otherwise write into a
   parent repo's git config.

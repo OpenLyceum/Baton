@@ -166,7 +166,7 @@ public/screenshots/wide.png  narrow.png   ← 1280×720 and 720×1280; placehold
 
 | Piece | Standard |
 |---|---|
-| `package.json` | `vite-plugin-pwa ^2`, `sharp` + `png-to-ico` + `tsx`, the shared keyword set above, `icons` script runs `tsx scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
+| `package.json` | `vite-plugin-pwa ^2`, `sharp` + `png-to-ico`, the shared keyword set above, `icons` script runs `node scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
 | `vite.config.ts` | `registerType: "autoUpdate"`; `includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"]`; manifest `id` (= `package.json` `name`), `categories: ["education", "science"]`, `display: "standalone"`, `display_override: ["window-controls-overlay", "standalone"]`, **no** `orientation`; PNG 192/512 + SVG `purpose: "maskable"`; `screenshots` wide + narrow; Workbox `maximumFileSizeToCacheInBytes` + `globPatterns` including `js,css,html,svg,png,woff2` |
 | `index.html` | `mobile-web-app-capable`, `apple-mobile-web-app-capable`, `theme-color` (must match `theme_color`), `description`, Open Graph + Twitter meta (`og:image` / `twitter:image` → `./icons/icon-512.png`), favicon + SVG icon + apple-touch-icon |
 | Single-file mode | `vite build --mode single` skips `VitePWA` (inlines into one HTML file). Omit this only when the bundle cannot be self-contained (document in `AGENTS.md`) |
@@ -221,7 +221,7 @@ rest are a quick manual scan.
 - [ ] `src/init.ts` takes `version` from `package.json`; no template placeholders (`exampleToggle`, `Sim*.ts`) remain. *(auto)*
 - [ ] TypeScript: named exports only (no `export default class`); relative imports end in `.js`; `<Prefix>Constants.ts` registers with the namespace. *(auto)*
 - [ ] Any tests live only under root `tests/` with `tests/setup.ts`; no co-located / `__tests__/`; a `test` script exists. *(auto)*
-- [ ] Fuzz smoke: `tests/fuzz/fuzz.spec.ts`, `playwright.config.ts`, `scripts/test-fuzz.ts`; `test:fuzz` runs `tsx scripts/test-fuzz.ts`. *(auto)*
+- [ ] Fuzz smoke: `tests/fuzz/fuzz.spec.ts`, `playwright.config.ts`, `scripts/test-fuzz.ts`; `test:fuzz` runs `node scripts/test-fuzz.ts`. *(auto)*
 - [ ] `tests/memory-leak.test.ts` exists, lists the sim's disposables via `describeDisposalLeaks()` from the template-owned `tests/helpers/memoryLeak.ts` (no private `forceGC`), and `vitest.config.ts` enables `--expose-gc`. *(auto)*
 - [ ] `*KeyboardHelpContent.ts` exists under `src/` (Keyboard Shortcuts dialog). *(auto)*
 - [ ] `.githooks/{pre-commit,pre-push}` present; `prepare` sets `core.hooksPath`. *(auto)*
