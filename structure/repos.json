@@ -1416,6 +1416,58 @@
       "status": "active"
     },
     {
+      "name": "QuantumAtom3D",
+      "displayName": "Quantum Atom 3D",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "3D hydrogenic atom explorer: orbitals and probability density with phase colouring, radial distributions, superpositions that evolve in time, the angular-momentum vector model, normal and anomalous Zeeman splitting with selection rules, and the degeneracy of the isotropic 3D oscillator.",
+      "deployedUrl": "https://openlyceum.github.io/QuantumAtom3D",
+      "physicsTopics": [
+        "quantum mechanics",
+        "hydrogen atom",
+        "atomic orbitals",
+        "spherical harmonics",
+        "angular momentum",
+        "Zeeman effect",
+        "harmonic oscillator"
+      ],
+      "screens": [
+        {
+          "id": "orbitals",
+          "title": "Orbitals"
+        },
+        {
+          "id": "superposition",
+          "title": "Superposition"
+        },
+        {
+          "id": "angular-momentum",
+          "title": "Angular Momentum"
+        },
+        {
+          "id": "zeeman",
+          "title": "Zeeman"
+        },
+        {
+          "id": "oscillator",
+          "title": "3D Oscillator"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Explore hydrogenic orbitals in 3D, time-evolving superpositions, the angular-momentum vector model, Zeeman splitting and 3D oscillator degeneracy.",
+      "githubTopics": [
+        "quantum",
+        "webgpu",
+        "pwa"
+      ]
+    },
+    {
       "name": "QuantumPotential",
       "displayName": "Quantum Potential",
       "type": "simulation",
