@@ -127,8 +127,8 @@ EOF
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
     "test": "vitest run",
-    "test:fuzz": "tsx scripts/test-fuzz.ts",
-    "icons": "tsx scripts/generate-icons.ts"
+    "test:fuzz": "node scripts/test-fuzz.ts",
+    "icons": "node scripts/generate-icons.ts"
   },
   "devDependencies": {
     "@types/node": "^${major}.0.0",

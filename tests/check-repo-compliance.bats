@@ -471,10 +471,10 @@ strict_compliance() {
 }
 
 @test "old-style test:fuzz script fails in strict mode" {
-  sed -i 's|"tsx scripts/test-fuzz.ts"|"playwright test --project=chromium"|' "$SIM/package.json"
+  sed -i 's|"node scripts/test-fuzz.ts"|"playwright test --project=chromium"|' "$SIM/package.json"
   strict_compliance "$SIM"
   assert_failure
-  assert_output --partial "test:fuzz must run tsx scripts/test-fuzz.ts"
+  assert_output --partial "test:fuzz must run node scripts/test-fuzz.ts"
 }
 
 @test "dead .fuzz-playwright.config.ts fails in strict mode" {
