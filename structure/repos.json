@@ -1653,6 +1653,47 @@
       "status": "active"
     },
     {
+      "name": "RelativisticDynamics",
+      "displayName": "Relativistic Dynamics",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Relativistic momentum and energy across four screens: a particle pushed toward c against Newton's prediction and Bertozzi's 1964 data, the energy–momentum triangle and mass shell seen by moving observers, two-body collisions viewed from any frame, and threshold energies for fixed-target and collider reactions.",
+      "deployedUrl": "https://openlyceum.github.io/RelativisticDynamics",
+      "physicsTopics": [
+        "special relativity",
+        "relativistic momentum",
+        "four-vectors",
+        "collisions",
+        "threshold energy"
+      ],
+      "screens": [
+        {
+          "id": "accelerate",
+          "title": "Accelerate"
+        },
+        {
+          "id": "energy-momentum",
+          "title": "Energy–Momentum"
+        },
+        {
+          "id": "collisions",
+          "title": "Collisions"
+        },
+        {
+          "id": "thresholds",
+          "title": "Thresholds"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "Resonance",
       "displayName": "Resonance",
       "type": "simulation",
