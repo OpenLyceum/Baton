@@ -84,6 +84,16 @@
             }
           ]
         },
+        "subject": {
+          "description": "Discipline the simulation is filed under on the Pages landing page (filter chips and the default grouping); null for non-simulations. Omitted is treated as null.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "string",
+              "enum": ["physics", "chemistry", "astronomy", "earth-science"]
+            }
+          ]
+        },
         "upstream": {
           "description": "Provenance for ports; null when lineage is original or the repo is not a simulation.",
           "oneOf": [
@@ -164,8 +174,10 @@
         {
           "if": { "properties": { "type": { "const": "simulation" } } },
           "then": {
+            "required": ["subject"],
             "properties": {
               "isSimulation": { "const": true },
+              "subject": { "type": "string", "enum": ["physics", "chemistry", "astronomy", "earth-science"] },
               "lineage": { "type": "string", "enum": ["original", "phet", "naap"] },
               "physicsTopics": {
                 "type": "array",

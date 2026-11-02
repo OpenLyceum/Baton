@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Open Lyceum — open-source interactive physics simulations for the web.">
+  <meta name="description" content="Open Lyceum — open-source interactive physics, chemistry, and astronomy simulations for the web.">
   <meta property="og:title" content="Open Lyceum Simulations">
-  <meta property="og:description" content="Open-source interactive physics simulations for the web.">
+  <meta property="og:description" content="Open-source interactive physics, chemistry, and astronomy simulations for the web.">
   <meta name="theme-color" content="#0b1020">
   <title>Open Lyceum Simulations</title>
   <style>
@@ -259,6 +259,111 @@
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--accent); }
 
+    [hidden] { display: none !important; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Filter toolbar (revealed by the script; without JS the page is grouped by subject) */
+    .toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      margin: 0 0 2.5rem;
+      padding: 1rem 1.1rem;
+      background: rgba(13, 19, 38, 0.82);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    @media (min-width: 720px) {
+      .toolbar { position: sticky; top: 0.75rem; z-index: 10; }
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 0.4rem 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+    }
+    .chip:hover { color: var(--text); background: rgba(111, 155, 255, 0.12); border-color: rgba(111, 155, 255, 0.35); }
+    .chip[aria-pressed="true"] {
+      color: #fff;
+      background: linear-gradient(135deg, #5b8def, #7c5bef);
+      border-color: transparent;
+    }
+    .chip-count {
+      font-size: 0.75rem;
+      min-width: 1.6em;
+      padding: 0 0.4rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+    .chip[aria-pressed="true"] .chip-count { background: rgba(255, 255, 255, 0.22); }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; }
+    .field { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--faint); }
+    .field-search { flex: 1 1 16rem; }
+    .field input, .field select {
+      font: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.45rem 0.75rem;
+    }
+    .field input { width: 100%; }
+    .field select option { background: var(--bg-2); color: var(--text); }
+    .field input:focus-visible, .field select:focus-visible, .chip:focus-visible, .empty button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .status { margin: 0; font-size: 0.82rem; color: var(--faint); }
+
+    .empty { text-align: center; color: var(--muted); padding: 3rem 1rem; }
+    .empty button {
+      font: inherit;
+      color: var(--text);
+      margin-top: 0.5rem;
+      padding: 0.5rem 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+    }
+    .empty button:hover { background: rgba(111, 155, 255, 0.16); }
+
+    .card-meta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: hsl(var(--hue) 70% 72%);
+      margin-bottom: 0.3rem;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .bg::before, .bg::after { animation: none; }
       html { scroll-behavior: auto; }
@@ -269,9 +374,9 @@
   <div class="bg" aria-hidden="true"></div>
   <div class="wrap">
     <header>
-      <span class="eyebrow">Open-source physics for the web</span>
+      <span class="eyebrow">Open-source science for the web</span>
       <h1>Open Lyceum</h1>
-      <p>Interactive simulations for waves, mechanics, optics, electromagnetism, and quantum circuits &mdash; free to explore, remix, and teach with.</p>
+      <p>Interactive simulations for physics, chemistry, and astronomy &mdash; from waves, optics, and quantum mechanics to titrations, molecules, and the night sky &mdash; free to explore, remix, and teach with.</p>
       <div class="links">
         <a class="primary" href="#simulations">Browse simulations</a>
         <a href="https://github.com/OpenLyceum">GitHub Organization</a>
@@ -280,15 +385,51 @@
     </header>
 
     <main id="simulations">
-    <section>
-      <div class="section-head">
-        <h2>Core Simulations</h2>
-        <span class="count">40</span>
+      <div class="toolbar" id="sim-toolbar" hidden>
+        <div class="chips" role="group" aria-label="Filter by subject">
+          <button type="button" class="chip" data-subject-filter="all" aria-pressed="true">All <span class="chip-count">55</span></button>
+          <button type="button" class="chip" data-subject-filter="physics" aria-pressed="false">Physics <span class="chip-count">36</span></button>
+          <button type="button" class="chip" data-subject-filter="chemistry" aria-pressed="false">Chemistry <span class="chip-count">9</span></button>
+          <button type="button" class="chip" data-subject-filter="astronomy" aria-pressed="false">Astronomy <span class="chip-count">9</span></button>
+          <button type="button" class="chip" data-subject-filter="earth-science" aria-pressed="false">Earth Science <span class="chip-count">1</span></button>
+        </div>
+        <div class="controls">
+          <label class="field field-search">
+            <span class="sr-only">Search simulations</span>
+            <input type="search" id="sim-search" placeholder="Search by name, topic, or keyword" autocomplete="off" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>Collection</span>
+            <select id="sim-collection">
+              <option value="all">All</option>
+              <option value="original">Core Simulations</option>
+              <option value="phet">Classic &amp; PhET Ports</option>
+              <option value="naap">NAAP Astronomy Labs</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Group by</span>
+            <select id="sim-group">
+              <option value="subject">Subject</option>
+              <option value="collection">Collection</option>
+              <option value="none">None (A&ndash;Z)</option>
+            </select>
+          </label>
+        </div>
+        <p class="status" id="sim-status" aria-live="polite"></p>
       </div>
-      <div class="grid">
-        <a class="card" href="https://openlyceum.github.io/ACPhasor/" style="--hue: 33;">
+
+      <div id="sim-groups">
+      <section>
+        <div class="section-head">
+          <h2>Physics</h2>
+          <span class="count">36</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://openlyceum.github.io/ACPhasor/" style="--hue: 33;" data-subject="physics" data-collection="original" data-topics="AC circuits, phasors, RLC, impedance, resonance">
           <div class="thumb"><img src="assets/ACPhasor.webp" alt="AC Phasor simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">AC</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>AC Phasor</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -297,20 +438,10 @@
             <div class="tags"><span class="tag">AC circuits</span><span class="tag">phasors</span><span class="tag">RLC</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/CalorimetryLab/" style="--hue: 354;">
-          <div class="thumb"><img src="assets/CalorimetryLab.webp" alt="Calorimetry Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">CL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Calorimetry Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Gen Chem thermochemistry: drop a hot metal into water to find its specific heat, measure ΔH of neutralization, dissolving salts and Mg + HCl in a coffee-cup calorimeter with drift-line extrapolation, calibrate a bomb calorimeter with benzoic acid and burn fuels, and build ΔH from reversed and scaled step reactions with Hess's law.</p>
-            <div class="tags"><span class="tag">thermochemistry</span><span class="tag">calorimetry</span><span class="tag">specific heat</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/CapacitorLab/" style="--hue: 109;">
+        <a class="card" href="https://openlyceum.github.io/CapacitorLab/" style="--hue: 109;" data-subject="physics" data-collection="original" data-topics="electricity, capacitance, electric field, dielectric, circuits">
           <div class="thumb"><img src="assets/CapacitorLab.webp" alt="Capacitor Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">CL</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>Capacitor Lab</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -319,9 +450,10 @@
             <div class="tags"><span class="tag">electricity</span><span class="tag">capacitance</span><span class="tag">electric field</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/CarnotHeatEngine/" style="--hue: 159;">
+        <a class="card" href="https://openlyceum.github.io/CarnotHeatEngine/" style="--hue: 159;" data-subject="physics" data-collection="original" data-topics="thermodynamics, Carnot cycle, heat engines, efficiency, entropy, refrigeration">
           <div class="thumb"><img src="assets/CarnotHeatEngine.webp" alt="Carnot Heat Engine simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">CH</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>Carnot Heat Engine</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -330,9 +462,10 @@
             <div class="tags"><span class="tag">thermodynamics</span><span class="tag">Carnot cycle</span><span class="tag">heat engines</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/CrystalLattice/" style="--hue: 8;">
+        <a class="card" href="https://openlyceum.github.io/CrystalLattice/" style="--hue: 8;" data-subject="physics" data-collection="original" data-topics="crystallography, Bravais lattices, unit cells, close packing, Miller indices, diffraction, quasicrystals, aperiodic tilings">
           <div class="thumb"><img src="assets/CrystalLattice.webp" alt="Crystal Lattice simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">CL</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>Crystal Lattice</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -341,9 +474,10 @@
             <div class="tags"><span class="tag">crystallography</span><span class="tag">Bravais lattices</span><span class="tag">unit cells</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/DopplerEffect/" style="--hue: 235;">
+        <a class="card" href="https://openlyceum.github.io/DopplerEffect/" style="--hue: 235;" data-subject="physics" data-collection="original" data-topics="waves, sound, frequency, motion">
           <div class="thumb"><img src="assets/DopplerEffect.webp" alt="Doppler Effect simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">DE</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>Doppler Effect</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -352,9 +486,10 @@
             <div class="tags"><span class="tag">waves</span><span class="tag">sound</span><span class="tag">frequency</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/ElectricFieldMapper/" style="--hue: 108;">
+        <a class="card" href="https://openlyceum.github.io/ElectricFieldMapper/" style="--hue: 108;" data-subject="physics" data-collection="original" data-topics="electrostatics, electric fields, electric potential, Coulomb's law">
           <div class="thumb"><img src="assets/ElectricFieldMapper.webp" alt="Electric Field Mapper simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">EF</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>Electric Field Mapper</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -363,381 +498,10 @@
             <div class="tags"><span class="tag">electrostatics</span><span class="tag">electric fields</span><span class="tag">electric potential</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/Electrochemistry/" style="--hue: 262;">
-          <div class="thumb"><img src="assets/Electrochemistry.webp" alt="Electrochemistry simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">E</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Electrochemistry</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Gen Chem electrochemistry: build galvanic cells from nine half-cells and watch them run down, follow the Nernst equation on a plot of E against log Q to equilibrium, and test Faraday's law with copper and silver plating and the electrolysis of copper(II) chloride and water.</p>
-            <div class="tags"><span class="tag">electrochemistry</span><span class="tag">galvanic cells</span><span class="tag">Nernst equation</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/EquilibriumLab/" style="--hue: 351;">
-          <div class="thumb"><img src="assets/EquilibriumLab.webp" alt="Equilibrium Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">EL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Equilibrium Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Gen Chem chemical equilibrium: watch a mixture react until Q reaches K with the forward and reverse rates equal, work ICE tables against a live simulation, push a mixture at equilibrium with Le Chatelier stresses and see whether Q or K moved, and find ΔH° and ΔS° from a van 't Hoff plot.</p>
-            <div class="tags"><span class="tag">chemical equilibrium</span><span class="tag">equilibrium constant</span><span class="tag">reaction quotient</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/FieldBoundary/" style="--hue: 240;">
-          <div class="thumb"><img src="assets/FieldBoundary.webp" alt="Field Boundary simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">FB</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Field Boundary</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Explore Maxwell boundary conditions for E/D and B/H at a planar interface between two media.</p>
-            <div class="tags"><span class="tag">electromagnetism</span><span class="tag">boundary-conditions</span><span class="tag">dielectrics</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/FluidDynamics/" style="--hue: 244;">
-          <div class="thumb"><img src="assets/FluidDynamics.webp" alt="Fluid Dynamics simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">FD</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Fluid Dynamics</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Flow past an obstacle, from laminar streamlines to a Kármán vortex street to a turbulent wake — real-time GPU fluid simulation across Intro and Lab screens.</p>
-            <div class="tags"><span class="tag">fluid dynamics</span><span class="tag">Reynolds number</span><span class="tag">vortex street</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/HeatTransfer/" style="--hue: 143;">
-          <div class="thumb"><img src="assets/HeatTransfer.webp" alt="Heat Transfer simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">HT</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Heat Transfer</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Heat as a field on a WebGPU engine — temperature, conduction, convection, transport balance, and materials across five screens, with GPU-native compute shaders and a CPU reference backend.</p>
-            <div class="tags"><span class="tag">heat transfer</span><span class="tag">conduction</span><span class="tag">convection</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/InterferometryLab/" style="--hue: 334;">
-          <div class="thumb"><img src="assets/InterferometryLab.webp" alt="Interferometry Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">IL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Interferometry Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Physical-optics simulation of Michelson, Mach-Zehnder, and Fabry-Perot interferometers: optical path length, phase, coherence, and fringe formation.</p>
-            <div class="tags"><span class="tag">optics</span><span class="tag">physical optics</span><span class="tag">interference</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/LewisStructures/" style="--hue: 168;">
-          <div class="thumb"><img src="assets/LewisStructures.webp" alt="Lewis Structures simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LS</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Lewis Structures</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Lewis structures for General Chemistry: count valence electrons, draw bonds and lone pairs on a board with live formal-charge and octet checks, compare resonance forms with curved arrows and their hybrid, practise in a three-level challenge with hints, and see each finished structure's VSEPR shape in 3D.</p>
-            <div class="tags"><span class="tag">chemistry</span><span class="tag">lewis-structures</span><span class="tag">formal-charge</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/LightAndAtoms/" style="--hue: 215;">
-          <div class="thumb"><img src="assets/LightAndAtoms.webp" alt="Light and Atoms simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LA</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Light and Atoms</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Light and atoms for General Chemistry: the electromagnetic spectrum with c = λν and E = hν, a Bohr hydrogen atom that emits and absorbs photons, and the line spectra of gases and flames through a spectroscope.</p>
-            <div class="tags"><span class="tag">chemistry</span><span class="tag">light</span><span class="tag">electromagnetic spectrum</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/LightPropagation/" style="--hue: 220;">
-          <div class="thumb"><img src="assets/LightPropagation.webp" alt="Light Propagation simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LP</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Light Propagation</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Interactive simulation of how light propagates through polarizers and wave plates — Intro, Polarization, Wave Plates, and Lab screens.</p>
-            <div class="tags"><span class="tag">optics</span><span class="tag">light</span><span class="tag">polarization</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/MercuryElongations/" style="--hue: 98;">
-          <div class="thumb"><img src="assets/MercuryElongations.webp" alt="Mercury Elongations simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">ME</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Mercury Elongations</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Explore why Mercury never appears far from the Sun. Synchronized planetarium and orbital views connect the Sun–Mercury angle in Berea's sky with real Earth and Mercury ephemerides.</p>
-            <div class="tags"><span class="tag">astronomy</span><span class="tag">elongation</span><span class="tag">orbits</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/MolScope/" style="--hue: 82;">
-          <div class="thumb"><img src="assets/MolScope.webp" alt="MolScope simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MS</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>MolScope</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>A browser molecular viewer in the spirit of Jmol: explore small molecules, proteins, DNA and crystals in 3D, measure bonds and angles, and drive it with Jmol-style scripts.</p>
-            <div class="tags"><span class="tag">chemistry</span><span class="tag">molecular structure</span><span class="tag">proteins</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/MotionMatch/" style="--hue: 43;">
-          <div class="thumb"><img src="assets/MotionMatch.webp" alt="Motion Match simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MM</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Motion Match</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Match target position-versus-time and velocity-versus-time graphs by moving a character with pointer controls or by walking in front of a PASCO Wireless Motion Sensor.</p>
-            <div class="tags"><span class="tag">kinematics</span><span class="tag">motion graphs</span><span class="tag">position</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/MotionSensor/" style="--hue: 184;">
-          <div class="thumb"><img src="assets/MotionSensor.webp" alt="Motion Sensor simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MS</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Motion Sensor</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Record position over time with the mouse or a PASCO Wireless Motion Sensor over Web Bluetooth, and plot position, velocity and acceleration on a graph whose axes you choose.</p>
-            <div class="tags"><span class="tag">kinematics</span><span class="tag">motion</span><span class="tag">graphing</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/OpticsLab/" style="--hue: 177;">
-          <div class="thumb"><img src="assets/OpticsLab.webp" alt="Optics Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">OL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Optics Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Web-based geometric optics simulation. Supports ray sources, parallel and divergent beams, mirrors, lenses, beam splitters, and refraction interfaces.</p>
-            <div class="tags"><span class="tag">optics</span><span class="tag">geometric optics</span><span class="tag">reflection</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/OscillationsAndChaos/" style="--hue: 237;">
-          <div class="thumb"><img src="assets/OscillationsAndChaos.webp" alt="Oscillations and Chaos simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">OA</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Oscillations and Chaos</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Collection of four classical mechanics simulations exploring oscillations and chaos: single spring, double spring, pendulum, and double pendulum.</p>
-            <div class="tags"><span class="tag">oscillations</span><span class="tag">chaos</span><span class="tag">springs</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/Oscilloscope/" style="--hue: 183;">
-          <div class="thumb"><img src="assets/Oscilloscope.webp" alt="Oscilloscope simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">O</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Oscilloscope</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Single-screen SceneryStack bench oscilloscope. Display a synthetic function-generator signal or live microphone audio on a phosphor-green CRT graticule, with two channels, triggering, X-Y and FFT modes, measurement cursors, and live auto-measurements.</p>
-            <div class="tags"><span class="tag">oscilloscope</span><span class="tag">waveforms</span><span class="tag">signals</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/PeriodicTrends/" style="--hue: 359;">
-          <div class="thumb"><img src="assets/PeriodicTrends.webp" alt="Periodic Trends simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">PT</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Periodic Trends</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Gen Chem periodic trends from hydrogen to krypton: click an element or drag across a period or down a group to watch atomic radius, ionization energy, electron affinity and electronegativity change, explained through effective nuclear charge (Slater's rules) and shielding.</p>
-            <div class="tags"><span class="tag">periodic trends</span><span class="tag">effective nuclear charge</span><span class="tag">chemistry</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/PlateTectonics/" style="--hue: 2;">
-          <div class="thumb"><img src="assets/PlateTectonics.webp" alt="Plate Tectonics simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">PT</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Plate Tectonics</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Interactive map of the Earth's tectonic plates drawn entirely from real data — PB2002 plate boundaries, USGS earthquakes, Holocene volcanoes and NOAA relief — plus cross-sections through a subduction zone, a spreading ridge and a transform fault, and a reconstruction clock running 50 Myr either side of the present. Two further screens port the tabs of PhET's Java simulation: crustal isostasy, and the evolution of a convergent or divergent plate boundary. A fourth screen replays the Müller et al. (2019) reconstruction from the present back to 250 Ma.</p>
-            <div class="tags"><span class="tag">plate tectonics</span><span class="tag">seismology</span><span class="tag">volcanism</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/Precession/" style="--hue: 331;">
-          <div class="thumb"><img src="assets/Precession.webp" alt="Precession simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">P</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Precession</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Rigid-body dynamics of a spinning gyroscope: steady precession under gravity, nutation, and torque-free tumbling.</p>
-            <div class="tags"><span class="tag">rigid body</span><span class="tag">precession</span><span class="tag">nutation</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/QuantumAtom3D/" style="--hue: 187;">
-          <div class="thumb"><img src="assets/QuantumAtom3D.webp" alt="Quantum Atom 3D simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">QA</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Quantum Atom 3D</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>3D hydrogenic atom explorer: orbitals and probability density with phase colouring, radial distributions, superpositions that evolve in time, the angular-momentum vector model, normal and anomalous Zeeman splitting with selection rules, and the degeneracy of the isotropic 3D oscillator.</p>
-            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">hydrogen atom</span><span class="tag">atomic orbitals</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/QuantumPotential/" style="--hue: 251;">
-          <div class="thumb"><img src="assets/QuantumPotential.webp" alt="Quantum Potential simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">QP</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Quantum Potential</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Interactive quantum mechanics lab: solve the 1D Schrödinger equation in real time for analytically solvable and multi-well potentials, with wave functions, probability densities, energy levels, and time evolution.</p>
-            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">Schrodinger equation</span><span class="tag">potential wells</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/QubitSketch/" style="--hue: 47;">
-          <div class="thumb"><img src="assets/QubitSketch.webp" alt="Qubit Sketch simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">QS</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Qubit Sketch</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Drag-and-drop quantum circuit builder with a live state simulator. Place quantum gates and watch probabilities, amplitudes, Bloch spheres, and measurements update in real time.</p>
-            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">quantum circuits</span><span class="tag">qubits</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/RadioactivityAndStatistics/" style="--hue: 194;">
-          <div class="thumb"><img src="assets/RadioactivityAndStatistics.webp" alt="Radioactivity and Statistics simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RA</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Radioactivity and Statistics</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Counting-statistics laboratory: measure radioactive decay — simulated or from a PASCO Wireless Geiger Counter over Web Bluetooth — and compare the distribution against Poisson and Gaussian theory.</p>
-            <div class="tags"><span class="tag">radioactivity</span><span class="tag">statistics</span><span class="tag">Poisson</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/Resonance/" style="--hue: 206;">
-          <div class="thumb"><img src="assets/Resonance.webp" alt="Resonance simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">R</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Resonance</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Interactive simulation of resonance in driven oscillating systems. Visualizes driven mass-spring systems and Chladni plate patterns.</p>
-            <div class="tags"><span class="tag">resonance</span><span class="tag">oscillations</span><span class="tag">waves</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/SpecialRelativity/" style="--hue: 334;">
-          <div class="thumb"><img src="assets/SpecialRelativity.webp" alt="Special Relativity simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SR</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Special Relativity</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Explore special relativity across five screens: a moving light clock, an interactive Minkowski spacetime diagram, length contraction (ladder and barn), the twin paradox, and the relativistic Doppler effect.</p>
-            <div class="tags"><span class="tag">special relativity</span><span class="tag">spacetime</span><span class="tag">time dilation</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/SpectroscopyLab/" style="--hue: 125;">
-          <div class="thumb"><img src="assets/SpectroscopyLab.webp" alt="Spectroscopy Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Spectroscopy Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Read infrared, NMR and UV-Vis spectra against a 3D molecule: click a peak to see the atoms, vibration or orbital behind it.</p>
-            <div class="tags"><span class="tag">chemistry</span><span class="tag">spectroscopy</span><span class="tag">infrared spectroscopy</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/StandingWaves/" style="--hue: 262;">
-          <div class="thumb"><img src="assets/StandingWaves.webp" alt="Standing Waves simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SW</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Standing Waves</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Longitudinal standing waves in a pipe: displacement, velocity and pressure phase relationships, open vs. closed end reflection, and the harmonic series of open and stopped pipes.</p>
-            <div class="tags"><span class="tag">standing waves</span><span class="tag">acoustics</span><span class="tag">pipes</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/SternGerlach/" style="--hue: 138;">
-          <div class="thumb"><img src="assets/SternGerlach.webp" alt="Stern–Gerlach simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SG</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Stern–Gerlach</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Interactive Stern–Gerlach experiment: assemble analyzers, magnets, and counters; fire spin-½ / spin-1 atoms; compare Monte Carlo counts with analytic quantum predictions.</p>
-            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">spin</span><span class="tag">Stern-Gerlach</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/TitrationLab/" style="--hue: 149;">
-          <div class="thumb"><img src="assets/TitrationLab.webp" alt="Titration Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">TL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Titration Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Gen Chem acid–base titration: titrate at the bench with a burette, an indicator and a pH meter (including an unknown acid), compare exact titration curves for strong, weak and polyprotic acids and bases with their buffer regions and species, and choose an indicator by its endpoint error.</p>
-            <div class="tags"><span class="tag">acid-base titration</span><span class="tag">indicators</span><span class="tag">chemistry</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/TrackLab/" style="--hue: 52;">
-          <div class="thumb"><img src="assets/TrackLab.webp" alt="Track Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">TL</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Track Lab</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Browser-based video motion-analysis tool. Load a video, calibrate real-world distances, and auto-track objects across frames using computer vision.</p>
-            <div class="tags"><span class="tag">kinematics</span><span class="tag">measurement</span><span class="tag">data analysis</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/VernierScales/" style="--hue: 254;">
-          <div class="thumb"><img src="assets/VernierScales.webp" alt="Vernier Scales simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">VS</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Vernier Scales</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Learn to read vernier calipers and vernier scales in general.</p>
-            <div class="tags"><span class="tag">metrology</span><span class="tag">measurement</span><span class="tag">vernier caliper</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/WaveComposer/" style="--hue: 163;">
-          <div class="thumb"><img src="assets/WaveComposer.webp" alt="Wave Composer simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">WC</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Wave Composer</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>Three-screen VoceVista-style real-time voice-analysis simulation. Analyzes microphone input for waveform, spectrum, and composition.</p>
-            <div class="tags"><span class="tag">waves</span><span class="tag">acoustics</span><span class="tag">Fourier analysis</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://openlyceum.github.io/Zenith/" style="--hue: 266;">
-          <div class="thumb"><img src="assets/Zenith.webp" alt="Zenith simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">Z</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Zenith</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>SceneryStack planetarium renderer. Project the night sky for an observer on Earth from latitude, longitude, and local sidereal time.</p>
-            <div class="tags"><span class="tag">astronomy</span><span class="tag">planetarium</span><span class="tag">celestial sphere</span></div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <h2>Classic &amp; PhET Ports</h2>
-        <span class="count">8</span>
-      </div>
-      <div class="grid">
-        <a class="card" href="https://openlyceum.github.io/ElectricFieldOfDreams/" style="--hue: 280;">
+        <a class="card" href="https://openlyceum.github.io/ElectricFieldOfDreams/" style="--hue: 280;" data-subject="physics" data-collection="phet" data-topics="electrostatics, electric fields, Coulomb's law">
           <div class="thumb"><img src="assets/ElectricFieldOfDreams.webp" alt="Electric Field of Dreams simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">EF</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Electric Field of Dreams</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -746,9 +510,34 @@
             <div class="tags"><span class="tag">electrostatics</span><span class="tag">electric fields</span><span class="tag">Coulomb's law</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/FluidPressureAndFlow/" style="--hue: 240;">
+        <a class="card" href="https://openlyceum.github.io/FieldBoundary/" style="--hue: 240;" data-subject="physics" data-collection="original" data-topics="electromagnetism, boundary-conditions, dielectrics">
+          <div class="thumb"><img src="assets/FieldBoundary.webp" alt="Field Boundary simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">FB</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Field Boundary</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Explore Maxwell boundary conditions for E/D and B/H at a planar interface between two media.</p>
+            <div class="tags"><span class="tag">electromagnetism</span><span class="tag">boundary-conditions</span><span class="tag">dielectrics</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/FluidDynamics/" style="--hue: 244;" data-subject="physics" data-collection="original" data-topics="fluid dynamics, Reynolds number, vortex street, laminar flow, turbulence, viscosity">
+          <div class="thumb"><img src="assets/FluidDynamics.webp" alt="Fluid Dynamics simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">FD</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Fluid Dynamics</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Flow past an obstacle, from laminar streamlines to a Kármán vortex street to a turbulent wake — real-time GPU fluid simulation across Intro and Lab screens.</p>
+            <div class="tags"><span class="tag">fluid dynamics</span><span class="tag">Reynolds number</span><span class="tag">vortex street</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/FluidPressureAndFlow/" style="--hue: 240;" data-subject="physics" data-collection="phet" data-topics="fluid pressure, hydrostatics, Bernoulli, fluid flow, Pascal">
           <div class="thumb"><img src="assets/FluidPressureAndFlow.webp" alt="Fluid Pressure and Flow simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">FP</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Fluid Pressure and Flow</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -757,9 +546,34 @@
             <div class="tags"><span class="tag">fluid pressure</span><span class="tag">hydrostatics</span><span class="tag">Bernoulli</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/LadyBug/" style="--hue: 320;">
+        <a class="card" href="https://openlyceum.github.io/HeatTransfer/" style="--hue: 143;" data-subject="physics" data-collection="original" data-topics="heat transfer, conduction, convection, thermodynamics">
+          <div class="thumb"><img src="assets/HeatTransfer.webp" alt="Heat Transfer simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">HT</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Heat Transfer</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Heat as a field on a WebGPU engine — temperature, conduction, convection, transport balance, and materials across five screens, with GPU-native compute shaders and a CPU reference backend.</p>
+            <div class="tags"><span class="tag">heat transfer</span><span class="tag">conduction</span><span class="tag">convection</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/InterferometryLab/" style="--hue: 334;" data-subject="physics" data-collection="original" data-topics="optics, physical optics, interference, coherence, wave optics">
+          <div class="thumb"><img src="assets/InterferometryLab.webp" alt="Interferometry Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">IL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Interferometry Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Physical-optics simulation of Michelson, Mach-Zehnder, and Fabry-Perot interferometers: optical path length, phase, coherence, and fringe formation.</p>
+            <div class="tags"><span class="tag">optics</span><span class="tag">physical optics</span><span class="tag">interference</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/LadyBug/" style="--hue: 320;" data-subject="physics" data-collection="phet" data-topics="kinematics, 2D motion, rotation, vectors">
           <div class="thumb"><img src="assets/LadyBug.webp" alt="Ladybug Motion 2D simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LB</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Ladybug Motion 2D</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -768,9 +582,22 @@
             <div class="tags"><span class="tag">kinematics</span><span class="tag">2D motion</span><span class="tag">rotation</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/LunarLander/" style="--hue: 32;">
+        <a class="card" href="https://openlyceum.github.io/LightPropagation/" style="--hue: 220;" data-subject="physics" data-collection="original" data-topics="optics, light, polarization, wave plates">
+          <div class="thumb"><img src="assets/LightPropagation.webp" alt="Light Propagation simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LP</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Light Propagation</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Interactive simulation of how light propagates through polarizers and wave plates — Intro, Polarization, Wave Plates, and Lab screens.</p>
+            <div class="tags"><span class="tag">optics</span><span class="tag">light</span><span class="tag">polarization</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/LunarLander/" style="--hue: 32;" data-subject="physics" data-collection="phet" data-topics="gravity, forces, kinematics, energy">
           <div class="thumb"><img src="assets/LunarLander.webp" alt="Lunar Lander simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LL</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Lunar Lander</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -779,9 +606,10 @@
             <div class="tags"><span class="tag">gravity</span><span class="tag">forces</span><span class="tag">kinematics</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/MazeGame/" style="--hue: 55;">
+        <a class="card" href="https://openlyceum.github.io/MazeGame/" style="--hue: 55;" data-subject="physics" data-collection="phet" data-topics="kinematics, vectors, motion, acceleration">
           <div class="thumb"><img src="assets/MazeGame.webp" alt="Maze Game simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MG</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Maze Game</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -790,9 +618,34 @@
             <div class="tags"><span class="tag">kinematics</span><span class="tag">vectors</span><span class="tag">motion</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/MovingMan/" style="--hue: 188;">
+        <a class="card" href="https://openlyceum.github.io/MotionMatch/" style="--hue: 43;" data-subject="physics" data-collection="original" data-topics="kinematics, motion graphs, position, velocity">
+          <div class="thumb"><img src="assets/MotionMatch.webp" alt="Motion Match simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MM</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Motion Match</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Match target position-versus-time and velocity-versus-time graphs by moving a character with pointer controls or by walking in front of a PASCO Wireless Motion Sensor.</p>
+            <div class="tags"><span class="tag">kinematics</span><span class="tag">motion graphs</span><span class="tag">position</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/MotionSensor/" style="--hue: 184;" data-subject="physics" data-collection="original" data-topics="kinematics, motion, graphing, data-logging">
+          <div class="thumb"><img src="assets/MotionSensor.webp" alt="Motion Sensor simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MS</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Motion Sensor</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Record position over time with the mouse or a PASCO Wireless Motion Sensor over Web Bluetooth, and plot position, velocity and acceleration on a graph whose axes you choose.</p>
+            <div class="tags"><span class="tag">kinematics</span><span class="tag">motion</span><span class="tag">graphing</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/MovingMan/" style="--hue: 188;" data-subject="physics" data-collection="phet" data-topics="kinematics, 1D motion, graphs, velocity, acceleration">
           <div class="thumb"><img src="assets/MovingMan.webp" alt="Moving Man simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MM</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Moving Man</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -801,9 +654,94 @@
             <div class="tags"><span class="tag">kinematics</span><span class="tag">1D motion</span><span class="tag">graphs</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/RadioWaves/" style="--hue: 293;">
+        <a class="card" href="https://openlyceum.github.io/OpticsLab/" style="--hue: 177;" data-subject="physics" data-collection="original" data-topics="optics, geometric optics, reflection, refraction, lenses">
+          <div class="thumb"><img src="assets/OpticsLab.webp" alt="Optics Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">OL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Optics Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Web-based geometric optics simulation. Supports ray sources, parallel and divergent beams, mirrors, lenses, beam splitters, and refraction interfaces.</p>
+            <div class="tags"><span class="tag">optics</span><span class="tag">geometric optics</span><span class="tag">reflection</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/OscillationsAndChaos/" style="--hue: 237;" data-subject="physics" data-collection="original" data-topics="oscillations, chaos, springs, pendulum, energy, phase space">
+          <div class="thumb"><img src="assets/OscillationsAndChaos.webp" alt="Oscillations and Chaos simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">OA</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Oscillations and Chaos</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Collection of four classical mechanics simulations exploring oscillations and chaos: single spring, double spring, pendulum, and double pendulum.</p>
+            <div class="tags"><span class="tag">oscillations</span><span class="tag">chaos</span><span class="tag">springs</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/Oscilloscope/" style="--hue: 183;" data-subject="physics" data-collection="original" data-topics="oscilloscope, waveforms, signals, function generator, audio, FFT">
+          <div class="thumb"><img src="assets/Oscilloscope.webp" alt="Oscilloscope simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">O</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Oscilloscope</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Single-screen SceneryStack bench oscilloscope. Display a synthetic function-generator signal or live microphone audio on a phosphor-green CRT graticule, with two channels, triggering, X-Y and FFT modes, measurement cursors, and live auto-measurements.</p>
+            <div class="tags"><span class="tag">oscilloscope</span><span class="tag">waveforms</span><span class="tag">signals</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/Precession/" style="--hue: 331;" data-subject="physics" data-collection="original" data-topics="rigid body, precession, nutation, gyroscope, angular momentum, torque">
+          <div class="thumb"><img src="assets/Precession.webp" alt="Precession simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">P</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Precession</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Rigid-body dynamics of a spinning gyroscope: steady precession under gravity, nutation, and torque-free tumbling.</p>
+            <div class="tags"><span class="tag">rigid body</span><span class="tag">precession</span><span class="tag">nutation</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/QuantumAtom3D/" style="--hue: 187;" data-subject="physics" data-collection="original" data-topics="quantum mechanics, hydrogen atom, atomic orbitals, spherical harmonics, angular momentum, Zeeman effect, harmonic oscillator">
+          <div class="thumb"><img src="assets/QuantumAtom3D.webp" alt="Quantum Atom 3D simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">QA</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Quantum Atom 3D</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>3D hydrogenic atom explorer: orbitals and probability density with phase colouring, radial distributions, superpositions that evolve in time, the angular-momentum vector model, normal and anomalous Zeeman splitting with selection rules, and the degeneracy of the isotropic 3D oscillator.</p>
+            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">hydrogen atom</span><span class="tag">atomic orbitals</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/QuantumPotential/" style="--hue: 251;" data-subject="physics" data-collection="original" data-topics="quantum mechanics, Schrodinger equation, potential wells, wave functions, bound states">
+          <div class="thumb"><img src="assets/QuantumPotential.webp" alt="Quantum Potential simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">QP</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Quantum Potential</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Interactive quantum mechanics lab: solve the 1D Schrödinger equation in real time for analytically solvable and multi-well potentials, with wave functions, probability densities, energy levels, and time evolution.</p>
+            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">Schrodinger equation</span><span class="tag">potential wells</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/QubitSketch/" style="--hue: 47;" data-subject="physics" data-collection="original" data-topics="quantum mechanics, quantum circuits, qubits, quantum gates">
+          <div class="thumb"><img src="assets/QubitSketch.webp" alt="Qubit Sketch simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">QS</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Qubit Sketch</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Drag-and-drop quantum circuit builder with a live state simulator. Place quantum gates and watch probabilities, amplitudes, Bloch spheres, and measurements update in real time.</p>
+            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">quantum circuits</span><span class="tag">qubits</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/RadioWaves/" style="--hue: 293;" data-subject="physics" data-collection="phet" data-topics="electromagnetism, radio waves, EM fields, antennas">
           <div class="thumb"><img src="assets/RadioWaves.webp" alt="Radio Waves simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RW</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Radio Waves</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -812,9 +750,70 @@
             <div class="tags"><span class="tag">electromagnetism</span><span class="tag">radio waves</span><span class="tag">EM fields</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/TheRamp/" style="--hue: 329;">
+        <a class="card" href="https://openlyceum.github.io/RadioactivityAndStatistics/" style="--hue: 194;" data-subject="physics" data-collection="original" data-topics="radioactivity, statistics, Poisson, Geiger counter, counting">
+          <div class="thumb"><img src="assets/RadioactivityAndStatistics.webp" alt="Radioactivity and Statistics simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RA</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Radioactivity and Statistics</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Counting-statistics laboratory: measure radioactive decay — simulated or from a PASCO Wireless Geiger Counter over Web Bluetooth — and compare the distribution against Poisson and Gaussian theory.</p>
+            <div class="tags"><span class="tag">radioactivity</span><span class="tag">statistics</span><span class="tag">Poisson</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/Resonance/" style="--hue: 206;" data-subject="physics" data-collection="original" data-topics="resonance, oscillations, waves, Chladni patterns, damping">
+          <div class="thumb"><img src="assets/Resonance.webp" alt="Resonance simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">R</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Resonance</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Interactive simulation of resonance in driven oscillating systems. Visualizes driven mass-spring systems and Chladni plate patterns.</p>
+            <div class="tags"><span class="tag">resonance</span><span class="tag">oscillations</span><span class="tag">waves</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/SpecialRelativity/" style="--hue: 334;" data-subject="physics" data-collection="original" data-topics="special relativity, spacetime, time dilation, light clock, length contraction, Lorentz transformation, simultaneity, twin paradox, relativistic Doppler effect">
+          <div class="thumb"><img src="assets/SpecialRelativity.webp" alt="Special Relativity simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SR</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Special Relativity</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Explore special relativity across five screens: a moving light clock, an interactive Minkowski spacetime diagram, length contraction (ladder and barn), the twin paradox, and the relativistic Doppler effect.</p>
+            <div class="tags"><span class="tag">special relativity</span><span class="tag">spacetime</span><span class="tag">time dilation</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/StandingWaves/" style="--hue: 262;" data-subject="physics" data-collection="original" data-topics="standing waves, acoustics, pipes, harmonics">
+          <div class="thumb"><img src="assets/StandingWaves.webp" alt="Standing Waves simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SW</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Standing Waves</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Longitudinal standing waves in a pipe: displacement, velocity and pressure phase relationships, open vs. closed end reflection, and the harmonic series of open and stopped pipes.</p>
+            <div class="tags"><span class="tag">standing waves</span><span class="tag">acoustics</span><span class="tag">pipes</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/SternGerlach/" style="--hue: 138;" data-subject="physics" data-collection="original" data-topics="quantum mechanics, spin, Stern-Gerlach, measurement, superposition">
+          <div class="thumb"><img src="assets/SternGerlach.webp" alt="Stern–Gerlach simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SG</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Stern–Gerlach</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Interactive Stern–Gerlach experiment: assemble analyzers, magnets, and counters; fire spin-½ / spin-1 atoms; compare Monte Carlo counts with analytic quantum predictions.</p>
+            <div class="tags"><span class="tag">quantum mechanics</span><span class="tag">spin</span><span class="tag">Stern-Gerlach</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/TheRamp/" style="--hue: 329;" data-subject="physics" data-collection="phet" data-topics="forces, inclined plane, friction, energy, Newton's laws, kinematics">
           <div class="thumb"><img src="assets/TheRamp.webp" alt="The Ramp simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">TR</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>The Ramp</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -823,18 +822,170 @@
             <div class="tags"><span class="tag">forces</span><span class="tag">inclined plane</span><span class="tag">friction</span></div>
           </div>
         </a>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <h2>NAAP Astronomy Labs</h2>
-        <span class="count">7</span>
-      </div>
-      <div class="grid">
-        <a class="card" href="https://openlyceum.github.io/BasicCoordinatesAndSeasons/" style="--hue: 116;">
+        <a class="card" href="https://openlyceum.github.io/TrackLab/" style="--hue: 52;" data-subject="physics" data-collection="original" data-topics="kinematics, measurement, data analysis">
+          <div class="thumb"><img src="assets/TrackLab.webp" alt="Track Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">TL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Track Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Browser-based video motion-analysis tool. Load a video, calibrate real-world distances, and auto-track objects across frames using computer vision.</p>
+            <div class="tags"><span class="tag">kinematics</span><span class="tag">measurement</span><span class="tag">data analysis</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/VernierScales/" style="--hue: 254;" data-subject="physics" data-collection="original" data-topics="metrology, measurement, vernier caliper">
+          <div class="thumb"><img src="assets/VernierScales.webp" alt="Vernier Scales simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">VS</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Vernier Scales</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Learn to read vernier calipers and vernier scales in general.</p>
+            <div class="tags"><span class="tag">metrology</span><span class="tag">measurement</span><span class="tag">vernier caliper</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/WaveComposer/" style="--hue: 163;" data-subject="physics" data-collection="original" data-topics="waves, acoustics, Fourier analysis, sound">
+          <div class="thumb"><img src="assets/WaveComposer.webp" alt="Wave Composer simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">WC</span></div>
+          <div class="card-body">
+            <span class="card-meta">Physics</span>
+            <div class="card-head">
+              <h3>Wave Composer</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Three-screen VoceVista-style real-time voice-analysis simulation. Analyzes microphone input for waveform, spectrum, and composition.</p>
+            <div class="tags"><span class="tag">waves</span><span class="tag">acoustics</span><span class="tag">Fourier analysis</span></div>
+          </div>
+        </a>
+        </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>Chemistry</h2>
+          <span class="count">9</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://openlyceum.github.io/CalorimetryLab/" style="--hue: 354;" data-subject="chemistry" data-collection="original" data-topics="thermochemistry, calorimetry, specific heat, enthalpy, Hess law, chemistry">
+          <div class="thumb"><img src="assets/CalorimetryLab.webp" alt="Calorimetry Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">CL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Calorimetry Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Gen Chem thermochemistry: drop a hot metal into water to find its specific heat, measure ΔH of neutralization, dissolving salts and Mg + HCl in a coffee-cup calorimeter with drift-line extrapolation, calibrate a bomb calorimeter with benzoic acid and burn fuels, and build ΔH from reversed and scaled step reactions with Hess's law.</p>
+            <div class="tags"><span class="tag">thermochemistry</span><span class="tag">calorimetry</span><span class="tag">specific heat</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/Electrochemistry/" style="--hue: 262;" data-subject="chemistry" data-collection="original" data-topics="electrochemistry, galvanic cells, Nernst equation, electrolysis, chemistry">
+          <div class="thumb"><img src="assets/Electrochemistry.webp" alt="Electrochemistry simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">E</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Electrochemistry</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Gen Chem electrochemistry: build galvanic cells from nine half-cells and watch them run down, follow the Nernst equation on a plot of E against log Q to equilibrium, and test Faraday's law with copper and silver plating and the electrolysis of copper(II) chloride and water.</p>
+            <div class="tags"><span class="tag">electrochemistry</span><span class="tag">galvanic cells</span><span class="tag">Nernst equation</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/EquilibriumLab/" style="--hue: 351;" data-subject="chemistry" data-collection="original" data-topics="chemical equilibrium, equilibrium constant, reaction quotient, ICE table, Le Chatelier principle, van t Hoff equation, chemistry">
+          <div class="thumb"><img src="assets/EquilibriumLab.webp" alt="Equilibrium Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">EL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Equilibrium Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Gen Chem chemical equilibrium: watch a mixture react until Q reaches K with the forward and reverse rates equal, work ICE tables against a live simulation, push a mixture at equilibrium with Le Chatelier stresses and see whether Q or K moved, and find ΔH° and ΔS° from a van 't Hoff plot.</p>
+            <div class="tags"><span class="tag">chemical equilibrium</span><span class="tag">equilibrium constant</span><span class="tag">reaction quotient</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/LewisStructures/" style="--hue: 168;" data-subject="chemistry" data-collection="original" data-topics="chemistry, lewis-structures, formal-charge, resonance, vsepr">
+          <div class="thumb"><img src="assets/LewisStructures.webp" alt="Lewis Structures simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LS</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Lewis Structures</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Lewis structures for General Chemistry: count valence electrons, draw bonds and lone pairs on a board with live formal-charge and octet checks, compare resonance forms with curved arrows and their hybrid, practise in a three-level challenge with hints, and see each finished structure's VSEPR shape in 3D.</p>
+            <div class="tags"><span class="tag">chemistry</span><span class="tag">lewis-structures</span><span class="tag">formal-charge</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/LightAndAtoms/" style="--hue: 215;" data-subject="chemistry" data-collection="original" data-topics="chemistry, light, electromagnetic spectrum, photons, Bohr model, atomic spectra, emission spectra, absorption spectra, flame tests">
+          <div class="thumb"><img src="assets/LightAndAtoms.webp" alt="Light and Atoms simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LA</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Light and Atoms</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Light and atoms for General Chemistry: the electromagnetic spectrum with c = λν and E = hν, a Bohr hydrogen atom that emits and absorbs photons, and the line spectra of gases and flames through a spectroscope.</p>
+            <div class="tags"><span class="tag">chemistry</span><span class="tag">light</span><span class="tag">electromagnetic spectrum</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/MolScope/" style="--hue: 82;" data-subject="chemistry" data-collection="original" data-topics="chemistry, molecular structure, proteins, DNA, crystallography, unit cells, chemical bonding, molecular geometry, molecular vibrations">
+          <div class="thumb"><img src="assets/MolScope.webp" alt="MolScope simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MS</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>MolScope</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>A browser molecular viewer in the spirit of Jmol: explore small molecules, proteins, DNA and crystals in 3D, measure bonds and angles, and drive it with Jmol-style scripts.</p>
+            <div class="tags"><span class="tag">chemistry</span><span class="tag">molecular structure</span><span class="tag">proteins</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/PeriodicTrends/" style="--hue: 359;" data-subject="chemistry" data-collection="original" data-topics="periodic trends, effective nuclear charge, chemistry">
+          <div class="thumb"><img src="assets/PeriodicTrends.webp" alt="Periodic Trends simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">PT</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Periodic Trends</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Gen Chem periodic trends from hydrogen to krypton: click an element or drag across a period or down a group to watch atomic radius, ionization energy, electron affinity and electronegativity change, explained through effective nuclear charge (Slater's rules) and shielding.</p>
+            <div class="tags"><span class="tag">periodic trends</span><span class="tag">effective nuclear charge</span><span class="tag">chemistry</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/SpectroscopyLab/" style="--hue: 125;" data-subject="chemistry" data-collection="original" data-topics="chemistry, spectroscopy, infrared spectroscopy, NMR spectroscopy, UV-Vis spectroscopy, molecular vibrations, molecular orbitals, particle in a box">
+          <div class="thumb"><img src="assets/SpectroscopyLab.webp" alt="Spectroscopy Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Spectroscopy Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Read infrared, NMR and UV-Vis spectra against a 3D molecule: click a peak to see the atoms, vibration or orbital behind it.</p>
+            <div class="tags"><span class="tag">chemistry</span><span class="tag">spectroscopy</span><span class="tag">infrared spectroscopy</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/TitrationLab/" style="--hue: 149;" data-subject="chemistry" data-collection="original" data-topics="acid-base titration, indicators, chemistry">
+          <div class="thumb"><img src="assets/TitrationLab.webp" alt="Titration Lab simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">TL</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Titration Lab</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Gen Chem acid–base titration: titrate at the bench with a burette, an indicator and a pH meter (including an unknown acid), compare exact titration curves for strong, weak and polyprotic acids and bases with their buffer regions and species, and choose an indicator by its endpoint error.</p>
+            <div class="tags"><span class="tag">acid-base titration</span><span class="tag">indicators</span><span class="tag">chemistry</span></div>
+          </div>
+        </a>
+        </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>Astronomy</h2>
+          <span class="count">9</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://openlyceum.github.io/BasicCoordinatesAndSeasons/" style="--hue: 116;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, coordinates, seasons, celestial sphere, latitude, longitude">
           <div class="thumb"><img src="assets/BasicCoordinatesAndSeasons.webp" alt="Basic Coordinates and Seasons simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">BC</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Basic Coordinates and Seasons</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -843,9 +994,10 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">coordinates</span><span class="tag">seasons</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/ExtrasolarPlanets/" style="--hue: 348;">
+        <a class="card" href="https://openlyceum.github.io/ExtrasolarPlanets/" style="--hue: 348;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, exoplanets, radial velocity, transit photometry, orbits">
           <div class="thumb"><img src="assets/ExtrasolarPlanets.webp" alt="Extrasolar Planets simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">EP</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Extrasolar Planets</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -854,9 +1006,10 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">exoplanets</span><span class="tag">radial velocity</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/HabitableZones/" style="--hue: 339;">
+        <a class="card" href="https://openlyceum.github.io/HabitableZones/" style="--hue: 339;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, habitable zone, exoplanets, galactic habitability, stellar luminosity">
           <div class="thumb"><img src="assets/HabitableZones.webp" alt="Habitable Zones simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">HZ</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Habitable Zones</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -865,9 +1018,22 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">habitable zone</span><span class="tag">exoplanets</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/MotionsOfTheSun/" style="--hue: 85;">
+        <a class="card" href="https://openlyceum.github.io/MercuryElongations/" style="--hue: 98;" data-subject="astronomy" data-collection="original" data-topics="astronomy, elongation, orbits, planetarium, ephemerides">
+          <div class="thumb"><img src="assets/MercuryElongations.webp" alt="Mercury Elongations simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">ME</span></div>
+          <div class="card-body">
+            <span class="card-meta">Astronomy</span>
+            <div class="card-head">
+              <h3>Mercury Elongations</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Explore why Mercury never appears far from the Sun. Synchronized planetarium and orbital views connect the Sun–Mercury angle in Berea's sky with real Earth and Mercury ephemerides.</p>
+            <div class="tags"><span class="tag">astronomy</span><span class="tag">elongation</span><span class="tag">orbits</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/MotionsOfTheSun/" style="--hue: 85;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, sun paths, sidereal time, solar time, zodiac, ecliptic">
           <div class="thumb"><img src="assets/MotionsOfTheSun.webp" alt="Motions of the Sun simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MO</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Motions of the Sun</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -876,9 +1042,10 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">sun paths</span><span class="tag">sidereal time</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/RotatingSky/" style="--hue: 71;">
+        <a class="card" href="https://openlyceum.github.io/RotatingSky/" style="--hue: 71;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, celestial sphere, diurnal motion, horizon coordinates, Earth rotation">
           <div class="thumb"><img src="assets/RotatingSky.webp" alt="Rotating Sky simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RS</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Rotating Sky</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -887,9 +1054,10 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">celestial sphere</span><span class="tag">diurnal motion</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/SolarSystemModels/" style="--hue: 330;">
+        <a class="card" href="https://openlyceum.github.io/SolarSystemModels/" style="--hue: 330;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, geocentrism, heliocentrism, epicycles, planetary configurations">
           <div class="thumb"><img src="assets/SolarSystemModels.webp" alt="Solar System Models simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">SS</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Solar System Models</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -898,9 +1066,10 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">geocentrism</span><span class="tag">heliocentrism</span></div>
           </div>
         </a>
-        <a class="card" href="https://openlyceum.github.io/VariableStarPhotometry/" style="--hue: 139;">
+        <a class="card" href="https://openlyceum.github.io/VariableStarPhotometry/" style="--hue: 139;" data-subject="astronomy" data-collection="naap" data-topics="astronomy, photometry, variable stars, CCD imaging, light curves, period finding">
           <div class="thumb"><img src="assets/VariableStarPhotometry.webp" alt="Variable Star Photometry simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">VS</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Variable Star Photometry</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -909,8 +1078,46 @@
             <div class="tags"><span class="tag">astronomy</span><span class="tag">photometry</span><span class="tag">variable stars</span></div>
           </div>
         </a>
+        <a class="card" href="https://openlyceum.github.io/Zenith/" style="--hue: 266;" data-subject="astronomy" data-collection="original" data-topics="astronomy, planetarium, celestial sphere, sidereal time, horizon coordinates">
+          <div class="thumb"><img src="assets/Zenith.webp" alt="Zenith simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">Z</span></div>
+          <div class="card-body">
+            <span class="card-meta">Astronomy</span>
+            <div class="card-head">
+              <h3>Zenith</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>SceneryStack planetarium renderer. Project the night sky for an observer on Earth from latitude, longitude, and local sidereal time.</p>
+            <div class="tags"><span class="tag">astronomy</span><span class="tag">planetarium</span><span class="tag">celestial sphere</span></div>
+          </div>
+        </a>
+        </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>Earth Science</h2>
+          <span class="count">1</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://openlyceum.github.io/PlateTectonics/" style="--hue: 2;" data-subject="earth-science" data-collection="original" data-topics="plate tectonics, seismology, volcanism, geophysics, plate reconstruction, isostasy, subduction">
+          <div class="thumb"><img src="assets/PlateTectonics.webp" alt="Plate Tectonics simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">PT</span></div>
+          <div class="card-body">
+            <span class="card-meta">Earth Science</span>
+            <div class="card-head">
+              <h3>Plate Tectonics</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Interactive map of the Earth's tectonic plates drawn entirely from real data — PB2002 plate boundaries, USGS earthquakes, Holocene volcanoes and NOAA relief — plus cross-sections through a subduction zone, a spreading ridge and a transform fault, and a reconstruction clock running 50 Myr either side of the present. Two further screens port the tabs of PhET's Java simulation: crustal isostasy, and the evolution of a convergent or divergent plate boundary. A fourth screen replays the Müller et al. (2019) reconstruction from the present back to 250 Ma.</p>
+            <div class="tags"><span class="tag">plate tectonics</span><span class="tag">seismology</span><span class="tag">volcanism</span></div>
+          </div>
+        </a>
+        </div>
+      </section>
       </div>
-    </section>
+
+      <div class="empty" id="sim-empty" hidden>
+        <p>No simulations match these filters.</p>
+        <button type="button" id="sim-reset">Clear filters</button>
+      </div>
     </main>
 
     <footer>
@@ -918,5 +1125,126 @@
       <a href="https://github.com/OpenLyceum/Baton">OpenLyceum/Baton</a></p>
     </footer>
   </div>
+
+  <script>
+    // Subject filter, collection filter, search, and grouping. State is mirrored
+    // in the query string (?subject=chemistry&group=collection&q=orbit) so a
+    // filtered view can be shared as a link.
+    (() => {
+      const SUBJECTS = [["physics", "Physics"], ["chemistry", "Chemistry"], ["astronomy", "Astronomy"], ["earth-science", "Earth Science"]];
+      const COLLECTIONS = [["original", "Core Simulations"], ["phet", "Classic & PhET Ports"], ["naap", "NAAP Astronomy Labs"]];
+      const GROUPS = ["subject", "collection", "none"];
+
+      const toolbar = document.getElementById("sim-toolbar");
+      const groupsEl = document.getElementById("sim-groups");
+      const search = document.getElementById("sim-search");
+      const collectionSelect = document.getElementById("sim-collection");
+      const groupSelect = document.getElementById("sim-group");
+      const status = document.getElementById("sim-status");
+      const empty = document.getElementById("sim-empty");
+      const chips = Array.from(toolbar.querySelectorAll("[data-subject-filter]"));
+
+      const fold = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+      const cards = Array.from(groupsEl.querySelectorAll(".card"));
+      for (const card of cards) {
+        card.dataset.title = card.querySelector("h3").textContent;
+        card.dataset.search = fold(card.textContent + " " + (card.dataset.topics || ""));
+      }
+      cards.sort((a, b) => a.dataset.title.localeCompare(b.dataset.title));
+
+      const known = (value, list, fallback) => (list.includes(value) ? value : fallback);
+      const params = new URLSearchParams(location.search);
+      const state = {
+        subject: known(params.get("subject"), SUBJECTS.map(([k]) => k), "all"),
+        collection: known(params.get("collection"), COLLECTIONS.map(([k]) => k), "all"),
+        group: known(params.get("group"), GROUPS, "subject"),
+        q: params.get("q") || ""
+      };
+
+      function writeUrl() {
+        const next = new URLSearchParams();
+        if (state.subject !== "all") next.set("subject", state.subject);
+        if (state.collection !== "all") next.set("collection", state.collection);
+        if (state.group !== "subject") next.set("group", state.group);
+        if (state.q.trim()) next.set("q", state.q.trim());
+        const qs = next.toString();
+        history.replaceState(null, "", (qs ? "?" + qs : location.pathname) + location.hash);
+      }
+
+      function section(label, list) {
+        const el = document.createElement("section");
+        const head = document.createElement("div");
+        head.className = "section-head";
+        const h2 = document.createElement("h2");
+        h2.textContent = label;
+        const count = document.createElement("span");
+        count.className = "count";
+        count.textContent = String(list.length);
+        head.append(h2, count);
+        const grid = document.createElement("div");
+        grid.className = "grid";
+        grid.append(...list);
+        el.append(head, grid);
+        return el;
+      }
+
+      function render() {
+        const terms = fold(state.q).split(/\s+/).filter(Boolean);
+        const base = cards.filter((c) =>
+          (state.collection === "all" || c.dataset.collection === state.collection) &&
+          terms.every((t) => c.dataset.search.includes(t))
+        );
+
+        for (const chip of chips) {
+          const key = chip.dataset.subjectFilter;
+          const n = key === "all" ? base.length : base.filter((c) => c.dataset.subject === key).length;
+          chip.querySelector(".chip-count").textContent = String(n);
+          chip.setAttribute("aria-pressed", String(key === state.subject));
+        }
+
+        const visible = base.filter((c) => state.subject === "all" || c.dataset.subject === state.subject);
+        let groups;
+        if (state.group === "subject") {
+          groups = SUBJECTS.map(([key, label]) => [label, visible.filter((c) => c.dataset.subject === key)]);
+        } else if (state.group === "collection") {
+          groups = COLLECTIONS.map(([key, label]) => [label, visible.filter((c) => c.dataset.collection === key)]);
+        } else {
+          groups = [["All Simulations", visible]];
+        }
+        groupsEl.replaceChildren(...groups.filter(([, list]) => list.length > 0).map(([label, list]) => section(label, list)));
+
+        empty.hidden = visible.length > 0;
+        status.textContent = visible.length === cards.length
+          ? "Showing all " + cards.length + " simulations"
+          : "Showing " + visible.length + " of " + cards.length + " simulations";
+        writeUrl();
+      }
+
+      for (const chip of chips) {
+        chip.addEventListener("click", () => {
+          state.subject = chip.dataset.subjectFilter;
+          render();
+        });
+      }
+      search.addEventListener("input", () => { state.q = search.value; render(); });
+      collectionSelect.addEventListener("change", () => { state.collection = collectionSelect.value; render(); });
+      groupSelect.addEventListener("change", () => { state.group = groupSelect.value; render(); });
+      document.getElementById("sim-reset").addEventListener("click", () => {
+        state.subject = "all";
+        state.collection = "all";
+        state.q = "";
+        search.value = "";
+        collectionSelect.value = "all";
+        render();
+        search.focus();
+      });
+
+      search.value = state.q;
+      collectionSelect.value = state.collection;
+      groupSelect.value = state.group;
+      toolbar.hidden = false;
+      render();
+    })();
+  </script>
 </body>
 </html>

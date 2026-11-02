@@ -33,7 +33,7 @@ Pages simulation landing page.
 | [`screenshots/`](screenshots/) | Full-size sim screenshots the landing-page thumbnails are made from |
 | [`config/`](config/) | Canonical Dependabot, Claude-settings, and GitHub-repo-settings baselines |
 | [`structure/repos.json`](structure/repos.json) | Machine-readable catalog of org repositories |
-| [`structure/repos.schema.json`](structure/repos.schema.json) | JSON Schema for the catalog (`schemaVersion` 1.3.0) |
+| [`structure/repos.schema.json`](structure/repos.schema.json) | JSON Schema for the catalog (`schemaVersion` 1.4.0) |
 | [`CONVENTIONS.md`](CONVENTIONS.md) | Shared codebase structure every SceneryStack sim must follow |
 | [`ACCESSIBILITY.md`](ACCESSIBILITY.md) | Shared accessibility pattern for SceneryStack sims |
 | [`skills/`](skills/) | SceneryStack development reference docs for AI assistants |

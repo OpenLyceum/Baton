@@ -1,6 +1,6 @@
 {
   "$schema": "./repos.schema.json",
-  "schemaVersion": "1.3.0",
+  "schemaVersion": "1.4.0",
   "organization": "OpenLyceum",
   "displayName": "Open Lyceum",
   "pagesBase": "https://openlyceum.github.io",
@@ -28,6 +28,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -103,6 +104,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "Basic Coordinates and Seasons",
@@ -163,6 +165,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -205,6 +208,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -240,6 +244,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -276,6 +281,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -322,6 +328,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -351,6 +358,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -378,6 +386,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "Electric Field of Dreams",
@@ -411,6 +420,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -448,6 +458,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -491,6 +502,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "Extrasolar Planets",
@@ -526,6 +538,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -555,6 +568,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -587,6 +601,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "Fluid Pressure and Flow",
@@ -632,6 +647,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "Habitable Zones",
@@ -667,6 +683,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -709,6 +726,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -744,6 +762,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "Ladybug Motion 2D",
@@ -777,6 +796,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -813,6 +833,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -862,6 +883,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -900,6 +922,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "Lunar Lander",
@@ -934,6 +957,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "Maze Game",
@@ -967,6 +991,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "astronomy",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1004,6 +1029,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1052,6 +1078,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1087,6 +1114,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1122,6 +1150,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "Motions of the Sun",
@@ -1165,6 +1194,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "The Moving Man",
@@ -1203,6 +1233,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1242,6 +1273,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1285,6 +1317,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1313,6 +1346,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1343,6 +1377,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "earth-science",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1385,6 +1420,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1421,6 +1457,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1473,6 +1510,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1518,6 +1556,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1548,6 +1587,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1587,6 +1627,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "Radio Waves & Electromagnetic Fields",
@@ -1617,6 +1658,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1656,6 +1698,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "The Rotating Sky",
@@ -1711,6 +1754,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "Solar System Models",
@@ -1749,6 +1793,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1796,6 +1841,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1848,6 +1894,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1886,6 +1933,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1916,6 +1964,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "phet",
+      "subject": "physics",
       "upstream": {
         "org": "phet",
         "name": "The Ramp",
@@ -1955,6 +2004,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "chemistry",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -1990,6 +2040,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -2020,6 +2071,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "naap",
+      "subject": "astronomy",
       "upstream": {
         "org": "naap",
         "name": "Variable Star Photometry",
@@ -2064,6 +2116,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -2101,6 +2154,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "physics",
       "upstream": null,
       "language": [
         "TypeScript"
@@ -2138,6 +2192,7 @@
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
+      "subject": "astronomy",
       "upstream": null,
       "language": [
         "TypeScript"

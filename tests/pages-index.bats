@@ -73,16 +73,52 @@ page() {
 
 # ── Row selection ─────────────────────────────────────────────────────────────
 
-@test "buckets simulations by lineage with matching counts" {
+@test "groups simulations by subject with matching counts" {
   run_pages
-  # 3 original, 1 phet, 1 naap out of 8 catalog rows.
+  # 2 physics, 1 chemistry, 1 astronomy, 1 with no subject, out of 7 catalog rows.
   assert_equal "$(page | grep -c 'class="card"')" "5"
-  run bash -c "grep -A2 'Core Simulations' '$DOCS/index.html' | grep -o '<span class=\"count\">[0-9]*'"
-  assert_output --partial ">3"
-  run bash -c "grep -A2 'PhET Ports' '$DOCS/index.html' | grep -o '<span class=\"count\">[0-9]*'"
-  assert_output --partial ">1"
-  run bash -c "grep -A2 'NAAP Astronomy' '$DOCS/index.html' | grep -o '<span class=\"count\">[0-9]*'"
-  assert_output --partial ">1"
+  run bash -c "grep -o '<h2>[^<]*</h2>' '$DOCS/index.html'"
+  assert_output "$(printf '%s\n' '<h2>Physics</h2>' '<h2>Chemistry</h2>' '<h2>Astronomy</h2>' '<h2>Other</h2>')"
+  run bash -c "grep -A1 '<h2>Physics</h2>' '$DOCS/index.html' | grep -o '<span class=\"count\">[0-9]*'"
+  assert_output --partial ">2"
+}
+
+@test "files a simulation without a subject under Other, not a real discipline" {
+  run_pages
+  run page
+  assert_output --partial 'data-subject="other" data-collection="original"'
+  assert_output --partial '<span class="card-meta">Other</span>'
+}
+
+@test "renders a subject chip with a count only for subjects that have simulations" {
+  run_pages
+  run page
+  assert_output --partial 'data-subject-filter="all" aria-pressed="true">All <span class="chip-count">5</span>'
+  assert_output --partial 'data-subject-filter="chemistry" aria-pressed="false">Chemistry <span class="chip-count">1</span>'
+  refute_output --partial 'data-subject-filter="earth-science"'
+}
+
+@test "offers only the collections that have simulations" {
+  run_pages
+  run page
+  assert_output --partial '<option value="original">Core Simulations</option>'
+  assert_output --partial '<option value="phet">Classic &amp; PhET Ports</option>'
+  assert_output --partial '<option value="naap">NAAP Astronomy Labs</option>'
+}
+
+@test "tags each card with its subject, collection, and provenance note" {
+  run_pages
+  run page
+  assert_output --partial 'data-subject="physics" data-collection="phet"'
+  assert_output --partial '<span class="card-meta">Physics &middot; PhET port</span>'
+  assert_output --partial '<span class="card-meta">Astronomy &middot; NAAP lab</span>'
+}
+
+@test "carries every topic on the card for search" {
+  run_pages
+  run page
+  # All four of AlphaSim's topics, though only three render as tags.
+  assert_output --partial 'data-topics="alpha, beta, gamma, delta"'
 }
 
 @test "excludes non-active and non-simulation rows" {
@@ -94,7 +130,7 @@ page() {
   refute_output --partial "Zeta Tool"
 }
 
-@test "footer reports the total across all three buckets" {
+@test "footer reports the total across all subjects" {
   run_pages
   run page
   assert_output --partial "5 live simulations"

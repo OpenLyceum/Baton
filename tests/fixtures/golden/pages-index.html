@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ExampleOrg — open-source interactive physics simulations for the web.">
+  <meta name="description" content="ExampleOrg — open-source interactive physics, chemistry, and astronomy simulations for the web.">
   <meta property="og:title" content="ExampleOrg Simulations">
-  <meta property="og:description" content="Open-source interactive physics simulations for the web.">
+  <meta property="og:description" content="Open-source interactive physics, chemistry, and astronomy simulations for the web.">
   <meta name="theme-color" content="#0b1020">
   <title>ExampleOrg Simulations</title>
   <style>
@@ -259,6 +259,111 @@
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--accent); }
 
+    [hidden] { display: none !important; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Filter toolbar (revealed by the script; without JS the page is grouped by subject) */
+    .toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      margin: 0 0 2.5rem;
+      padding: 1rem 1.1rem;
+      background: rgba(13, 19, 38, 0.82);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    @media (min-width: 720px) {
+      .toolbar { position: sticky; top: 0.75rem; z-index: 10; }
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 0.4rem 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+    }
+    .chip:hover { color: var(--text); background: rgba(111, 155, 255, 0.12); border-color: rgba(111, 155, 255, 0.35); }
+    .chip[aria-pressed="true"] {
+      color: #fff;
+      background: linear-gradient(135deg, #5b8def, #7c5bef);
+      border-color: transparent;
+    }
+    .chip-count {
+      font-size: 0.75rem;
+      min-width: 1.6em;
+      padding: 0 0.4rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+    .chip[aria-pressed="true"] .chip-count { background: rgba(255, 255, 255, 0.22); }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; }
+    .field { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--faint); }
+    .field-search { flex: 1 1 16rem; }
+    .field input, .field select {
+      font: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.45rem 0.75rem;
+    }
+    .field input { width: 100%; }
+    .field select option { background: var(--bg-2); color: var(--text); }
+    .field input:focus-visible, .field select:focus-visible, .chip:focus-visible, .empty button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .status { margin: 0; font-size: 0.82rem; color: var(--faint); }
+
+    .empty { text-align: center; color: var(--muted); padding: 3rem 1rem; }
+    .empty button {
+      font: inherit;
+      color: var(--text);
+      margin-top: 0.5rem;
+      padding: 0.5rem 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+    }
+    .empty button:hover { background: rgba(111, 155, 255, 0.16); }
+
+    .card-meta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: hsl(var(--hue) 70% 72%);
+      margin-bottom: 0.3rem;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .bg::before, .bg::after { animation: none; }
       html { scroll-behavior: auto; }
@@ -269,9 +374,9 @@
   <div class="bg" aria-hidden="true"></div>
   <div class="wrap">
     <header>
-      <span class="eyebrow">Open-source physics for the web</span>
+      <span class="eyebrow">Open-source science for the web</span>
       <h1>ExampleOrg</h1>
-      <p>Interactive simulations for waves, mechanics, optics, electromagnetism, and quantum circuits &mdash; free to explore, remix, and teach with.</p>
+      <p>Interactive simulations for physics, chemistry, and astronomy &mdash; from waves, optics, and quantum mechanics to titrations, molecules, and the night sky &mdash; free to explore, remix, and teach with.</p>
       <div class="links">
         <a class="primary" href="#simulations">Browse simulations</a>
         <a href="https://github.com/ExampleOrg">GitHub Organization</a>
@@ -280,15 +385,51 @@
     </header>
 
     <main id="simulations">
-    <section>
-      <div class="section-head">
-        <h2>Core Simulations</h2>
-        <span class="count">3</span>
+      <div class="toolbar" id="sim-toolbar" hidden>
+        <div class="chips" role="group" aria-label="Filter by subject">
+          <button type="button" class="chip" data-subject-filter="all" aria-pressed="true">All <span class="chip-count">5</span></button>
+          <button type="button" class="chip" data-subject-filter="physics" aria-pressed="false">Physics <span class="chip-count">2</span></button>
+          <button type="button" class="chip" data-subject-filter="chemistry" aria-pressed="false">Chemistry <span class="chip-count">1</span></button>
+          <button type="button" class="chip" data-subject-filter="astronomy" aria-pressed="false">Astronomy <span class="chip-count">1</span></button>
+          <button type="button" class="chip" data-subject-filter="other" aria-pressed="false">Other <span class="chip-count">1</span></button>
+        </div>
+        <div class="controls">
+          <label class="field field-search">
+            <span class="sr-only">Search simulations</span>
+            <input type="search" id="sim-search" placeholder="Search by name, topic, or keyword" autocomplete="off" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>Collection</span>
+            <select id="sim-collection">
+              <option value="all">All</option>
+              <option value="original">Core Simulations</option>
+              <option value="phet">Classic &amp; PhET Ports</option>
+              <option value="naap">NAAP Astronomy Labs</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Group by</span>
+            <select id="sim-group">
+              <option value="subject">Subject</option>
+              <option value="collection">Collection</option>
+              <option value="none">None (A&ndash;Z)</option>
+            </select>
+          </label>
+        </div>
+        <p class="status" id="sim-status" aria-live="polite"></p>
       </div>
-      <div class="grid">
-        <a class="card" href="https://exampleorg.github.io/AlphaSim/" style="--hue: 63;">
+
+      <div id="sim-groups">
+      <section>
+        <div class="section-head">
+          <h2>Physics</h2>
+          <span class="count">2</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://exampleorg.github.io/AlphaSim/" style="--hue: 63;" data-subject="physics" data-collection="original" data-topics="alpha, beta, gamma, delta">
           <div class="thumb placeholder"><span>AS</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics</span>
             <div class="card-head">
               <h3>Alpha Sim</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -297,40 +438,10 @@
             <div class="tags"><span class="tag">alpha</span><span class="tag">beta</span><span class="tag">gamma</span></div>
           </div>
         </a>
-        <a class="card" href="https://exampleorg.github.io/betaWave/" style="--hue: 95;">
-          <div class="thumb"><img src="assets/betaWave.webp" alt="Beta Wave simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">W</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>Beta Wave</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>A wave.</p>
-            <div class="tags"><span class="tag">waves</span></div>
-          </div>
-        </a>
-        <a class="card" href="https://exampleorg.github.io/omegasim/" style="--hue: 130;">
-          <div class="thumb placeholder"><span>OM</span></div>
-          <div class="card-body">
-            <div class="card-head">
-              <h3>omegasim</h3>
-              <span class="card-arrow" aria-hidden="true">&rarr;</span>
-            </div>
-            <p>No display name, no uppercase letters.</p>
-            <div class="tags"></div>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <h2>Classic &amp; PhET Ports</h2>
-        <span class="count">1</span>
-      </div>
-      <div class="grid">
-        <a class="card" href="https://exampleorg.github.io/GammaRay/" style="--hue: 63;">
+        <a class="card" href="https://exampleorg.github.io/GammaRay/" style="--hue: 63;" data-subject="physics" data-collection="phet" data-topics="radiation">
           <div class="thumb"><img src="assets/GammaRay.webp" alt="Gamma Ray simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">GR</span></div>
           <div class="card-body">
+            <span class="card-meta">Physics &middot; PhET port</span>
             <div class="card-head">
               <h3>Gamma Ray</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -339,18 +450,38 @@
             <div class="tags"><span class="tag">radiation</span></div>
           </div>
         </a>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <h2>NAAP Astronomy Labs</h2>
-        <span class="count">1</span>
-      </div>
-      <div class="grid">
-        <a class="card" href="https://exampleorg.github.io/DeltaSky/" style="--hue: 81;">
+        </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>Chemistry</h2>
+          <span class="count">1</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://exampleorg.github.io/betaWave/" style="--hue: 95;" data-subject="chemistry" data-collection="original" data-topics="waves">
+          <div class="thumb"><img src="assets/betaWave.webp" alt="Beta Wave simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">W</span></div>
+          <div class="card-body">
+            <span class="card-meta">Chemistry</span>
+            <div class="card-head">
+              <h3>Beta Wave</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>A wave.</p>
+            <div class="tags"><span class="tag">waves</span></div>
+          </div>
+        </a>
+        </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>Astronomy</h2>
+          <span class="count">1</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://exampleorg.github.io/DeltaSky/" style="--hue: 81;" data-subject="astronomy" data-collection="naap" data-topics="astronomy">
           <div class="thumb placeholder"><span>DS</span></div>
           <div class="card-body">
+            <span class="card-meta">Astronomy &middot; NAAP lab</span>
             <div class="card-head">
               <h3>Delta Sky</h3>
               <span class="card-arrow" aria-hidden="true">&rarr;</span>
@@ -359,8 +490,34 @@
             <div class="tags"><span class="tag">astronomy</span></div>
           </div>
         </a>
+        </div>
+      </section>
+      <section>
+        <div class="section-head">
+          <h2>Other</h2>
+          <span class="count">1</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://exampleorg.github.io/omegasim/" style="--hue: 130;" data-subject="other" data-collection="original" data-topics="">
+          <div class="thumb placeholder"><span>OM</span></div>
+          <div class="card-body">
+            <span class="card-meta">Other</span>
+            <div class="card-head">
+              <h3>omegasim</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>No display name, no uppercase letters.</p>
+            <div class="tags"></div>
+          </div>
+        </a>
+        </div>
+      </section>
       </div>
-    </section>
+
+      <div class="empty" id="sim-empty" hidden>
+        <p>No simulations match these filters.</p>
+        <button type="button" id="sim-reset">Clear filters</button>
+      </div>
     </main>
 
     <footer>
@@ -368,5 +525,126 @@
       <a href="https://github.com/ExampleOrg/Baton">ExampleOrg/Baton</a></p>
     </footer>
   </div>
+
+  <script>
+    // Subject filter, collection filter, search, and grouping. State is mirrored
+    // in the query string (?subject=chemistry&group=collection&q=orbit) so a
+    // filtered view can be shared as a link.
+    (() => {
+      const SUBJECTS = [["physics", "Physics"], ["chemistry", "Chemistry"], ["astronomy", "Astronomy"], ["other", "Other"]];
+      const COLLECTIONS = [["original", "Core Simulations"], ["phet", "Classic & PhET Ports"], ["naap", "NAAP Astronomy Labs"]];
+      const GROUPS = ["subject", "collection", "none"];
+
+      const toolbar = document.getElementById("sim-toolbar");
+      const groupsEl = document.getElementById("sim-groups");
+      const search = document.getElementById("sim-search");
+      const collectionSelect = document.getElementById("sim-collection");
+      const groupSelect = document.getElementById("sim-group");
+      const status = document.getElementById("sim-status");
+      const empty = document.getElementById("sim-empty");
+      const chips = Array.from(toolbar.querySelectorAll("[data-subject-filter]"));
+
+      const fold = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+      const cards = Array.from(groupsEl.querySelectorAll(".card"));
+      for (const card of cards) {
+        card.dataset.title = card.querySelector("h3").textContent;
+        card.dataset.search = fold(card.textContent + " " + (card.dataset.topics || ""));
+      }
+      cards.sort((a, b) => a.dataset.title.localeCompare(b.dataset.title));
+
+      const known = (value, list, fallback) => (list.includes(value) ? value : fallback);
+      const params = new URLSearchParams(location.search);
+      const state = {
+        subject: known(params.get("subject"), SUBJECTS.map(([k]) => k), "all"),
+        collection: known(params.get("collection"), COLLECTIONS.map(([k]) => k), "all"),
+        group: known(params.get("group"), GROUPS, "subject"),
+        q: params.get("q") || ""
+      };
+
+      function writeUrl() {
+        const next = new URLSearchParams();
+        if (state.subject !== "all") next.set("subject", state.subject);
+        if (state.collection !== "all") next.set("collection", state.collection);
+        if (state.group !== "subject") next.set("group", state.group);
+        if (state.q.trim()) next.set("q", state.q.trim());
+        const qs = next.toString();
+        history.replaceState(null, "", (qs ? "?" + qs : location.pathname) + location.hash);
+      }
+
+      function section(label, list) {
+        const el = document.createElement("section");
+        const head = document.createElement("div");
+        head.className = "section-head";
+        const h2 = document.createElement("h2");
+        h2.textContent = label;
+        const count = document.createElement("span");
+        count.className = "count";
+        count.textContent = String(list.length);
+        head.append(h2, count);
+        const grid = document.createElement("div");
+        grid.className = "grid";
+        grid.append(...list);
+        el.append(head, grid);
+        return el;
+      }
+
+      function render() {
+        const terms = fold(state.q).split(/\s+/).filter(Boolean);
+        const base = cards.filter((c) =>
+          (state.collection === "all" || c.dataset.collection === state.collection) &&
+          terms.every((t) => c.dataset.search.includes(t))
+        );
+
+        for (const chip of chips) {
+          const key = chip.dataset.subjectFilter;
+          const n = key === "all" ? base.length : base.filter((c) => c.dataset.subject === key).length;
+          chip.querySelector(".chip-count").textContent = String(n);
+          chip.setAttribute("aria-pressed", String(key === state.subject));
+        }
+
+        const visible = base.filter((c) => state.subject === "all" || c.dataset.subject === state.subject);
+        let groups;
+        if (state.group === "subject") {
+          groups = SUBJECTS.map(([key, label]) => [label, visible.filter((c) => c.dataset.subject === key)]);
+        } else if (state.group === "collection") {
+          groups = COLLECTIONS.map(([key, label]) => [label, visible.filter((c) => c.dataset.collection === key)]);
+        } else {
+          groups = [["All Simulations", visible]];
+        }
+        groupsEl.replaceChildren(...groups.filter(([, list]) => list.length > 0).map(([label, list]) => section(label, list)));
+
+        empty.hidden = visible.length > 0;
+        status.textContent = visible.length === cards.length
+          ? "Showing all " + cards.length + " simulations"
+          : "Showing " + visible.length + " of " + cards.length + " simulations";
+        writeUrl();
+      }
+
+      for (const chip of chips) {
+        chip.addEventListener("click", () => {
+          state.subject = chip.dataset.subjectFilter;
+          render();
+        });
+      }
+      search.addEventListener("input", () => { state.q = search.value; render(); });
+      collectionSelect.addEventListener("change", () => { state.collection = collectionSelect.value; render(); });
+      groupSelect.addEventListener("change", () => { state.group = groupSelect.value; render(); });
+      document.getElementById("sim-reset").addEventListener("click", () => {
+        state.subject = "all";
+        state.collection = "all";
+        state.q = "";
+        search.value = "";
+        collectionSelect.value = "all";
+        render();
+        search.focus();
+      });
+
+      search.value = state.q;
+      collectionSelect.value = state.collection;
+      groupSelect.value = state.group;
+      toolbar.hidden = false;
+      render();
+    })();
+  </script>
 </body>
 </html>

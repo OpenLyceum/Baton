@@ -70,6 +70,7 @@ Edit [`structure/repos.json`](../structure/repos.json). Insert a new object in `
   "type": "simulation",
   "isSimulation": true,
   "lineage": "original",
+  "subject": "physics",
   "upstream": null,
   "language": ["TypeScript"],
   "framework": "SceneryStack",
@@ -90,6 +91,7 @@ Edit [`structure/repos.json`](../structure/repos.json). Insert a new object in `
 | `name` | Must match the GitHub repo name (and the sibling folder name in the workspace). |
 | `displayName` | Human title on the landing-page card (and for docs). |
 | `lineage` | Landing-page bucket: `"original"`, `"phet"`, or `"naap"`. Non-simulations use `null`. |
+| `subject` | Required for simulations: `"physics"`, `"chemistry"`, `"astronomy"`, or `"earth-science"`. Drives the landing page's subject filter and default grouping. `create-sim.sh --subject` sets it (default `physics`). |
 | `upstream` | For `phet` / `naap` ports: `{ "org", "name", "url" }` pointing at the source lab. Otherwise `null`. |
 | `description` | Full blurb on the Pages card. |
 | `shortDescription` | Optional. GitHub About text (≤350 chars). When omitted, metadata sync uses `description` (truncated if needed). |

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.2.0",
   "organization": "ExampleOrg",
-  "_comment": "Fixture catalog for tests/pages-index.bats. Deliberately exercises the generator's edge cases (mixed-case host, trailing slash, missing displayName, no-uppercase name, >3 topics, HTML metacharacters, excluded rows) rather than mirroring the real catalog. Not schema-valid on purpose \u2014 see fixtures/catalog-valid.json for that.",
+  "_comment": "Fixture catalog for tests/pages-index.bats. Deliberately exercises the generator's edge cases (mixed-case host, trailing slash, missing displayName, no-uppercase name, >3 topics, HTML metacharacters, excluded rows, a simulation with no subject) rather than mirroring the real catalog. Not schema-valid on purpose — see fixtures/catalog-valid.json for that.",
   "repos": [
     {
       "name": "AlphaSim",
@@ -28,7 +28,8 @@
           "title": "Intro"
         }
       ],
-      "status": "active"
+      "status": "active",
+      "subject": "physics"
     },
     {
       "name": "betaWave",
@@ -52,7 +53,8 @@
           "title": "Intro"
         }
       ],
-      "status": "active"
+      "status": "active",
+      "subject": "chemistry"
     },
     {
       "name": "omegasim",
@@ -101,7 +103,8 @@
           "title": "Intro"
         }
       ],
-      "status": "active"
+      "status": "active",
+      "subject": "physics"
     },
     {
       "name": "DeltaSky",
@@ -129,7 +132,8 @@
           "title": "Intro"
         }
       ],
-      "status": "active"
+      "status": "active",
+      "subject": "astronomy"
     },
     {
       "name": "EpsilonDraft",
@@ -151,7 +155,8 @@
           "title": "Intro"
         }
       ],
-      "status": "draft"
+      "status": "draft",
+      "subject": "physics"
     },
     {
       "name": "ZetaTool",

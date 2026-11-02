@@ -29,6 +29,7 @@ SIM_ID=""
 SIM_NAME=""
 SCREENS=""
 TOPICS=""
+SUBJECT="physics"
 GITHUB_TOPICS=""
 TARGET_PATH=""
 LOCAL_ONLY=0
@@ -57,6 +58,8 @@ Options:
                        Default: one screen named after --name.
                        Catalog stores {id, title} (id from kebab: or slug of title).
   --topics LIST        Comma-separated physicsTopics (required with --catalog/--onboard)
+  --subject SUBJECT    Landing-page discipline: physics (default), chemistry,
+                       astronomy, or earth-science
   --github-topics LIST Optional extra GitHub topics (kebab-case), e.g. game,pwa
   --shared-model       Scaffold src/common/model/SharedModel.ts; each screen composes it
   --path DIR           Checkout path (default: $FLEET_WORKSPACE/<repo>)
@@ -329,6 +332,10 @@ while [[ $# -gt 0 ]]; do
       TOPICS="${2:?Missing value for --topics}"
       shift 2
       ;;
+    --subject)
+      SUBJECT="${2:?Missing value for --subject}"
+      shift 2
+      ;;
     --github-topics)
       GITHUB_TOPICS="${2:?Missing value for --github-topics}"
       shift 2
@@ -525,6 +532,14 @@ if [[ "$CATALOG" -eq 1 || "$ONBOARD" -eq 1 ]]; then
   fi
 fi
 
+case "$SUBJECT" in
+  physics | chemistry | astronomy | earth-science) ;;
+  *)
+    echo "error: --subject must be physics, chemistry, astronomy, or earth-science (got '$SUBJECT')" >&2
+    exit 1
+    ;;
+esac
+
 if [[ -n "$SHORT_DESCRIPTION" && ${#SHORT_DESCRIPTION} -gt 350 ]]; then
   echo "error: --short-description must be ≤350 characters (got ${#SHORT_DESCRIPTION})" >&2
   exit 1
@@ -536,6 +551,7 @@ echo "  name:     $SIM_NAME"
 echo "  path:     $TARGET_PATH"
 echo "  screens:  ${SCREENS:-"(default: $SIM_NAME)"}"
 echo "  topics:   ${TOPICS:-"(none)"}"
+echo "  subject:  $SUBJECT"
 echo "  shared:   $([[ "$SHARED_MODEL" -eq 1 ]] && echo yes || echo no)"
 echo "  onboard:  $([[ "$ONBOARD" -eq 1 ]] && echo yes || echo no)"
 echo "  existing: $([[ "$EXISTING" -eq 1 ]] && echo "yes (adopt already-on-GitHub repo)" || echo "no (create from template)")"
@@ -646,6 +662,7 @@ entry="$(jq -n \
   --arg desc "$DESCRIPTION" \
   --arg short "$SHORT_DESCRIPTION" \
   --arg url "${PAGES_BASE}/${REPO}" \
+  --arg subject "$SUBJECT" \
   --argjson screens "$catalog_screens_json" \
   --argjson topics "$catalog_topics_json" \
   --argjson githubTopics "$catalog_github_topics_json" \
@@ -656,6 +673,7 @@ entry="$(jq -n \
       type: "simulation",
       isSimulation: true,
       lineage: "original",
+      subject: $subject,
       upstream: null,
       language: ["TypeScript"],
       framework: "SceneryStack",
