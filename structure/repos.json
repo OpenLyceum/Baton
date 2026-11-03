@@ -453,6 +453,51 @@
       "shortDescription": "Electrochemistry for General Chemistry: galvanic cells, the Nernst equation and electrolysis with Faraday's law."
     },
     {
+      "name": "ElectronConfiguration",
+      "displayName": "Electron Configuration",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "chemistry",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Build orbital diagrams, discover periodic-table patterns, form common ions, and solve electron-configuration challenges for first-semester general chemistry.",
+      "deployedUrl": "https://openlyceum.github.io/ElectronConfiguration",
+      "physicsTopics": [
+        "electron configurations",
+        "atomic structure",
+        "periodic table",
+        "ions"
+      ],
+      "screens": [
+        {
+          "id": "fill-orbitals",
+          "title": "Fill the Orbitals"
+        },
+        {
+          "id": "periodic-patterns",
+          "title": "Patterns in the Table"
+        },
+        {
+          "id": "ions",
+          "title": "Make an Ion"
+        },
+        {
+          "id": "configuration-detective",
+          "title": "Configuration Detective"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "chemistry",
+        "general-chemistry",
+        "education"
+      ]
+    },
+    {
       "name": "EquilibriumLab",
       "displayName": "Equilibrium Lab",
       "type": "simulation",
