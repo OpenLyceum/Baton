@@ -2014,6 +2014,49 @@
       "status": "active"
     },
     {
+      "name": "StellarWobble",
+      "displayName": "Stellar Wobble",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Find an exoplanet with the radial-velocity method across four screens: how a star's speed is measured from the Doppler shift of its spectral lines, a planet pulling its star around their center of mass (seen as only the telescope sees it), why the signal depends on our viewing angle and gives only a minimum mass, and fitting noisy night-by-night measurements to find the planet.",
+      "deployedUrl": "https://openlyceum.github.io/StellarWobble",
+      "physicsTopics": [
+        "astronomy",
+        "exoplanets",
+        "radial velocity",
+        "Doppler effect",
+        "center of mass",
+        "orbits"
+      ],
+      "screens": [
+        {
+          "id": "doppler",
+          "title": "Doppler"
+        },
+        {
+          "id": "wobble",
+          "title": "Wobble"
+        },
+        {
+          "id": "viewing-angle",
+          "title": "Viewing Angle"
+        },
+        {
+          "id": "observatory",
+          "title": "Observatory"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Find an exoplanet with the radial-velocity method: Doppler-shifted spectral lines, the star's wobble, viewing geometry and minimum mass, and fitting noisy data."
+    },
+    {
       "name": "SternGerlach",
       "displayName": "Stern–Gerlach",
       "type": "simulation",
