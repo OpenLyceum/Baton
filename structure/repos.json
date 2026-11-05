@@ -2195,6 +2195,54 @@
       "status": "active"
     },
     {
+      "name": "TransitHunter",
+      "displayName": "Transit Hunter",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Find exoplanets by the shadows they cast, across five screens: why a planet crossing its star dims it, why only lined-up orbits transit, reading a planet's size and distance from a light curve, hunting for planets in real Kepler and TESS measurements, and combining the transit with the star's wobble to tell rock from gas.",
+      "deployedUrl": "https://openlyceum.github.io/TransitHunter",
+      "physicsTopics": [
+        "astronomy",
+        "exoplanets",
+        "transit method",
+        "light curves",
+        "Kepler",
+        "TESS",
+        "planet density"
+      ],
+      "screens": [
+        {
+          "id": "dimming",
+          "title": "Dimming"
+        },
+        {
+          "id": "lining-up",
+          "title": "Lining Up"
+        },
+        {
+          "id": "light-curve",
+          "title": "Light Curve"
+        },
+        {
+          "id": "hunt",
+          "title": "Planet Hunt"
+        },
+        {
+          "id": "composition",
+          "title": "Rock or Gas?"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Find exoplanets with the transit method: dimming starlight, orbital alignment, reading light curves, real Kepler and TESS data, and planet densities."
+    },
+    {
       "name": "VariableStarPhotometry",
       "displayName": "Variable Star Photometry",
       "type": "simulation",
