@@ -542,6 +542,50 @@
       "shortDescription": "Chemical equilibrium for General Chemistry: watch Q approach K, work ICE tables, apply Le Chatelier stresses, and find ΔH° and ΔS° from a van 't Hoff plot."
     },
     {
+      "name": "ExoplanetsDatabase",
+      "displayName": "Exoplanets Database",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "A friendly front end to the NASA Exoplanet Archive across four screens: the archive's headline counts and planets per discovery method, a simplified sortable table with filters written in the archive's own syntax and a planet card compared with Earth and the Sun, eight preset plots of mass, period, radius and distance coloured by discovery method, and a plot builder for any two quantities.",
+      "deployedUrl": "https://openlyceum.github.io/ExoplanetsDatabase",
+      "physicsTopics": [
+        "astronomy",
+        "exoplanets",
+        "NASA Exoplanet Archive",
+        "discovery methods",
+        "data literacy",
+        "Kepler's third law",
+        "mass-radius relation"
+      ],
+      "screens": [
+        {
+          "id": "counts",
+          "title": "Counts"
+        },
+        {
+          "id": "explore",
+          "title": "Explore"
+        },
+        {
+          "id": "gallery",
+          "title": "Plot Gallery"
+        },
+        {
+          "id": "builder",
+          "title": "Plot Builder"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Explore the NASA Exoplanet Archive: counts, a filterable table, and preset plots of exoplanet mass, period and radius coloured by discovery method."
+    },
+    {
       "name": "ExtrasolarPlanets",
       "displayName": "Extrasolar Planets",
       "type": "simulation",
