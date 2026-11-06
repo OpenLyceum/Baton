@@ -731,6 +731,57 @@
       ]
     },
     {
+      "name": "HabitabilityLab",
+      "displayName": "Habitability Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Why can one planet keep liquid water while another cannot? Five screens: a bare planet's energy balance and equilibrium temperature, a grey greenhouse atmosphere with the phase diagram of water, the Kopparapu habitable-zone edges with real exoplanets from the NASA Exoplanet Archive, a habitable zone that moves as the star evolves, and atmospheric escape from molecular speeds to the cosmic shoreline.",
+      "deployedUrl": "https://openlyceum.github.io/HabitabilityLab",
+      "physicsTopics": [
+        "astronomy",
+        "exoplanets",
+        "habitable zone",
+        "energy balance",
+        "greenhouse effect",
+        "phase diagram of water",
+        "stellar evolution",
+        "tidal locking",
+        "atmospheric escape",
+        "cosmic shoreline"
+      ],
+      "screens": [
+        {
+          "id": "energy-balance",
+          "title": "Energy Balance"
+        },
+        {
+          "id": "greenhouse",
+          "title": "Greenhouse"
+        },
+        {
+          "id": "zone-edges",
+          "title": "Zone Edges"
+        },
+        {
+          "id": "aging-star",
+          "title": "Aging Star"
+        },
+        {
+          "id": "escape",
+          "title": "Escape"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Exoplanet habitability: energy balance, the greenhouse effect and water, habitable-zone edges with real planets, an aging star, and atmospheric escape."
+    },
+    {
       "name": "HabitableZones",
       "displayName": "Habitable Zones",
       "type": "simulation",
