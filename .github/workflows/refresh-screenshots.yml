@@ -72,7 +72,7 @@ jobs:
         run: scripts/generate-pages-index.sh
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v8.1.1
+        uses: peter-evans/create-pull-request@v8.1.2
         with:
           # GITHUB_TOKEN cannot open PRs while can_approve_pull_request_reviews
           # is off. FLEET_PAT is the org write token used by fleet-exec.
