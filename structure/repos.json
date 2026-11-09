@@ -1512,6 +1512,57 @@
       "status": "active"
     },
     {
+      "name": "PlanetaryConfigurations",
+      "displayName": "Planetary Configurations",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore planetary configurations from a Sun-centered view: elongation, conjunctions and quadratures, synodic and sidereal periods, and retrograde motion, compared with Ptolemy's geocentric model.",
+      "deployedUrl": "https://openlyceum.github.io/PlanetaryConfigurations",
+      "physicsTopics": [
+        "astronomy",
+        "planetary configurations",
+        "elongation",
+        "synodic period",
+        "retrograde motion",
+        "Ptolemaic model"
+      ],
+      "screens": [
+        {
+          "id": "orbits",
+          "title": "Orbits"
+        },
+        {
+          "id": "configurations",
+          "title": "Configurations"
+        },
+        {
+          "id": "synodic",
+          "title": "Synodic Motion"
+        },
+        {
+          "id": "periods",
+          "title": "Periods"
+        },
+        {
+          "id": "ptolemaic",
+          "title": "Ptolemaic"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Planetary configurations, synodic periods and retrograde motion — heliocentric and Ptolemaic — for the NAAP Solar System Models lab.",
+      "githubTopics": [
+        "solar-system",
+        "pwa"
+      ]
+    },
+    {
       "name": "PlateTectonics",
       "displayName": "Plate Tectonics",
       "type": "simulation",
