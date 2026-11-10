@@ -160,6 +160,40 @@
       "status": "active"
     },
     {
+      "name": "BiomechanicsArm",
+      "displayName": "Biomechanics Arm",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Live data acquisition for a model-arm torque lab: connect a PASCO Wireless Force Acceleration Sensor and a Wireless Rotary Motion Sensor over Bluetooth or USB, zero and orient each one, then record, graph and export the string tension against the arm angle. A demo mode simulates the arm when no sensors are at hand.",
+      "deployedUrl": "https://openlyceum.github.io/BiomechanicsArm",
+      "physicsTopics": [
+        "torque",
+        "static equilibrium",
+        "biomechanics"
+      ],
+      "screens": [
+        {
+          "id": "lab",
+          "title": "Lab"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Live force and angle acquisition from PASCO wireless sensors for a model-arm torque lab.",
+      "githubTopics": [
+        "pasco",
+        "web-bluetooth",
+        "webusb",
+        "data-acquisition"
+      ]
+    },
+    {
       "name": "CalorimetryLab",
       "displayName": "Calorimetry Lab",
       "type": "simulation",
