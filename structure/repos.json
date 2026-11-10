@@ -276,6 +276,53 @@
       "status": "active"
     },
     {
+      "name": "CartCollisions",
+      "displayName": "Cart Collisions",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Collide and launch two PASCO Smart Carts on a track — spring-plunger explosions, Velcro (completely inelastic) and magnetic (elastic) collisions, with equal or unequal masses. Fit lines to position–time graphs, fill momentum and kinetic-energy tables, and stream real Smart Carts over Web Bluetooth.",
+      "deployedUrl": "https://openlyceum.github.io/CartCollisions",
+      "physicsTopics": [
+        "momentum",
+        "collisions",
+        "kinetic-energy",
+        "conservation-of-momentum"
+      ],
+      "screens": [
+        {
+          "id": "explosions",
+          "title": "Explosions"
+        },
+        {
+          "id": "inelastic",
+          "title": "Inelastic"
+        },
+        {
+          "id": "elastic",
+          "title": "Elastic"
+        },
+        {
+          "id": "smart-carts",
+          "title": "Smart Carts"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "PASCO Smart Cart collision lab: explosions, inelastic and elastic collisions; momentum and kinetic-energy tables; real Smart Carts over Web Bluetooth.",
+      "githubTopics": [
+        "pasco",
+        "smart-cart",
+        "momentum",
+        "collisions"
+      ]
+    },
+    {
       "name": "CrystalLattice",
       "displayName": "Crystal Lattice",
       "type": "simulation",
