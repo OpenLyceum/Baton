@@ -1512,6 +1512,47 @@
       "status": "active"
     },
     {
+      "name": "PhotonInteractions",
+      "displayName": "Photon Interactions",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Photons as particles in four screens: Compton scattering with the momentum triangle, Compton's spectrometer and a detector's Compton edge; an X-ray tube's bremsstrahlung spectrum, Duane-Hunt limit and characteristic lines; pair production near a nucleus with energy and momentum budgets; and electron-positron annihilation with a PET scanner ring.",
+      "deployedUrl": "https://openlyceum.github.io/PhotonInteractions",
+      "physicsTopics": [
+        "compton-scattering",
+        "x-rays",
+        "bremsstrahlung",
+        "pair-production",
+        "photons"
+      ],
+      "screens": [
+        {
+          "id": "compton",
+          "title": "Compton"
+        },
+        {
+          "id": "xray-tube",
+          "title": "X-Ray Tube"
+        },
+        {
+          "id": "pair-production",
+          "title": "Pair Production"
+        },
+        {
+          "id": "annihilation",
+          "title": "Annihilation"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "PlanetaryConfigurations",
       "displayName": "Planetary Configurations",
       "type": "simulation",
