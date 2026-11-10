@@ -80,6 +80,46 @@
       "status": "active"
     },
     {
+      "name": "BackwardAcceleration",
+      "displayName": "Backward Acceleration",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Predict, then measure, the velocity and acceleration graphs of a cart released down an incline, braked on a level track, and pushed up a ramp so it rolls back down — with a virtual cart or a real PASCO Smart Cart over Web Bluetooth. Students sketch predictions on the graphs, check a sign table, and see why the acceleration stays negative while the cart speeds up on the way down.",
+      "deployedUrl": "https://openlyceum.github.io/BackwardAcceleration",
+      "physicsTopics": [
+        "kinematics",
+        "acceleration",
+        "velocity",
+        "motion-graphs",
+        "inclined-plane"
+      ],
+      "screens": [
+        {
+          "id": "lab",
+          "title": "Lab"
+        },
+        {
+          "id": "smart-cart",
+          "title": "Smart Cart"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Predict and measure v–t and a–t graphs of a cart on a ramp — virtual or a real PASCO Smart Cart over Web Bluetooth.",
+      "githubTopics": [
+        "pasco",
+        "smart-cart",
+        "web-bluetooth",
+        "pwa"
+      ]
+    },
+    {
       "name": "Baseline",
       "displayName": "Baseline",
       "type": "tool",
