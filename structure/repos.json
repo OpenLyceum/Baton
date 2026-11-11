@@ -1095,12 +1095,12 @@
           "title": "Radius"
         },
         {
-          "id": "starsamples",
-          "title": "StarSamples"
+          "id": "star-samples",
+          "title": "Star Samples"
         },
         {
-          "id": "gaiacensus",
-          "title": "GaiaCensus"
+          "id": "gaia-census",
+          "title": "Gaia Census"
         }
       ],
       "status": "active",
