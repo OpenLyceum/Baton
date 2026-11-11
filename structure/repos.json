@@ -397,6 +397,43 @@
       ]
     },
     {
+      "name": "ColliderLab",
+      "displayName": "Collider Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "You are the detector: read simulated collisions (curving tracks give momentum through pT = 0.3 B r, calorimeter layers identify particles, missing pT reveals neutrinos), time K0S decays, and build the dimuon mass spectrum from 100,000 real CMS events to weigh the Z boson.",
+      "deployedUrl": "https://openlyceum.github.io/ColliderLab",
+      "physicsTopics": [
+        "particle physics",
+        "detectors",
+        "invariant mass",
+        "relativity"
+      ],
+      "screens": [
+        {
+          "id": "event-display",
+          "title": "Event Display"
+        },
+        {
+          "id": "bump-hunt",
+          "title": "Bump Hunt"
+        },
+        {
+          "id": "energy-frontier",
+          "title": "Energy Frontier"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Be the particle detector: read collider events and find resonances in real CMS dimuon data."
+    },
+    {
       "name": "CrystalLattice",
       "displayName": "Crystal Lattice",
       "type": "simulation",
@@ -1641,6 +1678,47 @@
         }
       ],
       "status": "active"
+    },
+    {
+      "name": "ParticleZoo",
+      "displayName": "Particle Zoo",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Build hadrons from quarks with live charge, baryon number and strangeness; predict the Omega-minus from the 1962 Eightfold Way; pull a quark pair apart until the colour string snaps; and judge proposed reactions with a conservation ledger and quark-level Feynman vertices.",
+      "deployedUrl": "https://openlyceum.github.io/ParticleZoo",
+      "physicsTopics": [
+        "particle physics",
+        "quarks",
+        "conservation laws",
+        "standard model"
+      ],
+      "screens": [
+        {
+          "id": "hadron-builder",
+          "title": "Hadron Builder"
+        },
+        {
+          "id": "eightfold-way",
+          "title": "Eightfold Way"
+        },
+        {
+          "id": "confinement",
+          "title": "Confinement"
+        },
+        {
+          "id": "reaction-court",
+          "title": "Reaction Court"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Build hadrons from quarks, predict the Omega-minus, snap the QCD string, and judge which reactions nature allows."
     },
     {
       "name": "PeriodicTrends",
