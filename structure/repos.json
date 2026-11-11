@@ -444,6 +444,47 @@
       "status": "active"
     },
     {
+      "name": "DiffractionLab",
+      "displayName": "Diffraction Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Fraunhofer diffraction for modern physics: add one phasor per slit to see grating maxima sharpen, resolve close spectral lines with R = mN, image two stars through a circular aperture to find the Airy disk and the Rayleigh criterion, and record and reconstruct a hologram.",
+      "deployedUrl": "https://openlyceum.github.io/DiffractionLab",
+      "physicsTopics": [
+        "diffraction",
+        "optics",
+        "resolution",
+        "holography"
+      ],
+      "screens": [
+        {
+          "id": "gratings",
+          "title": "Gratings"
+        },
+        {
+          "id": "resolving-power",
+          "title": "Resolving Power"
+        },
+        {
+          "id": "circular-aperture",
+          "title": "Circular Aperture"
+        },
+        {
+          "id": "holography",
+          "title": "Holography"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Fraunhofer diffraction: N-slit phasors, grating resolving power (R = mN), the Airy disk and Rayleigh criterion, and holography. Companion to Modern Physics ch. 5."
+    },
+    {
       "name": "DopplerEffect",
       "displayName": "Doppler Effect",
       "type": "simulation",
