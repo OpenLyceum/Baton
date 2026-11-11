@@ -2266,9 +2266,13 @@
       "displayName": "Simplified MRI",
       "type": "simulation",
       "isSimulation": true,
-      "lineage": "original",
+      "lineage": "phet",
       "subject": "physics",
-      "upstream": null,
+      "upstream": {
+        "org": "phet",
+        "name": "Simplified MRI",
+        "url": "https://phet.colorado.edu/en/simulations/mri"
+      },
       "language": [
         "TypeScript"
       ],
