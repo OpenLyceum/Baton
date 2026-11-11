@@ -1060,6 +1060,53 @@
       "status": "active"
     },
     {
+      "name": "HRDiagram",
+      "displayName": "HR Diagram",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "An interactive Hertzsprung-Russell diagram built on real Gaia and Hipparcos stars across four screens: place a star by temperature and luminosity and read its radius against guides for the main sequence, luminosity classes, lines of equal radius and the instability strip; compare two stars to separate the effects of temperature and luminosity on radius; plot the nearest and the brightest stars by kind; and explore a Gaia census of every star within 100 parsecs with distance and brightness limits.",
+      "deployedUrl": "https://openlyceum.github.io/HRDiagram",
+      "physicsTopics": [
+        "astronomy",
+        "HR diagram",
+        "stellar luminosity",
+        "stellar temperature",
+        "stellar radius",
+        "Stefan-Boltzmann law",
+        "luminosity classes",
+        "Gaia",
+        "Hipparcos",
+        "data literacy"
+      ],
+      "screens": [
+        {
+          "id": "explore",
+          "title": "Explore"
+        },
+        {
+          "id": "radius",
+          "title": "Radius"
+        },
+        {
+          "id": "starsamples",
+          "title": "StarSamples"
+        },
+        {
+          "id": "gaiacensus",
+          "title": "GaiaCensus"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "An HR diagram of real Gaia and Hipparcos stars: place a star and read its radius, compare the nearest and brightest stars, and explore a census within 100 pc."
+    },
+    {
       "name": "InterferometryLab",
       "displayName": "Interferometry Lab",
       "type": "simulation",
