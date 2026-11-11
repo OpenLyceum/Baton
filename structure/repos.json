@@ -2262,6 +2262,53 @@
       "status": "template"
     },
     {
+      "name": "SimplifiedMRI",
+      "displayName": "Simplified MRI",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "phet",
+      "subject": "physics",
+      "upstream": {
+        "org": "phet",
+        "name": "Simplified MRI",
+        "url": "https://phet.colorado.edu/en/simulations/mri"
+      },
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "How magnetic resonance works, from nuclear spins to imaging. Tune radio waves until nuclei absorb and flip, add gradient magnets so only one slice of a head resonates, then watch a tissue's magnetization precess and relax after an RF pulse. A SceneryStack port of PhET's retired Java sim Simplified MRI, with its physics oddities fixed and a new relaxation screen.",
+      "deployedUrl": "https://openlyceum.github.io/SimplifiedMRI",
+      "physicsTopics": [
+        "nuclear magnetic resonance",
+        "magnetic resonance imaging",
+        "nuclear spin",
+        "Larmor precession",
+        "relaxation"
+      ],
+      "screens": [
+        {
+          "id": "nmr",
+          "title": "NMR"
+        },
+        {
+          "id": "mri",
+          "title": "MRI"
+        },
+        {
+          "id": "relaxation",
+          "title": "Relaxation"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Magnetic resonance from nuclear spins to imaging: tune radio waves to resonance, select a slice of a head with gradient magnets, and watch magnetization precess and relax. A port of PhET's Simplified MRI.",
+      "githubTopics": [
+        "nmr",
+        "mri",
+        "phet-port"
+      ]
+    },
+    {
       "name": "SolarSystemModels",
       "displayName": "Solar System Models",
       "type": "simulation",
