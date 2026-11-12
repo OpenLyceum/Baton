@@ -1614,6 +1614,56 @@
       "status": "active"
     },
     {
+      "name": "NuclideChart",
+      "displayName": "Nuclide Chart",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore the chart of nuclides with real IAEA data: binding energies and the mass formula, magic numbers in separation energies, isobar mass parabolas, half-life trends, and natural decay chains with Bateman activities and fission yields.",
+      "physicsTopics": [
+        "nuclear-physics",
+        "binding-energy",
+        "radioactive-decay"
+      ],
+      "githubTopics": [
+        "chart-of-nuclides",
+        "pwa"
+      ],
+      "screens": [
+        {
+          "id": "chart",
+          "title": "Chart"
+        },
+        {
+          "id": "binding-energy",
+          "title": "Binding Energy"
+        },
+        {
+          "id": "shells",
+          "title": "Shells"
+        },
+        {
+          "id": "isobars",
+          "title": "Isobars"
+        },
+        {
+          "id": "half-lives",
+          "title": "Half-Lives"
+        },
+        {
+          "id": "decay-chains",
+          "title": "Decay Chains"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "OpticsLab",
       "displayName": "Optics Lab",
       "type": "simulation",
