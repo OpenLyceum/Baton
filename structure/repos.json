@@ -34,7 +34,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "AC phasor simulation exploring resistors, inductors, and capacitors across four screens — Intro (single element), Series RLC, Resonance, and Power.",
+      "description": "AC phasor simulation exploring resistors, inductors, and capacitors across four screens \u2014 Intro (single element), Series RLC, Resonance, and Power.",
       "physicsTopics": [
         "AC circuits",
         "phasors",
@@ -91,7 +91,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Predict, then measure, the velocity and acceleration graphs of a cart released down an incline, braked on a level track, and pushed up a ramp so it rolls back down — with a virtual cart or a real PASCO Smart Cart over Web Bluetooth. Students sketch predictions on the graphs, check a sign table, and see why the acceleration stays negative while the cart speeds up on the way down.",
+      "description": "Predict, then measure, the velocity and acceleration graphs of a cart released down an incline, braked on a level track, and pushed up a ramp so it rolls back down \u2014 with a virtual cart or a real PASCO Smart Cart over Web Bluetooth. Students sketch predictions on the graphs, check a sign table, and see why the acceleration stays negative while the cart speeds up on the way down.",
       "deployedUrl": "https://openlyceum.github.io/BackwardAcceleration",
       "physicsTopics": [
         "kinematics",
@@ -111,7 +111,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "Predict and measure v–t and a–t graphs of a cart on a ramp — virtual or a real PASCO Smart Cart over Web Bluetooth.",
+      "shortDescription": "Predict and measure v\u2013t and a\u2013t graphs of a cart on a ramp \u2014 virtual or a real PASCO Smart Cart over Web Bluetooth.",
       "githubTopics": [
         "pasco",
         "smart-cart",
@@ -245,7 +245,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Gen Chem thermochemistry: drop a hot metal into water to find its specific heat, measure ΔH of neutralization, dissolving salts and Mg + HCl in a coffee-cup calorimeter with drift-line extrapolation, calibrate a bomb calorimeter with benzoic acid and burn fuels, and build ΔH from reversed and scaled step reactions with Hess's law.",
+      "description": "Gen Chem thermochemistry: drop a hot metal into water to find its specific heat, measure \u0394H of neutralization, dissolving salts and Mg + HCl in a coffee-cup calorimeter with drift-line extrapolation, calibrate a bomb calorimeter with benzoic acid and burn fuels, and build \u0394H from reversed and scaled step reactions with Hess's law.",
       "deployedUrl": "https://openlyceum.github.io/CalorimetryLab",
       "physicsTopics": [
         "thermochemistry",
@@ -274,7 +274,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "Calorimetry and Hess's law for General Chemistry: specific heat, coffee-cup and bomb calorimetry, and building ΔH from step reactions."
+      "shortDescription": "Calorimetry and Hess's law for General Chemistry: specific heat, coffee-cup and bomb calorimetry, and building \u0394H from step reactions."
     },
     {
       "name": "CapacitorLab",
@@ -324,7 +324,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Explore the Carnot cycle across three screens: a piston-cylinder tied to a live PV diagram, a quantitative efficiency lab with a T–S view, and the same cycle reversed as a refrigerator or heat pump.",
+      "description": "Explore the Carnot cycle across three screens: a piston-cylinder tied to a live PV diagram, a quantitative efficiency lab with a T\u2013S view, and the same cycle reversed as a refrigerator or heat pump.",
       "physicsTopics": [
         "thermodynamics",
         "Carnot cycle",
@@ -361,7 +361,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Collide and launch two PASCO Smart Carts on a track — spring-plunger explosions, Velcro (completely inelastic) and magnetic (elastic) collisions, with equal or unequal masses. Fit lines to position–time graphs, fill momentum and kinetic-energy tables, and stream real Smart Carts over Web Bluetooth.",
+      "description": "Collide and launch two PASCO Smart Carts on a track \u2014 spring-plunger explosions, Velcro (completely inelastic) and magnetic (elastic) collisions, with equal or unequal masses. Fit lines to position\u2013time graphs, fill momentum and kinetic-energy tables, and stream real Smart Carts over Web Bluetooth.",
       "deployedUrl": "https://openlyceum.github.io/CartCollisions",
       "physicsTopics": [
         "momentum",
@@ -445,7 +445,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Explore crystal structure across five screens: the five 2D Bravais lattices, cubic unit cells and packing factors, hexagonal vs cubic close packing, Miller indices, and aperiodic order — Penrose tilings and the hat monotile, with diffraction as sharp as a crystal's but a symmetry no crystal can have.",
+      "description": "Explore crystal structure across five screens: the five 2D Bravais lattices, cubic unit cells and packing factors, hexagonal vs cubic close packing, Miller indices, and aperiodic order \u2014 Penrose tilings and the hat monotile, with diffraction as sharp as a crystal's but a symmetry no crystal can have.",
       "physicsTopics": [
         "crystallography",
         "Bravais lattices",
@@ -561,7 +561,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive simulation of the Doppler Effect — visualizes how the frequency of sound waves shifts with relative motion between source and observer.",
+      "description": "Interactive simulation of the Doppler Effect \u2014 visualizes how the frequency of sound waves shifts with relative motion between source and observer.",
       "physicsTopics": [
         "waves",
         "sound",
@@ -736,7 +736,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Gen Chem chemical equilibrium: watch a mixture react until Q reaches K with the forward and reverse rates equal, work ICE tables against a live simulation, push a mixture at equilibrium with Le Chatelier stresses and see whether Q or K moved, and find ΔH° and ΔS° from a van 't Hoff plot.",
+      "description": "Gen Chem chemical equilibrium: watch a mixture react until Q reaches K with the forward and reverse rates equal, work ICE tables against a live simulation, push a mixture at equilibrium with Le Chatelier stresses and see whether Q or K moved, and find \u0394H\u00b0 and \u0394S\u00b0 from a van 't Hoff plot.",
       "deployedUrl": "https://openlyceum.github.io/EquilibriumLab",
       "physicsTopics": [
         "chemical equilibrium",
@@ -766,7 +766,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "Chemical equilibrium for General Chemistry: watch Q approach K, work ICE tables, apply Le Chatelier stresses, and find ΔH° and ΔS° from a van 't Hoff plot."
+      "shortDescription": "Chemical equilibrium for General Chemistry: watch Q approach K, work ICE tables, apply Le Chatelier stresses, and find \u0394H\u00b0 and \u0394S\u00b0 from a van 't Hoff plot."
     },
     {
       "name": "ExoplanetsDatabase",
@@ -828,7 +828,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive simulation of two exoplanet-detection methods — radial velocity (Doppler wobble) and transit (light-curve dip).",
+      "description": "Interactive simulation of two exoplanet-detection methods \u2014 radial velocity (Doppler wobble) and transit (light-curve dip).",
       "physicsTopics": [
         "astronomy",
         "exoplanets",
@@ -890,7 +890,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Flow past an obstacle, from laminar streamlines to a Kármán vortex street to a turbulent wake — real-time GPU fluid simulation across Intro and Lab screens.",
+      "description": "Flow past an obstacle, from laminar streamlines to a K\u00e1rm\u00e1n vortex street to a turbulent wake \u2014 real-time GPU fluid simulation across Intro and Lab screens.",
       "physicsTopics": [
         "fluid dynamics",
         "Reynolds number",
@@ -927,7 +927,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "SceneryStack recreation of PhET's Fluid Pressure and Flow — Under Pressure, Flow, and Water Tower screens for hydrostatic pressure, Bernoulli flow, and a water tower with a hose.",
+      "description": "SceneryStack recreation of PhET's Fluid Pressure and Flow \u2014 Under Pressure, Flow, and Water Tower screens for hydrostatic pressure, Bernoulli flow, and a water tower with a hose.",
       "physicsTopics": [
         "fluid pressure",
         "hydrostatics",
@@ -1056,7 +1056,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Heat as a field on a WebGPU engine — temperature, conduction, convection, transport balance, and materials across five screens, with GPU-native compute shaders and a CPU reference backend.",
+      "description": "Heat as a field on a WebGPU engine \u2014 temperature, conduction, convection, transport balance, and materials across five screens, with GPU-native compute shaders and a CPU reference backend.",
       "physicsTopics": [
         "heat transfer",
         "conduction",
@@ -1205,6 +1205,47 @@
       "status": "active"
     },
     {
+      "name": "Lasers",
+      "displayName": "Lasers",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "phet",
+      "subject": "physics",
+      "upstream": {
+        "org": "phet",
+        "name": "Lasers",
+        "url": "https://phet.colorado.edu/en/simulations/lasers"
+      },
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore absorption, spontaneous and stimulated emission, optical pumping, and laser operation with one atom or many. A SceneryStack port of PhET's retired Java Lasers simulation.",
+      "deployedUrl": "https://openlyceum.github.io/Lasers",
+      "physicsTopics": [
+        "lasers",
+        "stimulated-emission",
+        "absorption",
+        "optical-pumping",
+        "quantum"
+      ],
+      "screens": [
+        {
+          "id": "one-atom",
+          "title": "One Atom"
+        },
+        {
+          "id": "multiple-atoms",
+          "title": "Multiple Atoms"
+        }
+      ],
+      "status": "active",
+      "shortDescription": "Absorption, stimulated emission, optical pumping, and laser operation \u2014 a SceneryStack port of PhET Lasers.",
+      "githubTopics": [
+        "pwa"
+      ]
+    },
+    {
       "name": "LewisStructures",
       "displayName": "Lewis Structures",
       "type": "simulation",
@@ -1253,7 +1294,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Light and atoms for General Chemistry: the electromagnetic spectrum with c = λν and E = hν, a Bohr hydrogen atom that emits and absorbs photons, and the line spectra of gases and flames through a spectroscope.",
+      "description": "Light and atoms for General Chemistry: the electromagnetic spectrum with c = \u03bb\u03bd and E = h\u03bd, a Bohr hydrogen atom that emits and absorbs photons, and the line spectra of gases and flames through a spectroscope.",
       "deployedUrl": "https://openlyceum.github.io/LightAndAtoms",
       "physicsTopics": [
         "chemistry",
@@ -1303,7 +1344,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive simulation of how light propagates through polarizers and wave plates — Intro, Polarization, Wave Plates, and Lab screens.",
+      "description": "Interactive simulation of how light propagates through polarizers and wave plates \u2014 Intro, Polarization, Wave Plates, and Lab screens.",
       "physicsTopics": [
         "optics",
         "light",
@@ -1411,7 +1452,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Explore why Mercury never appears far from the Sun. Synchronized planetarium and orbital views connect the Sun–Mercury angle in Berea's sky with real Earth and Mercury ephemerides.",
+      "description": "Explore why Mercury never appears far from the Sun. Synchronized planetarium and orbital views connect the Sun\u2013Mercury angle in Berea's sky with real Earth and Mercury ephemerides.",
       "deployedUrl": "https://openlyceum.github.io/MercuryElongations",
       "physicsTopics": [
         "astronomy",
@@ -1962,7 +2003,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "Planetary configurations, synodic periods and retrograde motion — heliocentric and Ptolemaic — for the NAAP Solar System Models lab.",
+      "shortDescription": "Planetary configurations, synodic periods and retrograde motion \u2014 heliocentric and Ptolemaic \u2014 for the NAAP Solar System Models lab.",
       "githubTopics": [
         "solar-system",
         "pwa"
@@ -1980,8 +2021,8 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive map of the Earth's tectonic plates drawn entirely from real data — PB2002 plate boundaries, USGS earthquakes, Holocene volcanoes and NOAA relief — plus cross-sections through a subduction zone, a spreading ridge and a transform fault, and a reconstruction clock running 50 Myr either side of the present. Two further screens port the tabs of PhET's Java simulation: crustal isostasy, and the evolution of a convergent or divergent plate boundary. A fourth screen replays the Müller et al. (2019) reconstruction from the present back to 250 Ma.",
-      "shortDescription": "Interactive map of Earth's tectonic plates from real data — boundaries, earthquakes, volcanoes, cross-sections, and a 50 Myr reconstruction clock — plus PhET-style crust and plate-motion screens and a 250 Ma deep-time playback.",
+      "description": "Interactive map of the Earth's tectonic plates drawn entirely from real data \u2014 PB2002 plate boundaries, USGS earthquakes, Holocene volcanoes and NOAA relief \u2014 plus cross-sections through a subduction zone, a spreading ridge and a transform fault, and a reconstruction clock running 50 Myr either side of the present. Two further screens port the tabs of PhET's Java simulation: crustal isostasy, and the evolution of a convergent or divergent plate boundary. A fourth screen replays the M\u00fcller et al. (2019) reconstruction from the present back to 250 Ma.",
+      "shortDescription": "Interactive map of Earth's tectonic plates from real data \u2014 boundaries, earthquakes, volcanoes, cross-sections, and a 50 Myr reconstruction clock \u2014 plus PhET-style crust and plate-motion screens and a 250 Ma deep-time playback.",
       "physicsTopics": [
         "plate tectonics",
         "seismology",
@@ -2113,7 +2154,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive quantum mechanics lab: solve the 1D Schrödinger equation in real time for analytically solvable and multi-well potentials, with wave functions, probability densities, energy levels, and time evolution.",
+      "description": "Interactive quantum mechanics lab: solve the 1D Schr\u00f6dinger equation in real time for analytically solvable and multi-well potentials, with wave functions, probability densities, energy levels, and time evolution.",
       "deployedUrl": "https://openlyceum.github.io/QuantumPotential",
       "physicsTopics": [
         "quantum mechanics",
@@ -2141,7 +2182,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "Explore bound states in potential wells with real-time solutions to the 1D Schrödinger equation.",
+      "shortDescription": "Explore bound states in potential wells with real-time solutions to the 1D Schr\u00f6dinger equation.",
       "githubTopics": [
         "quantum",
         "pwa"
@@ -2190,7 +2231,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Counting-statistics laboratory: measure radioactive decay — simulated or from a PASCO Wireless Geiger Counter over Web Bluetooth — and compare the distribution against Poisson and Gaussian theory.",
+      "description": "Counting-statistics laboratory: measure radioactive decay \u2014 simulated or from a PASCO Wireless Geiger Counter over Web Bluetooth \u2014 and compare the distribution against Poisson and Gaussian theory.",
       "physicsTopics": [
         "radioactivity",
         "statistics",
@@ -2261,7 +2302,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Relativistic momentum and energy across four screens: a particle pushed toward c against Newton's prediction and Bertozzi's 1964 data, the energy–momentum triangle and mass shell seen by moving observers, two-body collisions viewed from any frame, and threshold energies for fixed-target and collider reactions.",
+      "description": "Relativistic momentum and energy across four screens: a particle pushed toward c against Newton's prediction and Bertozzi's 1964 data, the energy\u2013momentum triangle and mass shell seen by moving observers, two-body collisions viewed from any frame, and threshold energies for fixed-target and collider reactions.",
       "deployedUrl": "https://openlyceum.github.io/RelativisticDynamics",
       "physicsTopics": [
         "special relativity",
@@ -2277,7 +2318,7 @@
         },
         {
           "id": "energy-momentum",
-          "title": "Energy–Momentum"
+          "title": "Energy\u2013Momentum"
         },
         {
           "id": "collisions",
@@ -2381,7 +2422,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "GitHub template for Open Lyceum SceneryStack sims — Use this template or Baton create-sim.sh; rename + scaffold-screens for one or N screens.",
+      "description": "GitHub template for Open Lyceum SceneryStack sims \u2014 Use this template or Baton create-sim.sh; rename + scaffold-screens for one or N screens.",
       "physicsTopics": [],
       "screens": null,
       "status": "template"
@@ -2563,7 +2604,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "IR, ¹H NMR and UV-Vis spectra linked to a 3D molecule: normal modes, splitting patterns, Hückel orbitals, and an identify-the-unknown game.",
+      "shortDescription": "IR, \u00b9H NMR and UV-Vis spectra linked to a 3D molecule: normal modes, splitting patterns, H\u00fcckel orbitals, and an identify-the-unknown game.",
       "githubTopics": [
         "spectroscopy",
         "nmr",
@@ -2657,7 +2698,7 @@
     },
     {
       "name": "SternGerlach",
-      "displayName": "Stern–Gerlach",
+      "displayName": "Stern\u2013Gerlach",
       "type": "simulation",
       "isSimulation": true,
       "lineage": "original",
@@ -2667,7 +2708,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive Stern–Gerlach experiment: assemble analyzers, magnets, and counters; fire spin-½ / spin-1 atoms; compare Monte Carlo counts with analytic quantum predictions.",
+      "description": "Interactive Stern\u2013Gerlach experiment: assemble analyzers, magnets, and counters; fire spin-\u00bd / spin-1 atoms; compare Monte Carlo counts with analytic quantum predictions.",
       "physicsTopics": [
         "quantum mechanics",
         "spin",
@@ -2738,7 +2779,7 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Gen Chem acid–base titration: titrate at the bench with a burette, an indicator and a pH meter (including an unknown acid), compare exact titration curves for strong, weak and polyprotic acids and bases with their buffer regions and species, and choose an indicator by its endpoint error.",
+      "description": "Gen Chem acid\u2013base titration: titrate at the bench with a burette, an indicator and a pH meter (including an unknown acid), compare exact titration curves for strong, weak and polyprotic acids and bases with their buffer regions and species, and choose an indicator by its endpoint error.",
       "deployedUrl": "https://openlyceum.github.io/TitrationLab",
       "physicsTopics": [
         "acid-base titration",
@@ -2760,7 +2801,7 @@
         }
       ],
       "status": "active",
-      "shortDescription": "Acid–base titration for General Chemistry: burette-and-indicator lab, exact titration curves, and choosing an indicator."
+      "shortDescription": "Acid\u2013base titration for General Chemistry: burette-and-indicator lab, exact titration curves, and choosing an indicator."
     },
     {
       "name": "TrackLab",
