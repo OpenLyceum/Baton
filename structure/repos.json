@@ -481,6 +481,34 @@
       "status": "active"
     },
     {
+      "name": "DataLab",
+      "displayName": "Data Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Plot and analyze your own lab data in the browser: import a CSV or paste a table, choose the x and y columns, drag across the graph to select a range, fit a proportional, linear or quadratic model, inspect the residuals, and export the results.",
+      "deployedUrl": "https://openlyceum.github.io/DataLab",
+      "physicsTopics": [
+        "data analysis",
+        "curve fitting",
+        "measurement",
+        "kinematics"
+      ],
+      "screens": [
+        {
+          "id": "data-lab",
+          "title": "Data Lab"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "DiffractionLab",
       "displayName": "Diffraction Lab",
       "type": "simulation",
