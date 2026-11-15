@@ -29,8 +29,11 @@ DataLab and BasicCoordinatesAndSeasons list their directly invoked data generato
 as entries. Astronomy sims with optional Java-based Flash decompilers list `java`
 in `ignoreBinaries`, because it is a system prerequisite rather than an npm package.
 RadioactivityAndStatistics lists the standalone USB probe server and browser script
-as entries. TrackLab retains `@techstark/opencv-js` in `ignoreDependencies`: its Vite
-plugin serves/copies the file from `node_modules` by path instead of importing it.
+as entries. The shared `knip.json` ignores `@swc/core`: dependency-cruiser loads it
+via `parser: "swc"` (see [`dependency-cruiser.md`](dependency-cruiser.md)), which Knip
+does not see as an import. TrackLab also retains `@techstark/opencv-js` in
+`ignoreDependencies`: its Vite plugin serves/copies the file from `node_modules` by
+path instead of importing it.
 
 Review findings before deleting code or dependencies. Runtime lookups, shell
 commands, generated assets, and optional template toolkit files can require
