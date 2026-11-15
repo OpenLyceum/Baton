@@ -13,6 +13,10 @@ on:
         # Opt in after adopting the strengthened template config and resolving findings.
         type: boolean
         default: false
+      unused-mode:
+        # off | advisory | required. Promote only after reviewing both Knip modes.
+        type: string
+        default: "off"
       run-tests:
         # Tri-state: "true" forces the test step on, "false" forces it off, and the
         # default "" means auto — run tests when the repo defines a "test" npm script.
@@ -29,6 +33,59 @@ permissions:
 # caller's run and kill the reusable call at startup, so the build never runs.
 
 jobs:
+  unused:
+    if: inputs.unused-mode != 'off'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: ${{ inputs.unused-mode == 'advisory' }}
+    steps:
+      - name: Validate rollout mode
+        env:
+          UNUSED_MODE: ${{ inputs.unused-mode }}
+        run: |
+          case "$UNUSED_MODE" in
+            advisory|required) ;;
+            *) echo "unused-mode must be off, advisory, or required" >&2; exit 2 ;;
+          esac
+
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: "npm"
+      - run: npm ci
+
+      - name: Inventory default and production code
+        shell: bash
+        run: |
+          mkdir -p knip-reports
+          failed=0
+          for mode in default production; do
+            args=()
+            if [ "$mode" = production ]; then args+=(--production); fi
+            status=0
+            npm run --silent knip -- "${args[@]}" --reporter json \
+              > "knip-reports/$mode.json" 2> "knip-reports/$mode.stderr" || status=$?
+            valid=true
+            if ! jq -e 'type == "object" and (.issues | type == "array")' "knip-reports/$mode.json" >/dev/null; then
+              valid=false
+            fi
+            echo "$status" > "knip-reports/$mode.exit-code"
+            echo "$valid" > "knip-reports/$mode.valid-json"
+            echo "Knip $mode: exit $status, valid JSON: $valid" >> "$GITHUB_STEP_SUMMARY"
+            cat "knip-reports/$mode.stderr"
+            if [ "$status" -ne 0 ] || [ "$valid" != true ]; then failed=1; fi
+          done
+          exit "$failed"
+
+      - name: Upload Knip reports
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: knip-reports
+          path: knip-reports/
+          if-no-files-found: warn
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20

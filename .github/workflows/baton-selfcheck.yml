@@ -50,6 +50,9 @@ jobs:
       - name: Check fleet Node version is in sync
         run: scripts/check-node-version.sh
 
+      - name: Test Knip inventory reporting
+        run: python3 -m unittest discover -s tests -p 'test_knip_*.py'
+
       - name: Detect uncataloged repos
         # Compare the live GitHub org against structure/repos.json so a repo that
         # was created on GitHub but never onboarded can't stay invisible to the

@@ -6,9 +6,11 @@ Run it inside the member repo after `npm ci`, using the fleet's Node 26 runtime.
 It reports unused files, exports, types, dependencies, and circular dependencies across
 the project. TypeScript and Biome remain responsible for their existing checks.
 
-Knip is a **manual check** during adoption. A finding produces a nonzero exit
-status, but the command is not part of shared CI, release scripts, or git hooks.
-Existing findings can therefore be reviewed without blocking unrelated changes.
+Knip runs in a separate **advisory CI job** during adoption. Both default and
+production reports, stderr, and exit codes are uploaded as the `knip-reports`
+artifact. Existing findings do not block unrelated build/test checks. A sim with
+a reviewed clean baseline can opt into required CI. Knip is not part of release
+scripts or git hooks.
 
 ```bash
 npm run knip
@@ -27,6 +29,14 @@ Playwright, and package-script discovery identifies application, test, config,
 and script entry points. Keep application modules out of `entry` unless they
 are actually loaded independently; making every source file an entry hides
 unused files. Add explicit entry points for custom loaders that Knip cannot see.
+
+The application project pattern is `src/**/*.ts!`: the trailing `!` includes
+source files in production mode as well as the default run. Tests, scripts, and
+root configuration patterns stay unmarked. The Vite plugin discovers `src/main.ts`
+through `index.html` in both modes, so no redundant explicit application entry is
+needed. When adding a custom independently loaded runtime entry, mark that entry
+and its production project patterns with `!` too. Tooling entries stay unmarked.
+Check `npm run knip -- --production --debug` after changing entry discovery.
 
 The shared config also turns on stricter coverage for these self-contained apps:
 
@@ -55,6 +65,12 @@ Shared:
 - `./.dependency-cruiser.local.cjs` in `ignoreUnresolved`: the shared
   `.dependency-cruiser.cjs` optionally `require.resolve`s this overlay; the file is
   absent until a sim needs a local carve-out.
+- `vite!` in `ignoreBinaries`: production-only exception for `start: vite`.
+  These applications deploy static build output, but Knip treats the `start`
+  script as production while excluding devDependencies (where Vite belongs).
+  Normal mode still checks Vite's dependency/binary declaration. Keep Vite in
+  devDependencies; do not ignore it in both modes or move build tooling into
+  runtime dependencies merely to satisfy production analysis.
 
 Sim carve-outs (allowed via `config/template-manifest.json` extend keys):
 
@@ -80,7 +96,14 @@ When Knip reports an unused export, choose deliberately:
 | --- | --- |
 | Nothing should import it (app-local dead export) | Remove the `export` keyword (or delete the symbol). |
 | Intentional shared toolkit API that some forks skip | Keep the export and tag it `/** @public */` so Knip leaves it alone. |
-| Export exists only so tests can reach it | Tag `/** @internal */`. Production mode ignores `@internal`; prefer this over growing `ignore*` lists. Do not use `@public` for test-only seams. |
+| Deliberate export exists only so tests can reach an implementation helper | Explain the testing need and tag `/** @internal */`. Production mode ignores that export; do not use `@public` for test-only seams. |
+
+Review production findings **before** adding `@internal`. Broadly tagging everything
+used only by tests would conceal the dead production API this mode is meant to find.
+Prefer tests through an existing application API when direct helper access adds no
+useful coverage. Do not retain an entire unused implementation merely because tests
+exercise it. Side-effect modules with no consumers of their exported value should
+keep the side-effect import and remove the unnecessary export.
 
 Do **not** add `"tags": ["-public"]` in `knip.json` — that would hide toolkit APIs from
 the report entirely. Tag individual exports instead.
@@ -102,8 +125,40 @@ The template owns the base configuration and dependency/script versions.
 specific ignores for documented local needs. Update the template first when
 changing the shared configuration, then propagate it to the simulations.
 
-After a reviewed cleanup, run the sim's lint, type checks, tests, and build.
-Consider mandatory CI enforcement only after the existing findings have been
-reviewed and each simulation has an agreed clean baseline.
+## Inventory and CI rollout
+
+From Baton, with Node 26 on PATH and dependencies already installed in member repos:
+
+```bash
+python3 scripts/inventory-knip.py --output /tmp/knip-inventory-$(date +%Y%m%d-%H%M%S)
+# A single repo, or a different workspace/runtime:
+python3 scripts/inventory-knip.py --only ACPhasor --workspace .. \
+  --node /path/to/node26 --output /tmp/knip-acphasor
+```
+
+The inventory reads the catalog (simulations plus template), uses at most three
+concurrent processes by default (`--jobs`), and never installs, fixes, commits, or
+pushes. It preserves each mode's raw JSON and stderr, exit codes, Knip version,
+config/lock hashes, checkout HEAD and dirty state, plus `summary.json`. Use a new
+output directory each time. Findings are data; missing tools, malformed output,
+timeouts, and execution failures produce inventory exit code 2. Config hints can
+fail a run even when its JSON issue list is empty; inspect stderr and exit codes.
+Warning-only issues also prevent classification as a clean baseline.
+
+`fleet-exec.sh` is for proposing changes in temporary clones, not a local findings
+inventory. Its dry-run executes the command but only previews the commit/push/PR
+stage. Use the inventory script to retain reports from installed local checkouts.
+
+The reusable CI input `unused-mode` accepts `off` (default for other callers),
+`advisory`, or `required`. Template and sim callers opt into `advisory`; the job
+runs separately from the existing build job. After reviewing both reports and
+running lint, type checks, tests, architecture checks, and build, set the sim's
+caller to `unused-mode: required`. Document this deliberate caller deviation in
+its AGENTS compliance carve-outs. Required mode fails CI if either run fails;
+repository branch protection must require the job if merge enforcement is desired.
+Do not promote a sim merely because its normal-mode report is empty.
+
+The initial rollout and reviewed pilot are recorded in
+[`knip-rollout.md`](knip-rollout.md). Keep both modes active after promotion.
 
 Reference: [Knip documentation](https://knip.dev/overview/getting-started).

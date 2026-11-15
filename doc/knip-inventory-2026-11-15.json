@@ -1,0 +1,1748 @@
+{
+  "startedAt": "2026-11-15T21:03:23.119151+00:00",
+  "finishedAt": "2026-11-15T21:04:28.491358+00:00",
+  "node": "v26.13.0",
+  "results": [
+    {
+      "repo": "ACPhasor",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "0099278d3033d1266fb43efbdf86379bcf86546e",
+      "dirty": "M .github/workflows/ci.yml\n M AGENTS.md\n M knip.json\n M src/common/model/Impedance.ts\n M src/preferences/acPhasorQueryParameters.ts",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "11813e8cb5f8bbaf877a3be0cc616c39947ed0c30c056bfa3131fed8943b7a55",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "BackwardAcceleration",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "0088088534e62358adb7ea5418ebb55605c78a88",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "9e17b27fae46b6a449ba9e77ad3854bd4c2251f717049d854c895f820523f20c",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "BasicCoordinatesAndSeasons",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 9,
+            "types": 3
+          }
+        }
+      },
+      "head": "3acb65b26904f44b662623394be6993ad09a2b28",
+      "dirty": "M knip.json",
+      "configSha256": "6fbbf603248abf1863604040e6fc2e277473b4aca8a85e42ac1bcdbece4cdedb",
+      "lockSha256": "0f6c5f9c9fce1f7f2b87380165a0ed59bf2a634a31c36f0b615e59dd9855a1e2",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "BiomechanicsArm",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "0aa2cc1372f1e9298a12a2692e4de6f6bc1326c5",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "7af9c7b551d21a44202af5baf4bba6575f17631961bc5c88464ac602961c64cf",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "CalorimetryLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 5,
+            "types": 2
+          }
+        }
+      },
+      "head": "42736056cf026f27a534b321707b0d6e36f4445e",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "1e18aa9dadd08e86455f6c027e6783c54c713a7fe6dc4a7a50c7841d0a2311b5",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "CapacitorLab",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "1241af38005ae95ce8f7e5e7db2ff2366cb1f8ff",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "465488b4f24c00ad900ea76d7fa2aae15c8ea0b46de3da82ae635ce94db53c5a",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "CarnotHeatEngine",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4
+          }
+        }
+      },
+      "head": "9c231ffbd3b055a519cf0d37b5e0f2236b09e135",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "cb6fde9ced2ef079d252ee87aae42734edaa75e788d132c1364b5699b1eca71f",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "CartCollisions",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4
+          }
+        }
+      },
+      "head": "ba2c9240015b10fe766d15885721fd3e0e5e6b79",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "0359736bf47c35b429465c92826554b9f8e829c3bd05d678f68e72fb3f340c07",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "ColliderLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 6
+          }
+        }
+      },
+      "head": "976a555577ce610ee93d5e09f1b04b223cb81a4b",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e1891aa8b1c7f4df55084096a19290e166ea20184f262fb6292351f53bc5626c",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "CrystalLattice",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 31,
+            "types": 2
+          }
+        }
+      },
+      "head": "2e9c6b0c17a0321670ecb761792d1fc5b67a1c86",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e9fa944964ce369be4e1145e1cdfcd83dd1861f1ddb2cbd5169c87f82217dbdc",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "DataLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "1e6fc3d59ba427284e9d92ecb509c27e4ed2d5bf",
+      "dirty": "M knip.json",
+      "configSha256": "de958c30872a222f9d3bd6b9e2b65abf3279d4dda091af5016cd4b2b3e70df0f",
+      "lockSha256": "dfc157d771b5e92fb7d7ab0a1a0da113a53f166cc576044eb4f42213691efe45",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "DiffractionLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 7
+          }
+        }
+      },
+      "head": "3ff489e09bca2c76bd97027daf63568e66dac364",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "bab4e9e99bccb5fda8875c68942e6a81cdfb7d156da4e624e6f03c52575b2a54",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "DopplerEffect",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "413b021d7b28d4af8e29a4b60ed751f5d4d58aef",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c3e396678e2102560f8b1e772335f434902e480c58aeb54338105bb69cd1c4c2",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ElectricFieldMapper",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4
+          }
+        }
+      },
+      "head": "705fc3a559c604ec41a017562f1683d289a724e2",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "5a0a9ddc85be0734af6b55c386483c281bcaa7bb8e3474d14cf10f6e4f291fa3",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "ElectricFieldOfDreams",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "e876ae458368a00b749cf6b0ec9addb118921095",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "a594a981f0bcad42f4e68ee03f7f3ca16039a01f54196b33f7d9cf91bb247182",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Electrochemistry",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4
+          }
+        }
+      },
+      "head": "ad8f0b214c174552fe9fd43be9dd93c8f5f448d9",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "d2a7c03ef526cf6f42544b11f1b533fb4c9534828992035f7a155f5e5150a763",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "ElectronConfiguration",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "0009e6dbc44f50bf3aceeb1a4a5dc66067309232",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e4b6aefca0651e04b11a5d0eb97286c84f7ca39331ad66182bd0b93f44a66698",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "EquilibriumLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "024327bc09ac74d4235a14338c221b665e328fe3",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "4e0447c5186d5473962ceaa54bd99109a63793df414c96e013a80a47b80062cc",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "ExoplanetsDatabase",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "a004da5c463db61d9cbb2fc01d1b70f6fce49123",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "317e582c1ae6f9b8f5b14e1efcca2169506806adeba9456b58d988f34749b8de",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "ExtrasolarPlanets",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 15,
+            "types": 1
+          }
+        }
+      },
+      "head": "bba3f64b533e8784641c778e82c2aaa737092106",
+      "dirty": "M knip.json",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "bcd5aedd723018a7c287f0ba2c4a8de09bdf6da487f8497f5543543224b65041",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "FieldBoundary",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 10
+          }
+        }
+      },
+      "head": "3b4992776509d35e24c3df1ad331cdf8d7205288",
+      "dirty": "M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "3e017407b6cbf8f8470df50f6d77b3d0f77a4ac93b9fb8094ab8fd1a9ba9ceac",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "FluidDynamics",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 8
+          }
+        }
+      },
+      "head": "af41b9a420e85fc2595969956186f69b61292ff5",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "fc92f1fe425bf7850c96dcda47976af7f0f4a34a223c8f9155ea77a3dc8c51bf",
+      "lockSha256": "0bc0db9a789bf00d1c5b666452a76852798352c0b5535e42bb870ddc0cb68e74",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "FluidPressureAndFlow",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 6
+          }
+        }
+      },
+      "head": "d21cbb3041aa90cc0e62b85622b363d41c703f62",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f2ce1150386419d0e3171705fa8a2ba59edcccbd4c62973f09270998b9822b9c",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "HRDiagram",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "a0fb691c715fdf84abff942e0d844e88bc51b7fc",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e4cebc89f3bd5be206376e5d31d8649c9d805893c48b06a02ea9537e56c4d0b3",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "HabitabilityLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 6
+          }
+        }
+      },
+      "head": "da132d09554cb3cb9df6afac469bb06b61ac3320",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "25eb9698ba79248c647f0e2671a1b316607a99d8bbc470d2ce850bdd06fb7051",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "HabitableZones",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "3b1af0264090c6074ae7598b572a5593efa5d471",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "c6c667db55de9a9efe5c9d2a5b6e8b5983d30a9e695930e4ae1643c79f7af6a9",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "HeatTransfer",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 5,
+            "types": 1
+          }
+        }
+      },
+      "head": "686ccb6c366f54ffd23a8334331893760d2ca998",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "61e90919d279550e0870cc58297f928d3e126d3c592a7fc8b230779593e3bab9",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "InterferometryLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 8
+          }
+        }
+      },
+      "head": "406efd985ff3a005e4add015b49684680627521b",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "5d222ae769bafa63b04bb320a2939e358d7d7b18fa97bced1f021c71c13cbe77",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "LadyBug",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "21daa66567d1ade58c2fe82c62bb1e1bc0e6978a",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "cdf467bf9ae8d98e8e86488c1639a2bac422c1b2dc053e252db358b657c036e9",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "Lasers",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "e2b35fe7c8672aac2ce33d22679144a2d35ce500",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "779d35965d135729c6ea7e89556a7b5d818db088df2c7927ea0071bd7edf0152",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "LewisStructures",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2,
+            "types": 1
+          }
+        }
+      },
+      "head": "16fdd12fa66935be4141c9331c6b525f9b6514ff",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "80700a3e24d4a4a0fe9d64ace5f7f8b3f258b7f37e7e924b210e43df1cf10ce6",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "LightAndAtoms",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 6
+          }
+        }
+      },
+      "head": "5d96282e4dc6776d3587d3dc4b1ce120e9ed29f8",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c0bf0c26ec9acbbd92eb3efa26c640b203101a99f9dffac6a62872fda05868f2",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "LightPropagation",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4,
+            "types": 1
+          }
+        }
+      },
+      "head": "34e300102491767a483479ca98c975ef81afe8d9",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "773ff3292651c07470d1cc6caf3cde6af0a2fa6b793e76b78a2759c3c7129230",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "LunarLander",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "da96c8646e29e312ba6915dbc80edd6fe6e56a52",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "0b7d0c5ef8e9112638cecf2c531bef155ad58b8c9b2f55b7e9d436d7ca7e5ebc",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MazeGame",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "c11850b344a3a91fcf33dd462824d6437039becf",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "d00f70ff36017f7121be1374ad1218dc3aa0b03b305543e3463735c2a2858439",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MercuryElongations",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "36c7713230f361099fba818f3db84596f5e1f5ec",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c2cce3416524c10578664bd73b448ef5806709d554ba5a86e8967a78641dcbfd",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "MolScope",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "e8e9d62de200663f757d2f874aba5fc08a2336e6",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c59df65e93a4fb8272bac7c29f7a86c4357e63a2595c8a1e902cb9cec37e8b63",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "MotionMatch",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "b994065d0ec6e943247c8b9540d5f99631e0a1df",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f5b31e276f21e1cbfeb04f1ba0d058ead9995b3c56d48b98715c34ebaa736ec2",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "MotionSensor",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 6
+          }
+        }
+      },
+      "head": "20df7e9d2dfafcd47c70a309acb7d10ae2ecd82a",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "42c78f11adef1797f4495f67032b7e87e3bb7c7bccecf6c6380a14e2cfd46d01",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "MotionsOfTheSun",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 8,
+            "types": 2
+          }
+        }
+      },
+      "head": "7807552eb12ef7ca7ba2620b0686c5bef8bb1bc4",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "6fe34d75135ef71ebb2f23e5b4c642dbf02149502e4c1af4c00548b2027107be",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "MovingMan",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "bce32b0ded7329957f2ab0347de84c1b9c9a352a",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "265d53ca411458c11b53f4da9bfced0625eea578b8762b9e6cfa88dc82d283c7",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "NuclideChart",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 12,
+            "types": 2
+          }
+        }
+      },
+      "head": "d43f3377bc8aacdb3748d0ac1746f490f8563409",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "98befcd751b133da801d16bf0f33dd99133900bbbc4b4ed0f7f03efb65d2fda6",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "OpticsLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "3fe2a6f159c8af25a0b5cb87874b28af5e0c1053",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "90e98c9da229e4acb62282dcc06c74ce7b83f89b57c396a1ea4bbe1ad0b4e48d",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "OscillationsAndChaos",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "6c76849a0c42176ebe9f8b177260469803566cb9",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f0c4b85b60f15df01c6dde6bf612b0a88d93133c879c4718646888a80864654a",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Oscilloscope",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "81e1a2812803e8ff15cfc06c10bcc77f32d68197",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "2f1cbc0f08341e53ace9ab7a652f98976d0c2bd59125ad86166e3188f358cb2f",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "ParticleZoo",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 6
+          }
+        }
+      },
+      "head": "d25804f8c30d01de7e91cf7dd29fff8162f775ca",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "3da6e61c28b310576dfe30446582cc30eeb5052e387db510b2bd63c92f509a13",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "PeriodicTrends",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "29f7c15d4d015302bce8b5ab79ed82c096dc7f60",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "fe7f07507c80255887609a46104d7601d27c2cb72a9dd62e1991ae20be2b73b9",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "PhotonInteractions",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 10
+          }
+        }
+      },
+      "head": "a37e4b09479ed8f030d2eac372b5462a5ccb19c8",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "d00f42961d0ed829c2202421b2fb257b0d5d127613446574aa4abf9d8e251e53",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "PlanetaryConfigurations",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "0e11a2c9eebb4cb4e5b54c6755a776766a80b0c5",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e82f4afbccfd04f0e165b0e2929b0a09f65528f39b930888e1397114015d7e2b",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "PlateTectonics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 29,
+            "types": 1
+          }
+        }
+      },
+      "head": "e755a5087f0b75cadf205332890c7e50a117a022",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "97a009ebf4a41b200b3a039764fe7361b35023c03091cc92cffd733cb02dfb18",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "Precession",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 7
+          }
+        }
+      },
+      "head": "4cd22a1bc16bf691a3c8fa2939d408212ca932f2",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "9f30281489c86c814ad923bc7e0bb388de8477bd7d0e8f0f84ad8baa05b4e725",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "QuantumAtom3D",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 10,
+            "types": 1
+          }
+        }
+      },
+      "head": "93e2335ff7e6c44b9d44592d8aca66c15adafefd",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "8cf95b9f487b462499ba57ec324403ac612327d5020efdb9ceae50a94d2eca5d",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "QuantumPotential",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 11
+          }
+        }
+      },
+      "head": "073fbad87a5e331915f8792b99dbb65feaf7f718",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "76832e21dffe141064399cde7588c23073a56156440dc8d9c10d90cf257b2b3b",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "QubitSketch",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "df67180e13d0484d92592ef35b514ee12d1258ce",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c0054245abd376ec39d16d3f1b55b263e421dcb6609c0d9a2b3f7e9b74daffc4",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "RadioWaves",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "2ef95d50f81faee2708d08ca4710d1c616c76c38",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e63697e7d7aeb98275e650c155e43b3a88fd6035b1178e8ab86a9b008b12c099",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "RadioactivityAndStatistics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 10
+          }
+        }
+      },
+      "head": "a97f4dfc4b92cb5087ef51bfcd6b472b653d59d4",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "852adde15991d6aa250d5476c31fb3dc1f26981345deda3a74aaa92e86eed269",
+      "lockSha256": "f8987b195c6e14c43f411bccc436702b49e55f45f7ef011328a758d2e31066f5",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "RelativisticDynamics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 9
+          }
+        }
+      },
+      "head": "ce77cfcc3c6e56a21f517d651b3ccbc5c9b3761d",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "3a735a478b003cb43bc0f24f5c5a5a510203718a9778909b19f4e116f89a857e",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "Resonance",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4,
+            "types": 1
+          }
+        }
+      },
+      "head": "74547c130c2e1d519ab9a3c7c8fed787bacc8d7b",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "5ce47ffa313e1724edbd547065792d893b07164e4ab03cfdb9008aab7bb42cb1",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "RotatingSky",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3,
+            "types": 1
+          }
+        }
+      },
+      "head": "29cc173a72412c5735f836c41fbb9f4252c918ee",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "292b4dcddbc1832f2571a38fe4caa5feea27afde3a8a6e3c65a8372413610416",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "SceneryStackTemplate",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1,
+            "files": 2
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1,
+            "files": 3
+          }
+        }
+      },
+      "head": "64e3d05bdb7d65ead6358511e7cc11deff625909",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "b2b39adf3091a46b2e8fef617d6a34611ac6297ba087859a0b69567168f3c46c",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "SimplifiedMRI",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "fad489ebcaaaf549d626e01a3ff49c77c3978efb",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e79ebbe973663024c6b203998a5d695f6110b6884755d305bcaa0da88ea3e750",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "SolarSystemModels",
+      "modes": {
+        "default": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "1be6b690eab3d9441ae2bc431325e67e2121d841",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "397301136abfd8caf5b148d1766864e30b685acf3739be52def0e7e79f78581f",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "SpecialRelativity",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 10
+          }
+        }
+      },
+      "head": "56de04eafe0b8ad3fb96de00566489f6ca7b39e4",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "b40207c20dcca8ec1fd57a17c1b9eec6397594fc0effdba94f2986ce7ff9a822",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "SpectroscopyLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 15,
+            "types": 1
+          }
+        }
+      },
+      "head": "4a5e424625f9c3f0eaa8ebf9628b9f9c7398db87",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "9f25e2944a721bc4dbe32f370ed24b9cea6df1d3a32bcb59082e39f4626fd25d",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "StandingWaves",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "25be0d004398e5468d6273a6ee94b44a37af1773",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "502fbd246f607c0b7d5a0e3bcae7c691c3ebcf97ad0126da2b47150a1845006c",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "StellarWobble",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 3
+          }
+        }
+      },
+      "head": "ccf3a0cf00e7b6736f7c3b1b43b1c822744b6f74",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c5b7ddb5762cd63ba7a44b24ba1e265c27f7a6da2bd5fd6e4c6e3e1c26a22c5b",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "SternGerlach",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 2
+          }
+        }
+      },
+      "head": "ce2515569a4cfdc7059a92990c88f1b0dec05ff4",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "be669f00a1fc3c71877797d0cd7f483d3388df5eea2599ac99f268d94ba44edd",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "TheRamp",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "15d781c4be2decd771fc94a26d87eaa6d3c4be96",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "132d3bb5f256f2e0d8768bb80c2c3b2532714ace520bb7f02ec0f1b7ce8bea35",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "TitrationLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 11
+          }
+        }
+      },
+      "head": "d95eeb7667a50983a9cc54be54713fc0439cfa96",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "e0d1251c1059bd7980cec74bdef8f2d45cb11c61e28158fbda52c576b50daeb7",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "TrackLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "900bf44ca3ff098435d930b4e3b1123cbc9e731e",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "1df6194c9d8cc2dee24281cef09429e400d4bef9f03c622f56fbc622bdd05363",
+      "lockSha256": "22204a4d36b700f3d73bd15264e61cc5dfb7ae7685f3ae80bd7017bf566897ab",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "TransitHunter",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 12,
+            "types": 1
+          }
+        }
+      },
+      "head": "581897a664e2f4f6bd655a512a4b65ce4209d7e5",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "ce708c574d6406bd0f462c0a789d02f108357c1668b29d00b249658d66ab1d1c",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "VariableStarPhotometry",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 1
+          }
+        }
+      },
+      "head": "79b712cdc984902a111f73be125af6a9db61bafc",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "cd8226e64f865af80121136b2b3bb46c1158499b50c1ecc4f1cd11365ecead29",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "VernierScales",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 18
+          }
+        }
+      },
+      "head": "bdade0175de10b23018aedb73331d15e9f66af6f",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "d7d5e5c85b175c534b087106876656fe4188bdb0b3fc8d0d973f7c78f1d14a68",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "WaveComposer",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 4
+          }
+        }
+      },
+      "head": "635325f17904ee6e4c7087e12de1b818eb5477bc",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f48006068ba5e12afc8ad8a8dabf346d5f6f5d6a61b75a0598b936fd8aa04e38",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    },
+    {
+      "repo": "Zenith",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 1,
+          "validReport": true,
+          "counts": {
+            "exports": 13
+          }
+        }
+      },
+      "head": "c47813d6995a0c1086c1bd377f2447e180de216b",
+      "dirty": "M .github/workflows/ci.yml\n M knip.json",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "115f3409ea5d69c79a8ab164639bd099585a09e65773572fec36e702a71098a6",
+      "knipVersion": "6.45.1",
+      "status": "findings"
+    }
+  ],
+  "note": "Initial inventory, not an ignore baseline. Only ACPhasor is promoted to required CI after review. Raw JSON and stderr are retained separately by the inventory runner."
+}
