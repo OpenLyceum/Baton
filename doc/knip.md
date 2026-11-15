@@ -40,6 +40,14 @@ An unused export may only need its `export` keyword removed. Intentional shared
 toolkit exports can use the existing `@public` annotations. Avoid blanket ignores
 or automatic `--fix` cleanup across the fleet.
 
+Keep the preferences trio wired even when empty: `src/preferences/` is required by
+compliance (`<Prefix>PreferencesModel`, at least one `*PreferencesNode`, and
+`<prefix>QueryParameters`). Empty stubs that nothing imports look unused to Knip,
+but deleting them fails compliance. Wire Model/Node from `main.ts` via
+`simulationOptions.customPreferences`, and have the Model import the query-parameters
+module (side-effect import is enough while it has no parameters) so Knip keeps the
+file.
+
 The template owns the base configuration and dependency/script versions.
 `config/template-manifest.json` allows sims to extend project/entry patterns and
 specific ignores for documented local needs. Update the template first when
