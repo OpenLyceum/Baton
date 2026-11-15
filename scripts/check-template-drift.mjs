@@ -198,9 +198,16 @@ function checkSim(repoName) {
       const t = getPath(tpl, path);
       const c = getPath(cur, path);
       if (Array.isArray(t)) {
+        // Starter toolkit entries belong only to the template. Requiring them
+        // in forks would hide orphan application modules and invent missing paths.
+        const templateOnly = new Set(
+          (isTemplate ? [] : manifest.templateOnly.jsonArrayValues?.[rel]?.[path] ?? []).map(stable),
+        );
         const have = new Set((Array.isArray(c) ? c : []).map(stable));
-        const lost = t.filter((x) => !have.has(stable(x)));
+        const lost = t.filter((x) => !templateOnly.has(stable(x)) && !have.has(stable(x)));
         if (lost.length) problems.push(`${path} drops ${lost.map(stable).join(", ").slice(0, 160)}`);
+        const inherited = (Array.isArray(c) ? c : []).filter((x) => templateOnly.has(stable(x)));
+        if (inherited.length) problems.push(`${path} retains template-only values: ${inherited.map(stable).join(", ")}`);
       } else if (t !== undefined && stable(t) !== stable(c)) problems.push(`${path} differs`);
       setPath(tpl, path, null);
       setPath(cur, path, null);

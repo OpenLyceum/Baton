@@ -50,7 +50,7 @@ jobs:
       - name: Check fleet Node version is in sync
         run: scripts/check-node-version.sh
 
-      - name: Test Knip inventory reporting
+      - name: Test Knip inventory and template-only entries
         run: python3 -m unittest discover -s tests -p 'test_knip_*.py'
 
       - name: Detect uncataloged repos

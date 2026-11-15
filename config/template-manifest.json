@@ -54,6 +54,15 @@
     ]
   },
   "templateOnly": {
+    "jsonArrayValues": {
+      "knip.json": {
+        "entry": [
+          "src/common/SimControlOptions.ts!",
+          "src/common/SimPanel.ts!",
+          "src/common/TimeModel.ts!"
+        ]
+      }
+    },
     "files": [
       "scripts/rename-sim.ts",
       "scripts/scaffold-screens.ts"

@@ -6,10 +6,10 @@ Run it inside the member repo after `npm ci`, using the fleet's Node 26 runtime.
 It reports unused files, exports, types, dependencies, and circular dependencies across
 the project. TypeScript and Biome remain responsible for their existing checks.
 
-Knip runs in a separate **advisory CI job** during adoption. Both default and
+Knip runs in a separate CI job, **required after baseline review** and advisory
+while adoption or cleanup is still in progress. Both default and
 production reports, stderr, and exit codes are uploaded as the `knip-reports`
-artifact. Existing findings do not block unrelated build/test checks. A sim with
-a reviewed clean baseline can opt into required CI. Knip is not part of release
+artifact. Advisory findings do not block unrelated build/test checks. Knip is not part of release
 scripts or git hooks.
 
 ```bash
@@ -87,8 +87,10 @@ Sim carve-outs (allowed via `config/template-manifest.json` extend keys):
 
 Review findings before deleting code or dependencies. Runtime lookups, shell
 commands, generated assets, and optional template toolkit files can require
-context. For example, a new template can report unused `SimPanel.ts`,
-`SimControlOptions.ts`, and `PANEL_CORNER_RADIUS` until those tools are used.
+context. The template's `SimPanel.ts`, `SimControlOptions.ts`, and `TimeModel.ts`
+are documented starter toolkit entries; its panel constant is an intentional
+public toolkit export. Forks must use or remove unused starters instead of
+inheriting template-only entry exemptions.
 
 When Knip reports an unused export, choose deliberately:
 
@@ -124,6 +126,10 @@ The template owns the base configuration and dependency/script versions.
 `config/template-manifest.json` allows sims to extend project/entry patterns and
 specific ignores for documented local needs. Update the template first when
 changing the shared configuration, then propagate it to the simulations.
+`templateOnly.jsonArrayValues` in the manifest keeps the template's three starter
+entry patterns out of that required base. The drift checker accepts those entries
+in the template, rejects inheriting them verbatim in a sim, and still requires
+production source coverage and all other shared configuration.
 
 ## Inventory and CI rollout
 
@@ -150,15 +156,17 @@ inventory. Its dry-run executes the command but only previews the commit/push/PR
 stage. Use the inventory script to retain reports from installed local checkouts.
 
 The reusable CI input `unused-mode` accepts `off` (default for other callers),
-`advisory`, or `required`. Template and sim callers opt into `advisory`; the job
-runs separately from the existing build job. After reviewing both reports and
+`advisory`, or `required`. The template uses `required`; existing sims are promoted
+individually after baseline review. The job runs separately from the existing build job.
+After reviewing both reports and
 running lint, type checks, tests, architecture checks, and build, set the sim's
-caller to `unused-mode: required`. Document this deliberate caller deviation in
-its AGENTS compliance carve-outs. Required mode fails CI if either run fails;
+caller to `unused-mode: required`. A sim still using `advisory` documents its
+remaining adoption work in AGENTS compliance carve-outs. Required mode fails CI if either run fails;
 repository branch protection must require the job if merge enforcement is desired.
 Do not promote a sim merely because its normal-mode report is empty.
 
 The initial rollout and reviewed pilot are recorded in
-[`knip-rollout.md`](knip-rollout.md). Keep both modes active after promotion.
+[`knip-rollout.md`](knip-rollout.md); current validation and promotion decisions are in
+[`knip-reviewed-baselines.md`](knip-reviewed-baselines.md). Keep both modes active after promotion.
 
 Reference: [Knip documentation](https://knip.dev/overview/getting-started).
