@@ -10,6 +10,8 @@ It validates import boundaries that Biome and TypeScript do not enforce:
 |---|---|---|
 | `no-unresolved` | error | Imports must resolve; catches invented packages and stale file paths |
 | `no-undeclared-packages` | error | Runtime packages must be direct dependencies, not accidental transitive installs |
+| `no-duplicate-dep-types` | error | Imported packages must not appear in multiple dependency categories |
+| `not-to-deprecated` | warn | Installed package metadata must not mark imports deprecated |
 | `no-node-builtins` | error | Browser code must not value-import Node built-ins |
 | `no-src-to-tooling` | error | App code must not import scripts, configs or sibling checkouts (`package.json` metadata and static images in root `assets/` are allowed) |
 | `no-app-to-bootstrap` | error | Only bootstrap modules may import the bootstrap chain |
@@ -25,9 +27,25 @@ It validates import boundaries that Biome and TypeScript do not enforce:
 | `no-src-to-tests` | error | `src/` must not import `tests/` |
 | `not-to-dev-dep` | error | `src/` must not value-import npm `devDependencies` |
 | `no-model-to-ui-packages` | error | `model/` must not value-import `scenerystack/scenery` or `scenerystack/sun` (type-only allowed; `scenery-phet` units/`TimeSpeed` OK) |
+| `no-model-to-colors` | error | Models must not value-import `*Colors.ts`; views map domain state to colors |
+| `no-unreachable-from-entry` | error | Every source module must be reachable from `src/main.ts` (ambient declarations excepted) |
 | `no-orphans` | error | Modules under `src/` with no incoming or outgoing dependencies |
 
 Shared roots treated as non-screens: `common`, `preferences`, `i18n`, `assets`.
+
+Resolution targets browser packages: import/browser/module conditions, browser aliases,
+and browser/module/main entry fields (with type metadata fallbacks). Node-specific
+conditional exports are not selected for browser application code.
+
+Reachability includes literal dynamic imports and type-only edges. Entry modules are
+exempt from their own reachability check, as are ambient `.d.ts`, `.d.cts` and `.d.mts`
+declarations. Only the template package additionally treats `src/common/SimControlOptions.ts`,
+`SimPanel.ts` and `TimeModel.ts` as public starter entry points. Forks must use or remove
+unused starter components; this exception does not propagate to renamed sims. Keep
+reference implementations used only by tests under `tests/`, outside application source.
+Computed dynamic imports still need explicit review; the parser cannot infer every target.
+
+The deprecation warning uses installed package metadata, not a live npm registry lookup.
 
 SceneryStack sims and the template enforce architecture checks in **pre-push**,
 **release**, and **CI**. Each sim's reusable Baton CI caller sets
