@@ -41,6 +41,14 @@
     "biome.json": [
       "files.includes",
       "overrides"
+    ],
+    "knip.json": [
+      "entry",
+      "project",
+      "ignoreFiles",
+      "ignoreDependencies",
+      "ignoreUnresolved",
+      "ignoreBinaries"
     ]
   },
   "templateOnly": {
