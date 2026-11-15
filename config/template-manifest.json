@@ -25,7 +25,8 @@
     "tests/helpers/memoryLeak.ts",
     "src/assert.ts",
     "src/brand.ts",
-    "src/splash.ts"
+    "src/splash.ts",
+    ".dependency-cruiser.cjs"
   ],
   "linesSuperset": [
     ".gitignore"

@@ -43,6 +43,7 @@ Pages simulation landing page.
 | [`doc/github-repo-settings.md`](doc/github-repo-settings.md) | GitHub settings/security baseline for sims + apply/check script |
 | [`doc/fleet-git.md`](doc/fleet-git.md) | Cheat sheet: everyday git across local checkouts (`pull`/`push`/`status` all) |
 | [`doc/knip.md`](doc/knip.md) | Manual unused-code checks across the SceneryStack fleet |
+| [`doc/dependency-cruiser.md`](doc/dependency-cruiser.md) | Manual architecture / layer checks across the SceneryStack fleet |
 | [`doc/fleet-auth.md`](doc/fleet-auth.md) | Setting up the `FLEET_PAT` / GitHub App that lets `fleet-exec` open PRs |
 | [`doc/gitlab-mirror.md`](doc/gitlab-mirror.md) | GitLab backup mirror: setup, initial import, periodic sync, restore |
 

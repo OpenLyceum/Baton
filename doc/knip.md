@@ -1,6 +1,7 @@
 # Finding unused code with Knip
 
-Every SceneryStack simulation and SceneryStackTemplate provides `npm run knip`.
+Every SceneryStack simulation and SceneryStackTemplate provides `npm run check:unused`
+(alias: `npm run knip`).
 Run it inside the member repo after `npm ci`, using the fleet's Node 26 runtime.
 It reports unused files, exports, types, and dependencies across the project.
 TypeScript and Biome remain responsible for their existing checks.
