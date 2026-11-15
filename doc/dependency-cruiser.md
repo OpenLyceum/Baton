@@ -25,7 +25,7 @@ It validates import boundaries that Biome and TypeScript do not enforce:
 | `no-src-to-tests` | error | `src/` must not import `tests/` |
 | `not-to-dev-dep` | error | `src/` must not value-import npm `devDependencies` |
 | `no-model-to-ui-packages` | error | `model/` must not value-import `scenerystack/scenery` or `scenerystack/sun` (type-only allowed; `scenery-phet` units/`TimeSpeed` OK) |
-| `no-orphans` | warn | Modules under `src/` with no incoming or outgoing dependencies |
+| `no-orphans` | error | Modules under `src/` with no incoming or outgoing dependencies |
 
 Shared roots treated as non-screens: `common`, `preferences`, `i18n`, `assets`.
 
@@ -41,8 +41,8 @@ merging callers that use the new input. Keep these files synchronized through
 
 `npm run test:architecture` runs CLI regression fixtures for forbidden imports, legitimate
 imports, and overlay failures. CI runs these before checking the application graph.
-The default error reporter fails on errors; orphan warnings remain advisory. JSON and
-graph reporters are for inspection and do not provide the same failing exit status.
+The default error reporter fails on errors (including orphans). JSON and graph
+reporters are for inspection and do not provide the same failing exit status.
 Keep the default reporter in enforcement commands.
 
 ```bash
@@ -91,12 +91,12 @@ Every exclusion needs a bullet under `AGENTS.md` → `## Compliance carve-outs`:
 only when that exact rule name has its own carve-out bullet with a reason, for example:
 
 ```markdown
-- `no-common-to-screen`: shared polymorphic views currently depend on screen interfaces.
+- `no-cross-screen`: pedagogy screen temporarily composes another screen's model; extract a shared API in `common/` before dropping this.
 ```
 
 Prefer extracting shared interfaces over omitting a boundary rule. These checks make
 exceptions explicit and reviewable; they are not a security boundary against editing
-configuration or inventing a carve-out.
+configuration or inventing a carve-out. No sim currently omits a fleet rule.
 
 ## What this prevents
 
