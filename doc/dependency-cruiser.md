@@ -8,7 +8,13 @@ It validates import boundaries that Biome and TypeScript do not enforce:
 
 | Rule | Severity | Meaning |
 |---|---|---|
-| `no-circular` | error | Circular dependencies are prohibited |
+| `no-unresolved` | error | Imports must resolve; catches invented packages and stale file paths |
+| `no-undeclared-packages` | error | Runtime packages must be direct dependencies, not accidental transitive installs |
+| `no-node-builtins` | error | Browser code must not value-import Node built-ins |
+| `no-src-to-tooling` | error | App code must not import scripts, configs or sibling checkouts (`package.json` metadata and static images in root `assets/` are allowed) |
+| `no-app-to-bootstrap` | error | Only bootstrap modules may import the bootstrap chain |
+| `no-model-to-view-transitive` | error | Model code must not reach views or preferences nodes through helpers or barrels |
+| `no-circular` | error | Runtime circular dependencies are prohibited |
 | `no-model-to-view` | error | Code under `model/` must not import `view/` |
 | `no-common-to-screen` | error | `src/common/` must not import screen packages |
 | `no-preferences-to-screen` | error | `src/preferences/` must not import screen packages |
@@ -18,19 +24,30 @@ It validates import boundaries that Biome and TypeScript do not enforce:
 | `no-model-to-preferences-view` | error | `model/` may use `*PreferencesModel`, not `*PreferencesNode` |
 | `no-src-to-tests` | error | `src/` must not import `tests/` |
 | `not-to-dev-dep` | error | `src/` must not value-import npm `devDependencies` |
-| `no-model-to-ui-packages` | warn | `model/` must not value-import `scenerystack/scenery` or `scenerystack/sun` (type-only allowed; `scenery-phet` units/`TimeSpeed` OK) |
+| `no-model-to-ui-packages` | error | `model/` must not value-import `scenerystack/scenery` or `scenerystack/sun` (type-only allowed; `scenery-phet` units/`TimeSpeed` OK) |
 | `no-orphans` | warn | Modules under `src/` with no incoming or outgoing dependencies |
 
 Shared roots treated as non-screens: `common`, `preferences`, `i18n`, `assets`.
 
-dependency-cruiser is a **manual check** during adoption. A finding produces a nonzero
-exit status, but the command is not part of shared CI, release scripts, or git hooks.
-Review reports before rearranging modules. Warnings (`no-model-to-ui-packages`,
-`no-orphans`) also fail the command while severity stays advisory in spirit — fix or
-document before treating a sim as clean.
+SceneryStack sims and the template enforce architecture checks in **pre-push**,
+**release**, and **CI**. Each sim's reusable Baton CI caller sets
+`run-architecture: true`. The reusable input defaults to false for other callers
+and repos that have not yet adopted this infrastructure.
+
+For a new sim or older checkout, adopt the template config, hook, regression fixtures,
+package scripts and CI caller together. Deploy the reusable Baton workflow before
+merging callers that use the new input. Keep these files synchronized through
+`config/template-manifest.json`; review fixes from `check-template-drift.sh --fix <Sim>`.
+
+`npm run test:architecture` runs CLI regression fixtures for forbidden imports, legitimate
+imports, and overlay failures. CI runs these before checking the application graph.
+The default error reporter fails on errors; orphan warnings remain advisory. JSON and
+graph reporters are for inspection and do not provide the same failing exit status.
+Keep the default reporter in enforcement commands.
 
 ```bash
 npm run check:architecture
+npm run test:architecture
 npm run check:architecture -- -T dot > /tmp/deps.dot   # graphviz
 npm run check:architecture -- -T mermaid               # mermaid text
 ```
@@ -59,9 +76,35 @@ module.exports = {
 };
 ```
 
-Document the overlay under the sim's `## Compliance carve-outs` when it changes
-template-owned behavior in a lasting way. Prefer fixing structure over permanent
-excludes.
+Overlays fail closed: syntax errors, missing dependencies inside the overlay, invalid
+shapes, unknown keys and duplicate rule names stop the check. Only `options.exclude`
+may be customized; parser, resolver and graph traversal options stay fleet-owned.
+Exclusions must be nonempty regexes that do not match the empty string.
+
+Every exclusion needs a bullet under `AGENTS.md` → `## Compliance carve-outs`:
+
+```markdown
+- `.dependency-cruiser.local.cjs`: excludes a specific file until the parser supports it.
+```
+
+`forbidden` may add uniquely named rules. `omitRules` may remove a known fleet rule
+only when that exact rule name has its own carve-out bullet with a reason, for example:
+
+```markdown
+- `no-common-to-screen`: shared polymorphic views currently depend on screen interfaces.
+```
+
+Prefer extracting shared interfaces over omitting a boundary rule. These checks make
+exceptions explicit and reviewable; they are not a security boundary against editing
+configuration or inventing a carve-out.
+
+## What this prevents
+
+The rules catch dependency drift: models acquiring view dependencies, screen coupling,
+tooling leaking into browser code, and imports of nonexistent or undeclared packages.
+They cannot assess physics correctness, duplicated algorithms, hardcoded text or colors,
+bootstrap import order, or computed dynamic imports that the parser cannot resolve.
+Keep TypeScript, Biome, compliance checks and domain tests alongside this check.
 
 ## Related
 

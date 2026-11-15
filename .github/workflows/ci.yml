@@ -9,6 +9,10 @@ on:
         # See Baton/README.md ("Node version").
         type: string
         default: "26"
+      run-architecture:
+        # Opt in after adopting the strengthened template config and resolving findings.
+        type: boolean
+        default: false
       run-tests:
         # Tri-state: "true" forces the test step on, "false" forces it off, and the
         # default "" means auto — run tests when the repo defines a "test" npm script.
@@ -48,6 +52,12 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Architecture boundaries
+        if: inputs.run-architecture
+        run: |
+          npm run test:architecture
+          npm run check:architecture
 
       - name: Type check
         run: npm run check
