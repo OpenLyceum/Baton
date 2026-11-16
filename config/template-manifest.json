@@ -27,7 +27,8 @@
     "src/brand.ts",
     "src/splash.ts",
     ".dependency-cruiser.cjs",
-    "tests/architecture.test.mjs"
+    "tests/architecture.node-test.ts",
+    "biome-plugins/no-native-tofixed.grit"
   ],
   "linesSuperset": [
     ".gitignore"

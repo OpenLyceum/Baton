@@ -84,7 +84,7 @@ Use `dotRandom` (seedable) rather than `Math.random()` so fuzz runs and replays 
 - Keep `step(dt)` in **real seconds**; apply slow-motion / time-speed as an explicit multiplier, never baked into constants (echoes scenerystack-model).
 - Put `FIXED_DT`, tolerances, and physical constants in `*Constants.ts` in SI units (see scenerystack-constants).
 - Prefer `Utils.clamp`/`LinearFunction`/`Vector2` math over open-coded arithmetic — clearer and tested.
-- Format displayed numbers with `toFixed` / `toFixedNumber` from `scenerystack/dot`, not `Number.toFixed`.
+- Format displayed numbers with `toFixed` / `toFixedNumber` from `scenerystack/dot`, not `Number.toFixed`. The template's `biome-plugins/no-native-tofixed.grit` flags native calls in `src/` (and lint fails on warnings). For a deliberate exception, use `// biome-ignore lint/plugin/no-native-tofixed: <reason>`.
 - Use `dotRandom`, not `Math.random()`, anywhere randomness must be reproducible.
 - For oscillators/orbits use semi-implicit Euler or RK4; reserve forward Euler for non-stiff, non-conservative motion.
 

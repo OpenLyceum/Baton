@@ -183,7 +183,10 @@ What the gate can't judge — check these by eye:
   clean.
 - [ ] Numbers are formatted with `toFixed`/`toFixedNumber` from `scenerystack/dot` (never
   JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
-  scenerystack-numerics.
+  scenerystack-numerics. The template's `no-native-tofixed` Biome plugin flags native calls in
+  `src/`; each `biome-ignore lint/plugin/no-native-tofixed` needs a reason.
+- [ ] `npm run lint` passes. It runs with `--error-on-warnings`, so a `"warn"` rule fails the
+  same as an error; every `biome-ignore` states a specific reason.
 - [ ] Text uses `PhetFont` (or a shared font constant), not CSS font strings such as
   `"16px sans-serif"`. Canvas `ctx.font` strings are the exception.
 - [ ] No `!` non-null assertions in `src/` without a comment (Biome warns); prefer a narrowing
