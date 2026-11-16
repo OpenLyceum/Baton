@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "scenerystack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Focused SceneryStack reference skills for building OpenLyceum simulations — coding conventions, optionize, model/view transforms, i18n, color profiles, accessibility, preferences, query parameters, and more.",
   "author": {
     "name": "OpenLyceum"

@@ -70,6 +70,10 @@ Or interactively: `claude plugin marketplace add OpenLyceum/Baton` then
 `claude plugin install scenerystack@baton`. Validate manifest changes with
 `claude plugin validate .claude-plugin/marketplace.json`.
 
+**Bump `version` in `.claude-plugin/plugin.json` whenever `skills/` changes.** Installed copies are
+cached by version, so without a bump `claude plugin update` can treat a stale copy as current. To see
+which version you have, compare `claude plugin list` with that file.
+
 Roll it out across the fleet with [`scripts/sync-claude-settings.sh`](scripts/sync-claude-settings.sh),
 which merges those keys into every SceneryStack repo's settings without clobbering existing config.
 
