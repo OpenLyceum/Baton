@@ -2021,8 +2021,8 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Interactive map of the Earth's tectonic plates drawn entirely from real data \u2014 PB2002 plate boundaries, USGS earthquakes, Holocene volcanoes and NOAA relief \u2014 plus cross-sections through a subduction zone, a spreading ridge and a transform fault, and a reconstruction clock running 50 Myr either side of the present. Two further screens port the tabs of PhET's Java simulation: crustal isostasy, and the evolution of a convergent or divergent plate boundary. A fourth screen replays the M\u00fcller et al. (2019) reconstruction from the present back to 250 Ma.",
-      "shortDescription": "Interactive map of Earth's tectonic plates from real data \u2014 boundaries, earthquakes, volcanoes, cross-sections, and a 50 Myr reconstruction clock \u2014 plus PhET-style crust and plate-motion screens and a 250 Ma deep-time playback.",
+      "description": "Explore plate tectonics across three screens. Earth compares present-day PB2002 plates and boundaries, motion vectors, USGS earthquakes, Holocene volcanoes and hotspots, NOAA relief, and seafloor-age isochrons on a rotatable globe or pannable, zoomable flat map, with all layers initially off. Crust explores Airy isostasy; Plate Motion models schematic convergent and divergent boundaries over geological time. The latter two screens are ports of PhET's Java simulation.",
+      "shortDescription": "Three interactive screens: present-day tectonic data on a globe or flat map, crustal isostasy, and schematic convergent and divergent plate motion.",
       "physicsTopics": [
         "plate tectonics",
         "seismology",
@@ -2044,10 +2044,6 @@
         {
           "id": "plate-motion",
           "title": "Plate Motion"
-        },
-        {
-          "id": "deep-time",
-          "title": "Deep Time"
         }
       ],
       "status": "active"
