@@ -54,6 +54,8 @@ jobs:
               .filter((n) => only.length === 0 || only.includes(n));
             console.log(sims.join("\n"));
           ')
+          # ShellCheck sees shell syntax; the template literal is evaluated by Node.
+          # shellcheck disable=SC2016
           PAGES_BASE="$(node -p 'const c = require("./structure/repos.json"); c.pagesBase || `https://${c.organization.toLowerCase()}.github.io`')"
           for sim in "${SIMS[@]}"; do
             url="${PAGES_BASE}/${sim}/?screens=1"

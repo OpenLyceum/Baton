@@ -263,6 +263,25 @@ scripts/check-skills.sh         # every skills/<name>/SKILL.md is well-formed an
 scripts/check-node-version.sh   # all setup-node workflows declare the same Node version
 ```
 
+The separate, blocking `actionlint` job checks all of Baton's workflows with
+[actionlint 1.7.12](https://github.com/rhysd/actionlint/releases/tag/v1.7.12), including
+inline shell scripts through ShellCheck. CI downloads the pinned Linux binary and
+verifies its SHA-256 checksum before running it. To run the same check locally,
+install actionlint 1.7.12 from that release (or with
+`go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12`) and install
+[ShellCheck](https://www.shellcheck.net/), then run from the Baton root:
+
+```bash
+command -v shellcheck
+actionlint -color -pyflakes=
+```
+
+The optional Pyflakes integration is disabled for consistent local/CI behavior.
+Standalone `scripts/*.sh` remain covered by the existing ShellCheck step.
+Actionlint's reusable-workflow input checks apply to local `./` references; it does
+not validate the input contracts of sims' remote `OpenLyceum/Baton/...@main` calls.
+Fleet rollout is separate from this Baton-only check.
+
 ## Adding a simulation
 
 End-to-end checklist (create repo → `repos.json` → screenshot → WebP → regenerate

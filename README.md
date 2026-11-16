@@ -26,7 +26,7 @@ Pages simulation landing page.
 | [`.github/workflows/fleet-health.yml`](.github/workflows/fleet-health.yml) | Weekly lint / type-check / build / test of every `active` simulation, reported as a table |
 | [`.github/workflows/gitlab-mirror.yml`](.github/workflows/gitlab-mirror.yml) | Daily push of every repo's git history to the GitLab backup group |
 | [`.github/workflows/sync-dependabot.yml`](.github/workflows/sync-dependabot.yml) | Validate the Dependabot templates |
-| [`.github/workflows/baton-selfcheck.yml`](.github/workflows/baton-selfcheck.yml) | Validate Baton's own invariants (skills, catalog schema, Node-version sync, script syntax) |
+| [`.github/workflows/baton-selfcheck.yml`](.github/workflows/baton-selfcheck.yml) | Validate Baton's own invariants (skills, catalog schema, Node-version sync, script syntax) and lint workflows with actionlint |
 | [`.github/dependabot.yml`](.github/dependabot.yml) | Dependabot for Baton itself (npm + Actions) |
 | [`scripts/`](scripts/) | Repo catalog tools, compliance checks, Dependabot/metadata sync, screenshots |
 | [`tests/`](tests/) | Bats tests for the scripts (`npx bats tests/`; run by `baton-selfcheck.yml`) |

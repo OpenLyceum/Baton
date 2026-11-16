@@ -2,8 +2,8 @@ name: Baton self-check
 
 # Validates Baton's own invariants — the skills collection is well-formed and its
 # README index is in sync, the fleet Node version agrees across workflows, the
-# repository catalog matches its JSON Schema, and the helper scripts are
-# syntactically valid. These guard against the kind of drift that otherwise rots
+# repository catalog matches its JSON Schema, and the helper scripts and GitHub
+# Actions workflows are valid. These guard against drift that otherwise rots
 # silently as the repo grows.
 
 on:
@@ -34,6 +34,33 @@ permissions:
   contents: read
 
 jobs:
+  actionlint:
+    name: Lint GitHub Actions workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Install actionlint 1.7.12
+        # Pin both the release and its linux/amd64 checksum. Update together.
+        run: |
+          set -euo pipefail
+          install_dir="$(mktemp -d "$RUNNER_TEMP/actionlint.XXXXXX")"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz \
+            -o "$install_dir/actionlint.tar.gz"
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $install_dir/actionlint.tar.gz" \
+            | sha256sum --check --strict
+          tar -xzf "$install_dir/actionlint.tar.gz" -C "$install_dir" actionlint
+          echo "$install_dir" >> "$GITHUB_PATH"
+
+      - name: Check all Baton workflows
+        # ubuntu-latest provides ShellCheck for inline run scripts. Disable the
+        # optional Python integration so local and CI checks use the same tools.
+        run: |
+          command -v shellcheck
+          actionlint -color -pyflakes=
+
   selfcheck:
     runs-on: ubuntu-latest
     steps:
