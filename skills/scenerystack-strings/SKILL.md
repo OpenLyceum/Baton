@@ -5,7 +5,7 @@ description: Use whenever a view needs display text, or you add/rename/remove us
 
 # SceneryStack Strings (StringManager)
 
-**No user-visible text is ever hardcoded in a view.** Every label, button, title, and readout comes from a localized `StringProperty` exposed by the sim's `StringManager`. Strings live in `src/i18n/strings_<locale>.json`; the view consumes the `*StringProperty` so text updates live when the locale changes.
+**No user-visible text is ever hardcoded in a view.** Every label, button, title, and readout comes from a localized `StringProperty` exposed by the sim's `StringManager`. Strings live in `src/i18n/strings_<locale>.json`; the view consumes the `*StringProperty` so text updates live when the locale changes. The template's `no-hardcoded-text` Biome plugin flags display words passed as literals to `new Text` / `new RichText` in `src/`; symbols, units and formulas (`"pH"`, `"Hz"`, `"mc²"`) pass.
 
 ## The three pieces
 

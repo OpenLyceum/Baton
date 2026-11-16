@@ -5,7 +5,7 @@ description: Use when adding, changing, or theming colors in a SceneryStack sim 
 
 # SceneryStack Color Profiles
 
-Every color a view draws comes from a `ProfileColorProperty` defined in the sim's single `*Colors.ts` file. **Never hardcode `#hex`, `rgb(...)`, or a bare `Color` in a view or node.** Profile colors give you free light/dark theming, projector mode, and runtime-editable colors in the color editor.
+Every color a view draws comes from a `ProfileColorProperty` defined in the sim's single `*Colors.ts` file. **Never hardcode `#hex`, `rgb(...)`, or a bare `Color` in a view or node.** Profile colors give you free light/dark theming, projector mode, and runtime-editable colors in the color editor. The template's `no-inline-color` Biome plugin reports literal `new Color(...)` and string `fill`/`stroke` values outside `*Colors.ts` (computed colors and invisible hit areas pass).
 
 ## The `*Colors.ts` file
 

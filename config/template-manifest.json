@@ -28,7 +28,11 @@
     "src/splash.ts",
     ".dependency-cruiser.cjs",
     "tests/architecture.node-test.ts",
-    "biome-plugins/no-native-tofixed.grit"
+    "biome-plugins/no-native-tofixed.grit",
+    "biome-plugins/no-math-random.grit",
+    "biome-plugins/no-hardcoded-text.grit",
+    "biome-plugins/no-inline-color.grit",
+    "tests/biome-plugins.node-test.ts"
   ],
   "linesSuperset": [
     ".gitignore"

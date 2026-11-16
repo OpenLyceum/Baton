@@ -184,7 +184,8 @@ What the gate can't judge — check these by eye:
 - [ ] Numbers are formatted with `toFixed`/`toFixedNumber` from `scenerystack/dot` (never
   JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
   scenerystack-numerics. The template's `no-native-tofixed` Biome plugin flags native calls in
-  `src/`; each `biome-ignore lint/plugin/no-native-tofixed` needs a reason.
+  `src/`; each `biome-ignore lint/plugin/no-native-tofixed` needs a reason. The same goes for the
+  `no-math-random`, `no-hardcoded-text` and `no-inline-color` plugins.
 - [ ] `npm run lint` passes. It runs with `--error-on-warnings`, so a `"warn"` rule fails the
   same as an error; every `biome-ignore` states a specific reason.
 - [ ] Text uses `PhetFont` (or a shared font constant), not CSS font strings such as
