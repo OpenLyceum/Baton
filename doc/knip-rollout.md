@@ -33,14 +33,10 @@ an allowlist that suppresses new or existing findings.
 - Both Knip runs exit 0 with empty issue lists. Lint, app/scripts/tests type checks,
   architecture checks, production build, and all 179 tests pass.
 - Its CI caller uses `unused-mode: required`, documented in AGENTS carve-outs.
-  All other sims and the template use `advisory`. Remote execution begins after
-  publishing Baton's reusable workflow, then the caller changes. Requiring the
-  resulting job in branch protection is a separate repository setting.
 
-Other clean candidates (not yet promoted): DopplerEffect, ElectricFieldOfDreams,
-LunarLander, MazeGame, OpticsLab, OscillationsAndChaos, QubitSketch, RadioWaves,
-and TrackLab. Review their intentional APIs and run their full validation before
-promotion. The template's optional starter modules remain advisory findings.
+**Live promotion list:** after this inventory, many callers (including the template)
+were promoted to `unused-mode: required`. Do not use this section as the current
+required/advisory set — see [`knip-reviewed-baselines.md`](knip-reviewed-baselines.md).
 
 ## Rollout validation
 
