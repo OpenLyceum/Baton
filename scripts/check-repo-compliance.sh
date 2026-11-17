@@ -18,7 +18,9 @@ ORG="${FLEET_ORG:-${OPENPHYSICS_ORG:-$(jq -r '.organization' "$CATALOG")}}"
 ORG_CONFIG_REPO="$ORG/.github"
 PLUGIN_ID="$(jq -r '.enabledPlugins | keys[0]' "$CLAUDE_SETTINGS")"
 
-REPO_DIR="${1:?Repository directory required}"
+# Resolve to an absolute path up front so `basename` never sees "." when the
+# caller passes the current directory as a relative path.
+REPO_DIR="$(cd "${1:?Repository directory required}" && pwd)"
 cd "$REPO_DIR"
 
 echo "Checking compliance in: $(pwd)"
