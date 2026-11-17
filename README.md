@@ -126,6 +126,13 @@ jobs:
       id-token: write
 ```
 
+The deploy also publishes the sim's `build:single` output (one self-contained, minified HTML
+file for opening from disk or uploading to an LMS) at `<Pages URL>/<Repo>-single.html`, e.g.
+`https://openlyceum.github.io/TitrationLab/TitrationLab-single.html`. Repos without a
+`build:single` script skip it, and a failure there never blocks the Pages deploy. The file is
+reachable for returning visitors only because the template's `vite.config.ts` lists
+`/-single\.html$/` in Workbox's `navigateFallbackDenylist`; keep the two in sync.
+
 ## Compliance workflow
 
 [`shared-compliance-check.yml`](.github/workflows/shared-compliance-check.yml) runs weekly (Mondays 06:00 UTC)

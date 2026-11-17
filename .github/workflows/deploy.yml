@@ -38,6 +38,28 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Also publish the self-contained `build:single` output (one minified HTML file,
+      # for opening from disk or uploading to an LMS) at <Pages URL>/<Repo>-single.html.
+      # Must run AFTER the normal build: the PWA precache globs **/*.html, so a file
+      # present during `npm run build` would land in every visitor's service-worker cache.
+      # Builds into its own directory because Vite empties its outDir. The `-single.html`
+      # suffix must match `navigateFallbackDenylist` in the template's vite.config.ts, or
+      # the service worker serves index.html in its place to returning visitors.
+      # Callers pin @main, so this step can never fail the Pages deploy.
+      - name: Add single-file build
+        continue-on-error: true
+        env:
+          DIST: ${{ inputs.dist-path }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          if ! node -e "process.exit(require('./package.json').scripts?.['build:single'] ? 0 : 1)"; then
+            echo "No build:single script; skipping the single-file build."
+            exit 0
+          fi
+          npm run build:single -- --outDir "$RUNNER_TEMP/single" --emptyOutDir
+          cp "$RUNNER_TEMP/single/index.html" "$DIST/$REPO-single.html"
+          echo "Published $REPO-single.html ($(du -h "$DIST/$REPO-single.html" | cut -f1))"
+
       - name: Setup Pages
         uses: actions/configure-pages@v6.0.0
 
