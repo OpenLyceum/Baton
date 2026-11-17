@@ -13,7 +13,7 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 
 ## Required (`unused-mode: required`)
 
-48 checkouts (47 simulations + SceneryStackTemplate), as of 2026-11-17 local CI callers:
+51 checkouts (50 simulations + SceneryStackTemplate), as of 2026-11-17 local CI callers:
 
 - ACPhasor
 - BackwardAcceleration
@@ -57,19 +57,21 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 - MotionsOfTheSun
 - MovingMan
 - NuclideChart
+- OpticsLab
 - OscillationsAndChaos
 - Oscilloscope
 - PeriodicTrends
+- QubitSketch
 - RadioactivityAndStatistics
+- RadioWaves
 - SceneryStackTemplate
 - WaveComposer
 
 ## Advisory (`unused-mode: advisory`)
 
-27 simulations still on advisory CI. Each must keep an AGENTS carve-out naming
+24 simulations still on advisory CI. Each must keep an AGENTS carve-out naming
 `.github/workflows/ci.yml` and the pending Knip review:
 
-- OpticsLab
 - ParticleZoo
 - PhotonInteractions
 - PlanetaryConfigurations
@@ -77,8 +79,6 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 - Precession
 - QuantumAtom3D
 - QuantumPotential
-- QubitSketch
-- RadioWaves
 - RelativisticDynamics
 - Resonance
 - RotatingSky
@@ -125,3 +125,23 @@ Local validation logs: `/tmp/knip-promotion-validation-clean/`; initial working-
 Knip reports: `/tmp/knip-promotions-20261117-datalab-initial/` (DataLab) and
 `/tmp/knip-promotions-20261117-initial/` (PeriodicTrends). Validation was local;
 hosted CI and branch-protection settings were not verified.
+
+## 2026-11-17 promotions: OpticsLab, QubitSketch, and RadioWaves
+
+Both default and production Knip 6.45.1 reports are clean under Node v26.13.0
+for all three working checkouts after integrating the single-file build PRs.
+Their CI callers now use `unused-mode: required`, and their obsolete advisory
+carve-outs are removed. No source cleanup or suppression tags were needed.
+
+Lint, app/scripts/test type checks, architecture checks, production builds,
+and unit tests pass: OpticsLab has 459 tests, QubitSketch 93, and RadioWaves 21.
+Each also passes all 46 architecture/Biome tooling regression tests. Those
+CLI fixtures require child-process access outside the sandbox. Browser fuzz
+was not rerun for these CI-only promotions; hosted CI has not been checked for
+these uncommitted changes.
+
+Validation logs: `/tmp/OpticsLab-followup-validation.log`,
+`/tmp/QubitSketch-followup-validation.log`, and
+`/tmp/RadioWaves-followup-validation.log`. Tooling reruns are in the matching
+`/tmp/<Repo>-followup-tooling-tests.log` files; the two Knip reports are in
+`/tmp/<Repo>-knip-followup.log`.

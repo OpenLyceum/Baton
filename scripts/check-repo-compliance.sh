@@ -262,9 +262,11 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
   # Screen summaries (ACCESSIBILITY.md layer 2): per-screen *ScreenSummaryContent.ts
   # files (template pattern), an inline createScreenSummaryContent() factory
   # (OscillationsAndChaos pattern), or a direct `new ScreenSummaryContent(...)`
-  # — one of the three must exist.
+  # or a differently named subclass wired through the screenSummaryContent option.
   if [ -n "$(find src -name '*ScreenSummaryContent.ts' -print -quit)" ] \
-    || grep -rqE 'createScreenSummaryContent|new ScreenSummaryContent\(' src --include='*.ts'; then
+    || grep -rqE 'createScreenSummaryContent|new ScreenSummaryContent\(' src --include='*.ts' \
+    || { grep -rqE 'extends[[:space:]]+ScreenSummaryContent\b' src --include='*.ts' \
+      && grep -rqE 'screenSummaryContent[[:space:]]*:' src --include='*.ts'; }; then
     pass "screen summary content present"
   else
     warn "no *ScreenSummaryContent.ts and no ScreenSummaryContent construction — a11y screen summaries appear unwired (ACCESSIBILITY.md)"
@@ -455,15 +457,17 @@ PY
       fail "$d is missing"
     else
       # Presence is required (fail above); content is expected to be filled, not a
-      # stub. Heuristic: count substantive lines (non-blank, non-heading, no TODO/
-      # placeholder marker). A real doc has several; a copied-template stub has ~none.
+      # stub. Count substantive lines and words: Markdown prose may use long,
+      # unwrapped paragraphs, so line count alone misclassifies complete documents.
       # `|| true` because a pure stub filters down to nothing, making grep exit 1;
       # under `set -euo pipefail` that would abort the run instead of warning.
-      body_lines=$(grep -vcE '^\s*$|^\s*#|TODO|TBD|FIXME|placeholder|fill in|\.\.\.$' "$d" || true)
-      if [ "$body_lines" -lt 5 ]; then
-        warn "$d looks like a stub (only $body_lines substantive lines) — fill in the physics/architecture"
+      body=$(grep -vE '^\s*$|^\s*#|TODO|TBD|FIXME|placeholder|fill in|\.\.\.$' "$d" || true)
+      body_lines=$(printf '%s\n' "$body" | grep -c '[^[:space:]]' || true)
+      body_words=$(printf '%s\n' "$body" | wc -w | tr -d ' ')
+      if [ "$body_lines" -lt 5 ] && [ "$body_words" -lt 80 ]; then
+        warn "$d looks like a stub (only $body_lines substantive lines, $body_words words) — fill in the physics/architecture"
       else
-        pass "$d is filled ($body_lines content lines)"
+        pass "$d is filled ($body_lines content lines, $body_words words)"
       fi
     fi
   done

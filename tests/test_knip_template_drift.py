@@ -1,4 +1,4 @@
-"""Template-only Knip entries must not become required entry exemptions in forks."""
+"""Template drift: Knip starter entries and exact-file name normalization."""
 import json
 import os
 from pathlib import Path
@@ -65,3 +65,34 @@ class KnipTemplateDriftTests(unittest.TestCase):
         code, issues = self.check()
         self.assertEqual(code, 1)
         self.assertIn("entry retains template-only values", issues[0]["detail"])
+
+    def prepare_exact_file(self, template_text, sim_text):
+        manifest = json.loads(self.manifest.read_text())
+        manifest["exact"] = ["vite.config.ts"]
+        self.manifest.write_text(json.dumps(manifest))
+        self.write_config(self.sim, {"project": ["src/**/*.ts!"], "entry": []})
+        (self.template / "vite.config.ts").write_text(template_text)
+        (self.sim / "vite.config.ts").write_text(sim_text)
+
+    def test_exact_file_can_mention_the_sim_in_a_shared_comment(self):
+        text = "// Lazy imports are used by Example and OtherSim.\nexport default {};\n"
+        self.prepare_exact_file(text, text)
+        self.assertEqual(self.check(), (0, []))
+
+    def test_exact_file_can_retain_the_template_name_in_a_shared_comment(self):
+        text = "// Bump SceneryStackTemplate and repos together.\nexport default {};\n"
+        self.prepare_exact_file(text, text)
+        self.assertEqual(self.check(), (0, []))
+
+    def test_exact_file_renders_template_name_tokens(self):
+        self.prepare_exact_file(
+            '// Used by Example.\nexport const repo = "SceneryStackTemplate";\n',
+            '// Used by Example.\nexport const repo = "Example";\n',
+        )
+        self.assertEqual(self.check(), (0, []))
+
+    def test_exact_file_still_rejects_changed_content(self):
+        self.prepare_exact_file("export default { value: 1 };\n", "export default { value: 2 };\n")
+        code, issues = self.check()
+        self.assertEqual(code, 1)
+        self.assertEqual(issues[0]["path"], "vite.config.ts")

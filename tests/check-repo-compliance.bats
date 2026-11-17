@@ -303,6 +303,24 @@ setup() {
   assert_output --partial "screen summary content present"
 }
 
+@test "a differently named summary subclass wired to a screen satisfies the summary rule" {
+  rm "$SIM/src/intro/view/IntroScreenSummaryContent.ts"
+  echo 'export class ConfigurationSummary extends ScreenSummaryContent {}' >"$SIM/src/intro/view/ConfigurationSummary.ts"
+  echo 'super({ screenSummaryContent: new ConfigurationSummary(model) });' >"$SIM/src/intro/view/IntroScreenView.ts"
+  run_compliance "$SIM"
+  assert_success
+  refute_output --partial "a11y screen summaries appear unwired"
+  assert_output --partial "screen summary content present"
+}
+
+@test "an unwired summary subclass still warns" {
+  rm "$SIM/src/intro/view/IntroScreenSummaryContent.ts"
+  echo 'export class ConfigurationSummary extends ScreenSummaryContent {}' >"$SIM/src/intro/view/ConfigurationSummary.ts"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "a11y screen summaries appear unwired"
+}
+
 @test "missing KeyboardHelpContent fails" {
   rm "$SIM/src/FixtureSimKeyboardHelpContent.ts"
   run_compliance "$SIM"
@@ -402,6 +420,29 @@ setup() {
 
 @test "stub doc warns" {
   printf '# Model\n\nTODO\n' >"$SIM/doc/model.md"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "doc/model.md looks like a stub"
+}
+
+@test "complete documentation in unwrapped paragraphs does not warn" {
+  cat >"$SIM/doc/model.md" <<'EOF'
+# Model
+
+The model owns atoms, photons, seeded random sampling, and configuration Properties. Screen wrappers select one atom or thirty atoms. The view reads particle records and Properties without advancing physics or changing particle state directly.
+
+A fixed step accumulator advances lamp emission, moving atoms, spontaneous decay, photon absorption, stimulated emission, and mirror transport. Energies are measured relative to ground in electron volts. Wavelength is calculated from the energy difference between the initial and final states.
+
+Reset restores every control, resets random sampling, clears emission and time accumulators, and recreates the initial particle state. Pause gates automatic stepping; manual stepping preserves pause. Disposal unlinks the mode listener and disposes all owned Properties.
+EOF
+  run_compliance "$SIM"
+  assert_success
+  refute_output --partial "doc/model.md looks like a stub"
+  assert_output --partial "doc/model.md is filled"
+}
+
+@test "a long placeholder paragraph still warns" {
+  { printf '# Model\n\nTODO: '; printf 'placeholder content %.0s' {1..100}; printf '\n'; } >"$SIM/doc/model.md"
   run_compliance "$SIM"
   assert_success
   assert_output --partial "doc/model.md looks like a stub"

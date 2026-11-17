@@ -159,7 +159,9 @@ function checkSim(repoName) {
     const tpl = readText(join(templateDir, rel));
     if (tpl === null) continue;
     const cur = readText(join(simDir, rel));
-    if (cur !== null && toTemplate(cur, sim) === tpl) continue;
+    // Normalize both sides: a shared comment may legitimately mention this sim
+    // as an example, while other shared comments retain the template's name.
+    if (cur !== null && toTemplate(cur, sim) === toTemplate(tpl, sim)) continue;
     if (approved.has(rel)) continue;
     if (fix) {
       mkdirSync(dirname(join(simDir, rel)), { recursive: true });

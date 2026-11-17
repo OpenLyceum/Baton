@@ -128,6 +128,7 @@ EOF
     "prepare": "git config core.hooksPath .githooks",
     "test": "vitest run",
     "test:fuzz": "node scripts/test-fuzz.ts",
+    "test:soak": "npx playwright test tests/browser/memory-soak.spec.ts",
     "icons": "node scripts/generate-icons.ts"
   },
   "devDependencies": {
@@ -190,9 +191,15 @@ EOF
     echo '{}' >"$dir/src/i18n/strings_$loc.json"
   done
 
-  echo 'import { describeDisposalLeaks } from "./helpers/memoryLeak.js";' >"$dir/tests/memory-leak.test.ts"
+  echo 'export class FixtureModel { public dispose(): void {} }' >"$dir/src/intro/model/FixtureModel.ts"
+  cat >"$dir/tests/memory-leak.test.ts" <<'EOF'
+import { FixtureModel } from "../src/intro/model/FixtureModel.js";
+import { describeDisposalLeaks } from "./helpers/memoryLeak.js";
+describeDisposalLeaks([{ name: "FixtureModel", create: () => new FixtureModel() }]);
+EOF
   echo "// happy-dom mocks + init()" >"$dir/tests/setup.ts"
-  mkdir -p "$dir/tests/fuzz" "$dir/scripts"
+  mkdir -p "$dir/tests/fuzz" "$dir/tests/browser" "$dir/scripts"
+  echo "// browser memory soak" >"$dir/tests/browser/memory-soak.spec.ts"
   echo "// fuzz smoke" >"$dir/tests/fuzz/fuzz.spec.ts"
   echo "export default {};" >"$dir/playwright.config.ts"
   echo "// fuzz runner" >"$dir/scripts/test-fuzz.ts"
