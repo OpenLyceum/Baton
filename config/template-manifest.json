@@ -24,6 +24,7 @@
     "tests/setup.ts",
     "tests/fuzz/fuzz.spec.ts",
     "tests/helpers/memoryLeak.ts",
+    "tests/browser/memory-soak.spec.ts",
     "src/assert.ts",
     "src/brand.ts",
     "src/splash.ts",

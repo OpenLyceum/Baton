@@ -64,13 +64,16 @@ For a full release CRC, track these companion deliverables and their sign-offs. 
 
 - [ ] `tests/memory-leak.test.ts` passes under `npm test` and hands the sim's **real**
   disposables (models, and view nodes that link to longer-lived Properties) to
-  `describeDisposalLeaks()` from the template-owned `tests/helpers/memoryLeak.ts`. The gate
-  checks that the harness is used; only a reviewer can tell whether the list covers the
-  objects that matter. A suite that disposes only a `NumberProperty` or the template
-  `TimeModel` is a gap. `idempotentDispose: true` appears only on objects that promise it.
-  Extra leak tests pass their `WeakRef`(s) to `forceGC` (see scenerystack-testing).
-- [ ] A Chrome DevTools heap comparison shows no leak. Build with mangling disabled for readable names
-  (e.g. `vite build --minify false`). Compare against the responsible dev's results: {{ISSUE}}.
+  `describeDisposalLeaks()` from the template-owned `tests/helpers/memoryLeak.ts`. Prefer
+  `keepAlive` for external Properties and `expectNoListenerGrowth` for non-disposable owners.
+  Empty lists need `{ emptyOk }` plus custom coverage — hollow / TimeModel-only suites fail
+  compliance. Inventory gaps are WARN (`Baton/scripts/check-memory-leak-coverage.sh`); list
+  missing `dispose()` classes or carve out `` `memory-leak:<Class>` ``.
+  `idempotentDispose: true` appears only on objects that promise it. Extra leak tests pass
+  their `WeakRef`(s) to `forceGC` (see scenerystack-testing).
+- [ ] `npm run test:soak` (template-owned Reset-All heap soak) for CRC / leak hunts — not Fleet
+  Health fuzz. Optionally also a Chrome DevTools heap comparison with mangling disabled
+  (e.g. `vite build --minify false`).
 - [ ] Every SceneryStack component that registers internal observers/listeners is `dispose()`d where
   needed. Disposal may be unnecessary for a node that lives in a `ScreenView` never removed from the
   scene graph — document that reasoning when relying on it.

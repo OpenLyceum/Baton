@@ -20,10 +20,12 @@ reference (CONVENTIONS §5).
 tests/
   setup.ts                 template-owned: Canvas/WebGPU-safe getContext, AudioContext and
                            no-op Worker mocks, init({ name })
-  helpers/memoryLeak.ts    template-owned leak harness (forceGC, describeDisposalLeaks)
+  helpers/memoryLeak.ts    template-owned leak harness (forceGC, keepAlive,
+                           expectNoListenerGrowth, describeDisposalLeaks)
   memory-leak.test.ts      lists the sim's disposables (fleet pattern)
   **/*.test.ts             Vitest unit tests, mirroring the source tree under tests/
   fuzz/fuzz.spec.ts        template-owned Playwright fuzz smoke (npm run test:fuzz)
+  browser/memory-soak.spec.ts  template-owned Reset-All heap soak (npm run test:soak)
   browser/*.spec.ts        sim-specific Playwright specs (engine, focus, screenshots)
 vitest.config.ts           template-owned: environment: "happy-dom"; include: ["tests/**/*.test.ts"];
                            setupFiles: ["./tests/setup.ts"]; execArgv: ["--expose-gc"]; drift guards
@@ -87,41 +89,56 @@ describe("LensModel", () => {
 
 `tests/memory-leak.test.ts` lists the sim's disposables and hands them to the shared harness.
 Do not copy a private `forceGC`; the compliance gate fails a suite that bypasses
-`tests/helpers/memoryLeak.ts`.
+`tests/helpers/memoryLeak.ts`. Hollow suites also fail: `describeDisposalLeaks([])`
+without `{ emptyOk }` + custom coverage, or a TimeModel/NumberProperty-only list with no
+other `forceGC` / `expectNoListenerGrowth` tests. Every `src/` class that defines
+`dispose()` (except `*ScreenView` / `*Screen` / `*Sim`) must appear in the suite file or
+be carved out as `` `memory-leak:<Class>` `` under `## Compliance carve-outs`.
 
 ```typescript
 import { NumberProperty } from "scenerystack/axon";
 import { ResistorNode } from "../src/common/view/ResistorNode.js";
 import { LabModel } from "../src/lab/model/LabModel.js";
 import { LabPreferencesModel } from "../src/preferences/LabPreferencesModel.js";
-import { describeDisposalLeaks } from "./helpers/memoryLeak.js";
+import { describeDisposalLeaks, expectNoListenerGrowth } from "./helpers/memoryLeak.js";
 
 // Outlives every case, like model state outlives a node.
 const resistanceProperty = new NumberProperty(100);
 
 describeDisposalLeaks([
   { name: "LabModel", create: () => new LabModel(new LabPreferencesModel()) },
-  { name: "ResistorNode", create: () => new ResistorNode(resistanceProperty) },
+  {
+    name: "ResistorNode",
+    create: () => new ResistorNode(resistanceProperty),
+    keepAlive: () => [resistanceProperty],
+  },
 ]);
+
+// Non-disposable owners: assert listener counts stay flat across exercise/reset.
 ```
 
 For each case the harness checks the instance is collected after `dispose()` and that
-repeated create/dispose cycles leave no survivors.
+repeated create/dispose cycles leave no survivors. With `keepAlive`, sentinels stay
+strongly referenced through the WeakRef check so a forgotten unlink fails.
 
-- **List real objects.** Include every model or view class that links Properties, adds
-  listeners, or owns child nodes. Pass long-lived Properties in from outside, as the screen
-  would, so the test proves the object unlinks from state that outlives it.
+- **List real objects.** Include every model or view class that defines `dispose()`, links
+  Properties, adds listeners, or owns child nodes. Prefer `keepAlive` for external
+  Properties the node linked to.
 - **`idempotentDispose` is opt-in.** axon Properties and `Disposable` throw on a second
   `dispose()` by design. Set `idempotentDispose: true` only for objects that promise it
   (the template's `TimeModel`).
-- **Sim-specific leak tests** go below the `describeDisposalLeaks` call in the same file and
-  use the harness's exported `forceGC(ref)`. Always pass the `WeakRef`(s). Without them
-  `forceGC` runs every GC pass and can exceed Vitest's `testTimeout`. Allocate inside a
-  **function** (not a block) so V8 can collect the locals.
+- **Empty lists:** `describeDisposalLeaks([], { emptyOk: "…" })` plus custom
+  `forceGC` / `expectNoListenerGrowth` coverage in the same file. Empty-without-`emptyOk`
+  fails the suite and compliance.
+- **Sim-specific leak tests** go below the `describeDisposalLeaks` call and use
+  `forceGC(ref)` / `expectNoListenerGrowth(properties, exercise)`. Always pass WeakRefs
+  to `forceGC`. Allocate inside a **function** (not a block) so V8 can collect the locals.
 - If the sim deleted the template's unused `TimeModel`, delete its `TimeModel` case and
   `tests/TimeModel.test.ts` too. A suite that only disposes a stand-alone `NumberProperty`
-  proves the harness runs, nothing more. Record that gap.
+  proves the harness runs, nothing more — compliance fails that as hollow.
 - Dynamic sims that add/remove nodes at runtime should expand the suite like OpticsLab.
+- **Browser soak:** `npm run test:soak` (template-owned `tests/browser/memory-soak.spec.ts`).
+  Keep it out of Fleet Health fuzz; use it in CRC / nightly.
 
 ## What to test
 

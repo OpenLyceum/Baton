@@ -528,6 +528,94 @@ PY
     else
       pass "memory-leak suite uses the shared harness"
     fi
+    # Hollow / thin suite gate: empty case lists need emptyOk + custom coverage; a
+    # TimeModel-only (or NumberProperty-only) list with no other forceGC/expectNoListenerGrowth
+    # coverage is a harness smoke, not a sim dispose regression.
+    python3 - <<'PY' || new_rule "tests/memory-leak.test.ts is hollow — list real disposables, or describeDisposalLeaks([], { emptyOk }) plus custom forceGC/expectNoListenerGrowth coverage"
+import json, re, sys
+from pathlib import Path
+# Template ships only TimeModel by design.
+pkg = json.loads(Path("package.json").read_text()) if Path("package.json").exists() else {}
+if pkg.get("name") == "scenerystack-template":
+    sys.exit(0)
+text = open("tests/memory-leak.test.ts").read()
+# Strip block comments so prose mentioning describeDisposalLeaks([]) does not count.
+text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+text = re.sub(r"//.*?$", "", text, flags=re.M)
+m = re.search(r"describeDisposalLeaks\s*\(\s*(\[[\s\S]*?\])\s*(?:,\s*(\{[\s\S]*?\}))?\s*\)", text)
+if not m:
+    # Unusual form (e.g. mapped array) — require some coverage signal.
+    if "forceGC(" in text or "expectNoListenerGrowth(" in text or "keepAlive" in text:
+        sys.exit(0)
+    sys.exit(1)
+cases_src, opts_src = m.group(1), m.group(2) or ""
+names = re.findall(r'name:\s*["\']([^"\']+)["\']', cases_src)
+empty_ok = bool(re.search(r"emptyOk\s*:", opts_src))
+custom = "forceGC(" in text or "expectNoListenerGrowth(" in text
+trivial = {"TimeModel", "NumberProperty"}
+if not names:
+    sys.exit(0 if empty_ok and custom else 1)
+if set(names) <= trivial and not custom and len(names) <= 1:
+    sys.exit(1)
+sys.exit(0)
+PY
+
+    # Inventory (advisory): classes in src/ that define dispose() should appear in the
+    # leak suite or be carved out as `memory-leak:<Class>`. ScreenViews / Sims /
+    # YourModel placeholders are skipped. Hard-fail is reserved for hollow suites;
+    # closing the inventory gap is a fleet sweep tracked by this WARN.
+    inv_out="$(python3 - <<'PY'
+import re, sys
+from pathlib import Path
+
+suite = Path("tests/memory-leak.test.ts").read_text()
+agents = Path("AGENTS.md").read_text() if Path("AGENTS.md").exists() else ""
+carved = set()
+for m in re.finditer(r"^## Compliance carve-outs?\s*$([\s\S]*?)(?=^## |\Z)", agents, re.M):
+    for bullet in re.split(r"\n(?=\s*[-*] )", m.group(1)):
+        lead = re.match(r"\s*[-*] +`([^`\n]+)`", bullet)
+        if lead and lead.group(1).startswith("memory-leak:"):
+            carved.add(lead.group(1).split(":", 1)[1].strip())
+
+missing = []
+class_re = re.compile(r"(?m)^\s*(?:export\s+)?(?:abstract\s+)?class\s+(\w+)\b")
+dispose_re = re.compile(
+    r"(?:public|protected|private)\s+(?:override\s+)?dispose\s*\([^;]*\)\s*(?::\s*[^{]+)?\s*\{"
+    r"|override\s+dispose\s*\([^;]*\)\s*(?::\s*[^{]+)?\s*\{"
+)
+for path in Path("src").rglob("*.ts"):
+    if path.name.endswith(".d.ts"):
+        continue
+    src = path.read_text()
+    for cm in class_re.finditer(src):
+        name = cm.group(1)
+        if name.endswith(("ScreenView", "Screen", "Sim")) or name == "YourModel":
+            continue
+        body = src[cm.end(): cm.end() + 12000]
+        if not dispose_re.search(body):
+            continue
+        if name in suite or name in carved:
+            continue
+        if re.search(rf'name:\s*["\'][^"\']*{re.escape(name)}[^"\']*["\']', suite):
+            continue
+        missing.append(name)
+
+if missing:
+    uniq = sorted(set(missing))
+    print(", ".join(uniq[:12]) + ("…" if len(uniq) > 12 else ""))
+    sys.exit(1)
+sys.exit(0)
+PY
+)" && pass "memory-leak inventory: all dispose() overrides listed" || warn "memory-leak inventory gap: $inv_out — list in describeDisposalLeaks or carve out as \`memory-leak:<Class>\`"
+  fi
+
+  # Browser memory soak (CONVENTIONS.md §5): template-owned Playwright soak, not fuzz.
+  if [ ! -f tests/browser/memory-soak.spec.ts ]; then
+    new_rule "tests/browser/memory-soak.spec.ts is missing (fleet memory soak)"
+  elif ! grep -qE '"test:soak":\s*"npx playwright test tests/browser/memory-soak\.spec\.ts"' package.json; then
+    new_rule "package.json test:soak must run npx playwright test tests/browser/memory-soak.spec.ts"
+  else
+    pass "memory soak: spec + test:soak script"
   fi
 
   # A test script and the shared setup (CONVENTIONS.md §5).

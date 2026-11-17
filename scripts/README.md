@@ -31,6 +31,7 @@ the monorepo checkout.
 | [`sync-claude-settings.sh`](sync-claude-settings.sh) | Roll the `scenerystack` Claude Code plugin out to sim repos' `.claude/settings.json` |
 | [`lib/repos.sh`](lib/repos.sh) | Bash helper functions for other scripts |
 | [`check-repo-compliance.sh`](check-repo-compliance.sh) | README/CI/structure compliance (bootstrap, i18n, memory-leak suite, KeyboardHelp, githooks, PWA, …) |
+| [`check-memory-leak-coverage.sh`](check-memory-leak-coverage.sh) | Inventory `dispose()` overrides vs `tests/memory-leak.test.ts` (`<Sim>` or `--all`); compliance reports gaps as WARN |
 | [`check-template-drift.sh`](check-template-drift.sh) | Content drift of template-owned files / scripts / deps vs SceneryStackTemplate (`--all`, `--fix`); wraps [`check-template-drift.mjs`](check-template-drift.mjs), which reads `config/template-manifest.json` and honours AGENTS.md "Compliance carve-outs" |
 | [`check-skills.sh`](check-skills.sh) | Validate the `skills/` collection and its README index (Baton self-check) |
 | [`check-node-version.sh`](check-node-version.sh) | Assert fleet Node major agrees across workflows; with sibling checkouts, also engines.node / `@types/node` |
