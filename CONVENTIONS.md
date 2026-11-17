@@ -110,7 +110,8 @@ tests/
 vitest.config.ts            root; include: ["tests/**/*.test.ts"];
                             execArgv: ["--expose-gc"] when a memory-leak suite is present
 tsconfig.test.json          extends tsconfig.json; include: ["tests", "src/**/*.d.ts"];
-                            types: ["node", "vite/client", "vitest/globals"]
+                            types: ["node", "vite/client"] (no vitest/globals:
+                            globals are off, so tests import from "vitest")
 ```
 
 - `npm run check` typechecks app, scripts, and tests:
