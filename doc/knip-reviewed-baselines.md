@@ -2,9 +2,9 @@
 
 Source of truth for which SceneryStack callers use `unused-mode: required` versus
 `advisory`. Update this file when promoting or demoting a sim. Policy and local
-commands live in [`knip.md`](knip.md); the 2026-11-15 inventory snapshot is
-[`knip-rollout.md`](knip-rollout.md) (historical — do not treat it as the live
-promotion list).
+commands live in [`knip.md`](knip.md); the latest local inventory is summarized in
+[`knip-rollout.md`](knip-rollout.md). Inventory results do not replace this reviewed
+promotion list.
 
 Callers match `SceneryStackTemplate`: `unused-mode: required` after both default and
 production Knip reports are reviewed and cleared, with lint, typecheck, tests,
@@ -13,7 +13,7 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 
 ## Required (`unused-mode: required`)
 
-62 checkouts (61 simulations + SceneryStackTemplate), as of 2026-11-17 local CI callers:
+76 checkouts (75 simulations + SceneryStackTemplate), as of 2026-11-17 local CI callers:
 
 - ACPhasor
 - BackwardAcceleration
@@ -60,43 +60,64 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 - OpticsLab
 - OscillationsAndChaos
 - Oscilloscope
-- PeriodicTrends
-- PlanetaryConfigurations
-- QuantumScattering
-- QubitSketch
-- RadioactivityAndStatistics
-- RadioWaves
-- RotatingSky
-- SceneryStackTemplate
-- SimplifiedMRI
-- SolarSystemModels
-- StandingWaves
-- StellarWobble
-- SternGerlach
-- TheRamp
-- TrackLab
-- VariableStarPhotometry
-- WaveComposer
-
-## Advisory (`unused-mode: advisory`)
-
-14 simulations still on advisory CI. Each must keep an AGENTS carve-out naming
-`.github/workflows/ci.yml` and the pending Knip review:
-
 - ParticleZoo
+- PeriodicTrends
 - PhotonInteractions
+- PlanetaryConfigurations
 - PlateTectonics
 - Precession
 - QuantumAtom3D
 - QuantumPotential
+- QuantumScattering
+- QubitSketch
+- RadioactivityAndStatistics
+- RadioWaves
 - RelativisticDynamics
 - Resonance
+- RotatingSky
+- SceneryStackTemplate
+- SimplifiedMRI
+- SolarSystemModels
 - SpecialRelativity
 - SpectroscopyLab
+- StandingWaves
+- StellarWobble
+- SternGerlach
+- TheRamp
 - TitrationLab
+- TrackLab
 - TransitHunter
+- VariableStarPhotometry
 - VernierScales
+- WaveComposer
 - Zenith
+
+## Advisory (`unused-mode: advisory`)
+
+None. Every SceneryStack simulation caller and SceneryStackTemplate use
+`unused-mode: required`.
+
+## 2026-11-17 promotions: final 14 advisories
+
+Both default and production Knip 6.45.1 reports are empty with exit code 0 under
+Node v26.13.0 for these fourteen working checkouts (no source cleanup needed —
+findings from the 2026-11-15 inventory were already cleared):
+
+- ParticleZoo, PhotonInteractions, PlateTectonics, Precession
+- QuantumAtom3D, QuantumPotential, RelativisticDynamics, Resonance
+- SpecialRelativity, SpectroscopyLab, TitrationLab, TransitHunter
+- VernierScales, Zenith
+
+Each CI caller now uses `unused-mode: required`, and the obsolete advisory carve-out
+bullet was removed from `AGENTS.md` (the whole Compliance section was dropped when it
+would have been empty; ParticleZoo kept its template-owned / overrides subsections).
+Lint, typecheck, architecture checks, production builds, and unit tests pass on the
+working trees. QuantumPotential’s densest Many Wells timing budget was raised from
+2 s to 3.5 s after a consistent ~2.4 s wall time on this WSL host; that change is
+unrelated to Knip findings. Hosted CI and branch-protection settings were not verified.
+
+Validation logs: `/tmp/knip-promotion-validation-14/`; Knip reports:
+`/tmp/knip-advisory-20261117/`.
 
 ## 2026-11-17 promotions: DataLab and PeriodicTrends
 

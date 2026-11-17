@@ -1,0 +1,1582 @@
+{
+  "startedAt": "2026-11-17T16:18:16.767459+00:00",
+  "finishedAt": "2026-11-17T16:20:14.725179+00:00",
+  "node": "v26.13.0",
+  "results": [
+    {
+      "repo": "ACPhasor",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "57cc52c434a4cc82253f7724cdaf8cdda7fda462",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "69579bf3987e94911e65b0fb6f811a896a17f9c1cbd996e5ce6104e03bd336da",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "BackwardAcceleration",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "894ae66bded31493ff40b3252c79a88af730bdaa",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "d1ea3105dd6be7ce1a476d27335a8c7b4f8c83c6599e1ee712dc85f66ca460cd",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "BasicCoordinatesAndSeasons",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "9cc0ab79e1a683da28d1d525953d68e1be46790d",
+      "dirty": "",
+      "configSha256": "6fbbf603248abf1863604040e6fc2e277473b4aca8a85e42ac1bcdbece4cdedb",
+      "lockSha256": "84ffb038b36c52d9a95c55f12558023db53f2b5626cb2e87ed59b4be5f972432",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "BiomechanicsArm",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "f536e4c98f0d9e9404eb79868fd6c828a93220db",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c976e0cec0371ea96795c369fcad3334e61f2ce84f14ca02c29b414cce52f9b4",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "CalorimetryLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "d6a1577d54d3026f7dab34618b9edb7e24920aff",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "45260ea29d49103c13218c3d03a87ce60b52e8adb46612bb644cdaf42f930e8c",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "CapacitorLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "f4315ae9d1e1aec026a2a4fd6cc3c080065bf91b",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "ba1680d9822bcd97c168750537e4941a9b8275c515393d1572d09ba545ce5099",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "CarnotHeatEngine",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "0030be227d4a8e297592cf513d7422b16b65e270",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "8df4697fa661cc861916120c9a828cd996ed5d78401e562a6409ae8a658ad6d0",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "CartCollisions",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "d3b337fb1272db6386d60a596201706f6b762566",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "eb3c0ad494586b950403e5ca3618049072f9442cae90ddfeb59e727e6bffb88d",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ColliderLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "1bbf86191e422f6b9a6f3a2789ff057d86e05a05",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "90058321e42c8a05ee21106e35e40be774b6f5d0642b447bdf8ac603c4291d98",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "CrystalLattice",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "368b9241538d31d4fc6ee13a5764655776bc8f03",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "b2b687b6b28ede29a97d1d36051f86db6a97072120c0e1787be1841aed4f95de",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "DataLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "df92d983e88b59272a603d319b457ad80a023c67",
+      "dirty": "",
+      "configSha256": "de958c30872a222f9d3bd6b9e2b65abf3279d4dda091af5016cd4b2b3e70df0f",
+      "lockSha256": "cf436671d5e145b15298d7441d7f7c32a7276f8846a3164ccf8d58a1c29749d0",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "DiffractionLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "5557b5d24d481434149347ddd803f740c54c2211",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "a0763795aa68940dde80be1015dd9aa20b6662e4e6f59879262514a56375bde0",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "DopplerEffect",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "178571e0a3405879f7d394e5f73783558d8088d4",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f78e8c88543e30a2fc57cfc8603051603d2d5dda52cfd185faa431e1b53dd1a5",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ElectricFieldMapper",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "d492d9800fd7c64a5df7d2decf1ba3dc26373118",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "46aa178c1fc7058ee19770277ba2d2e7603b9b870f67d35e2bfc22cd194b98b9",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ElectricFieldOfDreams",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "3f8bcf866c1f08597adaabcdad217764f74f7e9f",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "8e1e5ac07b7e314759f610b3b8bd3f553eed7dee37b4918d50fb8e625ac5d817",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Electrochemistry",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "7e264effbc596ee38fd15ce50ea25b87417fc429",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "dfbdeac4d1ca943e07bf9953f7c7be33a81d9fa7570f2d0d790fdc1f7a63f616",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ElectronConfiguration",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "9c940d7cfb0dd98de590f0df7461b14bc708eec8",
+      "dirty": "D doc/correctness-review-2026-11-06.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c523f23a9ff7726f33d9b4bb79296ad60c4bc534f3edd7ec8d1f7ef3c50c36ae",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "EquilibriumLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "ee6447e86de0deb2f6540218f5e92e1add70beb8",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "67574a64010150ee960294a1bc911e4bc4d55eb0364b052bc8d8c5c19511e235",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ExoplanetsDatabase",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "88cdda1251279fa72cfb63804e90fd215291505e",
+      "dirty": "D doc/correctness-review-2026-11-06.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "0fd5e19ef3046ececce48e0c672f7f4786a2e13da48aec5d5603208073229dcd",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ExtrasolarPlanets",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "93272010232dc75ec7924041bcdb1c4d5bc2410a",
+      "dirty": "",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "e93e5025af11edcf8fad67e9db904dd64ffbb9e6c959252cef0387bcb12ff261",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "FieldBoundary",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "eb7dece5c9ae68efbcca6e5a367bfa7d2c1aab99",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "240cc3ac0fa37fb430c885cf5dc592f4e39640096fd3cfb6421b4604821bdc94",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "FluidDynamics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "bd678c239e9da19d2e79b8b6658af16d7cdb3f1b",
+      "dirty": "",
+      "configSha256": "fc92f1fe425bf7850c96dcda47976af7f0f4a34a223c8f9155ea77a3dc8c51bf",
+      "lockSha256": "ba8f862a7fd804324510180b655ca9dc49e33ac6d39195c30fa2da1b1c5d81aa",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "FluidPressureAndFlow",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "643ce1b0142511b1329a9e24f0e9ef1fb3015dde",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "58daf3f8dccc95ae07461dd7ff7ace39b4d9d036e1cc440739a56cf34c8b237c",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "HRDiagram",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "223f08bd4be4936a0df3f595127d713bff733874",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "a364674a2ecd28100bd1e05caf327828c77139c79dae8bbc381e9bab4b98fc30",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "HabitabilityLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "28fe8f0e5dfad539d74f79806e77fab0b0ab76d4",
+      "dirty": "D doc/code-review-2026-11-13.md\n D doc/correctness-review-2026-11-06.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "3f2f6560ab91b7c12fd619ea6084c3f4372acaea8db0620c050e91ef3f9b09b4",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "HabitableZones",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "2d69ef34a6cedef39eb08b017b6dcb2acae522ee",
+      "dirty": "",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "6211f37999b481864a164e0cd7d537d6e0aa37c87cb62ef1e082a3b338a8d065",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "HeatTransfer",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "0be5c7c0033003d598f8cefd9bcb8e54a3292901",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "32a02764e366bbebd3c722f0028e9be657bd28f00707c20503c6851f234e4d2b",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "InterferometryLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "c0785cfe6a118b33f4162e89ff200dea92bd101c",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f68a2c890fd3fc2c22f80fd5562bcbd7612e7ade9eea51f52dfcc35a2e258063",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "LadyBug",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "240f95d110df660f4a14fcc27ddeb87c2a9924bb",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "aec8ca2191906d140219c817492570acc94ab29a4174eb5e8948a3d9719824db",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Lasers",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "e6f07d9200219ec8e604b0987c6e5670619850c3",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "cd293ece8fba286b1f792c691e7e8f0c9b3cd7bbffd3d88640b3fc74bc681508",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "LewisStructures",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "8710c5353047a8d2671f1453725af4ce8b5a6763",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "0100322abdf0de27758f40722e960ceea05ccdc5f22224ab27a1a17b39a20d39",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "LightAndAtoms",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "e6f221a085df923a18299f63d8e6d6ba1fb44343",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "629f2d84e3a03d5b2102551143f4c7c107e3799bd0c16d7be3374e5ae8b0d89c",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "LightPropagation",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "6c8d813e311bdd7cf6327398d91bfc0cf2df3c64",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "c4707cad2ee44d79f567c1e97149b1950140c694383d3b9283f855dbf05f8566",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "LunarLander",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "42d2caaba774c23e9848ef59283105e87eb5b0a7",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "a6b5bc7ad1164361a43ce11329de1664ec2e5afa1e86e323b781e3ade0b1c9a2",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MazeGame",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "dd4b7aaafaf025db5472146e8edfa458476fef6a",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "b93f6723ac053984d887365373b91906621c52ac4ceb2e9da55a768f5dd77f99",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MercuryElongations",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "62f9ea8ef534a18e753e5c55206bacd6ac304d16",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "18ece197368494f9c2f4414fdb177379818598386565d1816ed93645f1b890a1",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MolScope",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "2d70a3a00728ad934642f2718ee80f94e2682011",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "30c9d9062c05ed189ba72be8869bdcfa742949ade572a369c69cd2ea109a88fb",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MotionMatch",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "6b6ebbdcaa2750bcdaa05f93d3852fa77bb183a6",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "054b4d38afa23bc6ae99e163d550a85d12723e919b8fc5268f775576b17014f4",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MotionSensor",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "cab6a88b41c1ba336d7908f34196f75393755721",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "239e5250a693164cc465a5adfc8eb4094bd7c467acf7cb8da0fa5a3f26090de0",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MotionsOfTheSun",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "724f753f4ed83bd4a96691f8b30e2581cd40958e",
+      "dirty": "",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "7115f44afc13956e9383fb45ad4a240b6726ba2e0ab87657b4a5574fc02b1363",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "MovingMan",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "d70bbb8f5a0eb4124c888ff577183ac74029b75d",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "dc9ef02600e3ce5d7fc8eb92002abbe3e4ac5fe8606d23e8e881677e96afca93",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "NuclideChart",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "769397d799eda16e0d77422369135b02c69cb22f",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "187a1f98062f8dcfb2ae2e023328fdcbd598d423331fc337c0be29fb7986eaa5",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "OpticsLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "7e6fe0c427aff56031dc97d826f92d0ee2242130",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "150818bdcb1d0d04ebaafbdbb0c0bc67958dd26f9d36daff7f6f6e8ebd2ef7c9",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "OscillationsAndChaos",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "7b14b3479db4b464d40fc2a8ca2d1eee6ca94eb8",
+      "dirty": "M AGENTS.md\n D doc/code-review-2026-11-16.md\n M doc/implementation-notes.md\n D src/doc/PROJECT_STRUCTURE.md\n D src/doc/SCENERYSTACK_PATTERNS.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "869d53f380249887a4ee87bb0839e77af98b7cd3767bffac9293a404c5586011",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Oscilloscope",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "e84d752f058c6506efcfaf15a91e7bcd0336fd49",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "ee3fceb9abe65eafc3448bdbe53ed9cf008dc99fa105296ee3b707d15359cf2d",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "ParticleZoo",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "c2c9bb11017b21e3c67d29b2a9956f1452d0e1f1",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "b3226d23ff4bc19ebf496eb3f9926bde3a3b3e6c87ba5d5622d314321517d173",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "PeriodicTrends",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "4c3453677a25e2af7b3c4d0190f96e7091f13c35",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "85d5ebd5c4f60c7025720a71b423cc6c5701ed13c43592ad7630762573eba087",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "PhotonInteractions",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "98714e09c23e683377d5dc418a6dc44a993e8116",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "ef4b411fc39f06d8f9d3d9aa49c73477612e6e3db38389ab4140688436e30d4c",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "PlanetaryConfigurations",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "dea0d658f8083d31556bde9d5db94b8308a45321",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "138170e211b56a7bba62ef8aed501734466fc78e0f46d037061b439d12f6074f",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "PlateTectonics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "e239a67aa5e1fe8dea137e38fd44fa970c548478",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "3d6d021dc61cb39b2a2b345b258b6fa077386b2f5c020d12d76254faa67c9b87",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Precession",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "c4bc79082daa4ab578ad6eac0f637bc25b71a996",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "7a709cd778ac15bc77432c40a6dab8e5e3b7692be35a4db71425687035a784db",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "QuantumAtom3D",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "96164acdf9b80a099f023221a3aa62b74df47374",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "ab5385f359e49ee57fcb2cb5a65c7b63736143e2c5ab69ce0b8bd8c4fd7a95e9",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "QuantumPotential",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "fd4ac1c9da2874a52fee0d3eb30d510f5fdad31d",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "9e28eb6639ae7d4a36fa40848d250f5f7fab0b99535038836426f1898eb97884",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "QubitSketch",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "ee38942d58e108e72b8cb8878ba3cc7ef105b118",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "7d06792f67f20f4a7c25da0016f40368e8d85d8fb043247311237351637c1bef",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "RadioWaves",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "7d369fe1def618ed39d141aa898af9f7edc6a3f0",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "1da1537b34f8dcd45d0a497a294a24aaddf9f06347ea9f81b3a9d21f8eef9d1e",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "RadioactivityAndStatistics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "3bbae423febe55b373721dfb96dddaa2a50be445",
+      "dirty": "",
+      "configSha256": "852adde15991d6aa250d5476c31fb3dc1f26981345deda3a74aaa92e86eed269",
+      "lockSha256": "59a4ddad494a6d9ed97bd00be7091833d0cb3f07c7f3dc8e0065480023b8177d",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "RelativisticDynamics",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "41c027bbe56bfb7c98ed66922fa4f1ae773701a4",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "3f25405983e32beacd33978c6dadc0778bcac2bdeea57175f31684970f356e59",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Resonance",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "098c04cd0a7ac9bccc7205500cc9c3e257b443ec",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "59123c6d5a31e2b00fa024a54de557b8bd41d6c66ed9ab91813b445ce7d9adea",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "RotatingSky",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "aed53d31b292c3eba599b046161c9dd74b30f6cf",
+      "dirty": "",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "0b0c8daefac42578b2144afc1268bc2fd8ad7e06358335c33e2c3623fb73fcae",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "SceneryStackTemplate",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "757f75de11c3ddcea57199827f576cb0602f2abd",
+      "dirty": "",
+      "configSha256": "0af2727b352753e13e47d73aba85346e2c513f9f6ac843f95b45698bc8e3f618",
+      "lockSha256": "22eb49b3dcaf1cf5274fffdb42fce0469b82011b6649be875f8da1b05b4be7d6",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "SimplifiedMRI",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "b1754f11bc607fce60905acca158cc81560e512c",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "4792afb84cb1d544fad51fa04cf689a224c42a93b55e656723b762bfd9fd81e1",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "SolarSystemModels",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "4e8b7fd0b69e27a1aa97ab2d039187ef59ffc259",
+      "dirty": "",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "72acbf9dedb17b86fb6ba4611266e51b946e7101745a4fae981f585ec943d814",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "SpecialRelativity",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "a560ac27fcb742e2334edf705622d73b984666ff",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "80301adc0237143ca2ea172a87ed5c5d0662bc16e8cd7402a4f3663800664533",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "SpectroscopyLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "e3bf007b0ca85280af799e36523b7989f3a7f189",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "eb0eb0052bf819c6e62fd99f007ecab005e6672c5529b52a9741845dc045368c",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "StandingWaves",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "78214a89abef6e74780cba7bbefef07e6b46a785",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "5128d3fd469ade079e5f11cf2a86690e0fd618a2522b66b3eb653a97c1bd4f25",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "StellarWobble",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "aa751149fd9b35a8f0e7f7c34c68e447ac8c0cfe",
+      "dirty": "D doc/correctness-review-2026-11-06.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "fbca67ff48f3c415f4479b9dc226b928b4425a2e5b1f6e82d49f1a67df8a4de7",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "SternGerlach",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "925fc9a42de3f9a244ce72cd19e0f2aeef485f21",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "376020d7d833ac39b62fc7a99f8125464752fa87d4dc33c9add0a276eab38771",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "TheRamp",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "1d8c58127023e6c8f126161edd7da98c3f9c0091",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "af3ddcf93edf1e874c973fcb8061f22db8894aa4f8483e7ab2a3c606d5ef49ff",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "TitrationLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "081179e29810424f2261f7c452b8b2c0466ca1ad",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "0d2e34bb7d697df28c381127b37134347dffd6a359ae70a7a0f5f3370c9ccf31",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "TrackLab",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "385c1b84fa29f3ca9cd8da3bbb2365c58974ae9f",
+      "dirty": "D doc/code-review-2026-11-16.md",
+      "configSha256": "1df6194c9d8cc2dee24281cef09429e400d4bef9f03c622f56fbc622bdd05363",
+      "lockSha256": "aa0eabc7940f75e80aa5ee7ea5cae4731d1377f88f74a72cceed3346ae68b698",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "TransitHunter",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "c3cd2b4410cdff38a61ac93e8022fc640338dad5",
+      "dirty": "D doc/correctness-review-2026-11-06.md",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "f75c896d1c7cfdccc944bf46a5dd8bdef7ae80840ff2a3e901038a58248ed000",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "VariableStarPhotometry",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "d0672ce3fff3ab82697f8fd1ed50faaf4b38ce4c",
+      "dirty": "",
+      "configSha256": "ca17b959ec5939618a4a239364a62ee134de008c1d2d148d8f33ec86537cbb2b",
+      "lockSha256": "9096c0896616b8aea5adc002e3afdc1140395e38f1c8cecc4b63ce08f74401ba",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "VernierScales",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "5ba4ae6fb5cd6194439696c863571c72ebfdd90a",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "7b67c980778c6fda8871eb7cbefc31992ba6b9d0540df416aa5963c8ea948b53",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "WaveComposer",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "65abe5c6d9e481213e6331662620335a9e68a2aa",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "8018986f6aa1c190a804b942cc777cb6dc378e872cbc9b7c1534980a5f502baa",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    },
+    {
+      "repo": "Zenith",
+      "modes": {
+        "default": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        },
+        "production": {
+          "exitCode": 0,
+          "validReport": true,
+          "counts": {}
+        }
+      },
+      "head": "8ebc42c58658c3936596c8f98c8b6ee837a05e08",
+      "dirty": "",
+      "configSha256": "f80dfd4a4d5ac6d5ff76f986ee9c70043cf5818b5fb1d7b50d3cf7efc7e2797a",
+      "lockSha256": "fe0abe647179852ab03a4331b5e705a2e1898efd4d95f906ccecc43c70f02e0e",
+      "knipVersion": "6.45.1",
+      "status": "clean"
+    }
+  ]
+}
