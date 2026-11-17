@@ -5,7 +5,7 @@
  * Compares SceneryStack sims against SceneryStackTemplate using
  * config/template-manifest.json: template-owned files that must be identical
  * (after substituting the sim's package/repo name), files a sim may only extend,
- * required package.json scripts/dependencies (exact versions, shared key order), template-only and forbidden files,
+ * required package.json scripts/dependencies (exact versions; shared script order, alphabetical dependencies), template-only and forbidden files,
  * and docs that must not be verbatim template copies.
  *
  * A sim approves a deviation with an explicit bullet under its AGENTS.md
@@ -217,13 +217,14 @@ function checkSim(repoName) {
   }
 
   // package.json — shared scripts, dependency instances, and key order match the template.
-  // Sim-specific scripts and packages are appended after that block (extras sorted).
+  // Sim-specific scripts are appended after the shared block (extras sorted); dependencies are fully alphabetical.
   const pj = manifest.packageJson;
   let pkgChanged = false;
   const templateScriptOrder = Object.keys(templatePkg.scripts).filter(
     (name) => isTemplate || !manifest.templateOnly.scripts.includes(name),
   );
   const byName = (a, b) => a.localeCompare(b);
+  const npmOrder = (a, b) => a.localeCompare(b, "en");
   const applyOrder = (label, current, ordered) => {
     if (stable(current ?? {}) === stable(ordered)) return;
     if (fix) {
@@ -231,7 +232,7 @@ function checkSim(repoName) {
       fixed.push(`${label} order`);
       return true;
     }
-    add("package", label, `${label} order differs from the template (shared entries first, sim-specific after)`);
+    add("package", label, `${label} order differs from the template ${label === "dependencies" || label === "devDependencies" ? "(alphabetical, as npm writes it)" : "(shared entries first, sim-specific after)"}`);
     return false;
   };
 
@@ -285,10 +286,10 @@ function checkSim(repoName) {
         }
       }
       const cur = pkg[field] ?? {};
-      const tplField = templatePkg[field] ?? {};
+      // Plain alphabetical order, the way `npm install <pkg>` writes it, so npm
+      // never undoes the order this check enforces.
       const ordered = {};
-      for (const dep of Object.keys(tplField)) if (dep in cur) ordered[dep] = cur[dep];
-      for (const dep of Object.keys(cur).filter((d) => !(d in ordered)).sort(byName)) ordered[dep] = cur[dep];
+      for (const dep of Object.keys(cur).sort(npmOrder)) ordered[dep] = cur[dep];
       if (applyOrder(field, cur, ordered)) pkg[field] = ordered;
     }
   }

@@ -149,7 +149,7 @@ License / Contributing` (enforced by Baton's compliance check). Do **not** add a
 |---|---|
 | `biome.json` | versioned `biomejs.dev` `$schema` matching the pinned `@biomejs/biome`; 2-space indent, 120-char width, double quotes, semicolons |
 | `tsconfig.json` / `tsconfig.scripts.json` / `tsconfig.test.json` | shared template versions (TS7, `erasableSyntaxOnly`, `verbatimModuleSyntax`); `check` runs `tsc` on all three |
-| `package.json` | Same scripts, dependency instances, and key order as `SceneryStackTemplate` (exact version specifiers). Sim-specific dependencies and scripts are appended after that shared block. Keywords include `simulation`, `SceneryStack`, `interactive`, `physics`, `education`, `pwa` (that casing); other keywords may be added |
+| `package.json` | Same scripts, dependency instances, and key order as `SceneryStackTemplate` (exact version specifiers). Sim-specific scripts are appended after that shared block; `dependencies` and `devDependencies` are sorted alphabetically, as `npm install` writes them. Keywords include `simulation`, `SceneryStack`, `interactive`, `physics`, `education`, `pwa` (that casing); other keywords may be added |
 | `.githooks/{pre-commit,pre-push}` | present; activated via `prepare` script on `npm install` |
 | `.github/workflows/ci.yml` | calls `OpenLyceum/Baton` reusable CI + shared security workflows |
 | `.github/workflows/deploy.yml` | calls `OpenLyceum/Baton` reusable Pages deploy; `on: push` to `main` **and** `workflow_dispatch` |
