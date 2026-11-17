@@ -248,10 +248,27 @@ if [ -f package.json ] && [ -f src/main.ts ]; then
   # Hardcoded colors in view code (heuristic — ProfileColorProperty entries belong in
   # <Prefix>Colors.ts). Transparent rgba(0,0,0,0) hit-areas and icon/brand palettes are
   # accepted; anything else should be themed or documented as a carve-out in AGENTS.md.
-  color_hits="$(grep -rEn '"#[0-9a-fA-F]{3,8}"|rgba?\(' src --include='*.ts' 2>/dev/null \
-    | grep -vE 'Colors\.ts|Icon|brand\.ts|rgba\( *0, *0, *0, *0 *\)|rgba\(0,0,0,0\)' || true)"
+  color_hits="$(python3 - <<'PYCOLORS'
+import re
+from pathlib import Path
+
+# Keep quoted text intact while removing comments, preserving source line numbers.
+# In particular, prose mentioning rgb() is not a CSS color declaration.
+tokens = re.compile(r'''("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|//[^\n]*|/\*[\s\S]*?\*/''')
+color = re.compile(r'"#[0-9a-fA-F]{3,8}"|rgba?\(')
+transparent = re.compile(r'rgba\( *0, *0, *0, *0 *\)')
+for path in sorted(Path("src").rglob("*.ts")):
+    if any(token in str(path) for token in ("Colors.ts", "Icon", "brand.ts")):
+        continue
+    source = path.read_text()
+    code = tokens.sub(lambda m: m.group(1) if m.group(1) else "\n" * m.group(0).count("\n"), source)
+    for line_number, line in enumerate(code.splitlines(), 1):
+        if color.search(transparent.sub("", line)):
+            print(f"{path}:{line_number}:{line}")
+PYCOLORS
+)"
   if [ -n "$color_hits" ]; then
-    if [ -f AGENTS.md ] && grep -qE '^## Compliance carve-outs' AGENTS.md && grep -qiE 'hardcoded colors' AGENTS.md; then
+    if [ -f AGENTS.md ] && grep -qE '^## Compliance carve-outs' AGENTS.md && grep -qiE 'hardcoded colou?rs' AGENTS.md; then
       pass "hardcoded color carve-outs documented in AGENTS.md ($(echo "$color_hits" | wc -l | tr -d ' ') hit(s))"
     else
       warn "possible hardcoded colors outside <Prefix>Colors.ts (theme or document under AGENTS.md ## Compliance carve-outs):"

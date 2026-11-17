@@ -279,6 +279,33 @@ setup() {
   assert_output --partial "hardcoded color carve-outs documented"
 }
 
+@test "comment color examples do not warn, including multiline and inline comments" {
+  cat >"$SIM/src/intro/view/IntroNode.ts" <<'EOF'
+/** Black or white on a CSS rgb()/hex fill.
+ * Examples: "#ffffff" and rgba(1, 2, 3, 1).
+ */
+const value = 1; // rgb(0, 0, 0)
+EOF
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "no hardcoded colors outside"
+}
+
+@test "real color following a comment still warns" {
+  echo '/* rgb() example */ const c = "rgb(1, 2, 3)";' >"$SIM/src/intro/view/IntroNode.ts"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "WARN: possible hardcoded colors"
+}
+
+@test "British spelling of hardcoded colours recognizes a documented carve-out" {
+  echo 'const c = "#ff0000";' >"$SIM/src/intro/view/IntroNode.ts"
+  printf '# AGENTS\n\n## Compliance carve-outs\n\n- **Hardcoded colours:** data palette.\n' >"$SIM/AGENTS.md"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "hardcoded color carve-outs documented"
+}
+
 @test "transparent rgba hit-area is not treated as a hardcoded color" {
   echo 'const hit = "rgba(0,0,0,0)";' >"$SIM/src/intro/view/IntroNode.ts"
   run_compliance "$SIM"
