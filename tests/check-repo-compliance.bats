@@ -600,6 +600,22 @@ EOF
   assert_output --partial "must equal the manifest theme_color"
 }
 
+@test "theme-color is read from sim.config.json when the template vite.config.ts is used" {
+  printf '{"themeColor": "#1a1a2e", "backgroundColor": "#000000"}\n' >"$SIM/sim.config.json"
+  sed -i 's|theme_color: "#1a1a2e"|theme_color: simConfig.themeColor|; s|background_color: "[^"]*"|background_color: simConfig.backgroundColor|' "$SIM/vite.config.ts"
+  strict_compliance "$SIM"
+  assert_success
+  assert_output --partial "theme-color matches manifest theme_color"
+}
+
+@test "sim.config.json themeColor disagreeing with index.html fails in strict mode" {
+  printf '{"themeColor": "#ffffff", "backgroundColor": "#000000"}\n' >"$SIM/sim.config.json"
+  sed -i 's|theme_color: "#1a1a2e"|theme_color: simConfig.themeColor|' "$SIM/vite.config.ts"
+  strict_compliance "$SIM"
+  assert_failure
+  assert_output --partial "must equal the manifest theme_color (#ffffff)"
+}
+
 @test "stale README Tech Stack version fails in strict mode" {
   sed -i 's|^- SceneryStack$|- Biome 1|' "$SIM/README.md"
   strict_compliance "$SIM"

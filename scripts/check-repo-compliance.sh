@@ -618,10 +618,17 @@ PY
   # index.html theme-color and the manifest agree; manifest has a background_color.
   if [ -f index.html ] && [ -f vite.config.ts ]; then
     html_theme="$(grep -oE 'name="theme-color"[^>]*content="#[0-9a-fA-F]{6}"' index.html | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]')"
-    manifest_theme="$(grep -oE 'theme_color:\s*"#[0-9a-fA-F]{6}"' vite.config.ts | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]')"
+    # Template vite.config.ts reads the colors from sim.config.json; a carved-out config inlines them.
+    if [ -f sim.config.json ]; then
+      manifest_theme="$(jq -r '.themeColor // empty' sim.config.json | tr '[:upper:]' '[:lower:]')"
+      has_background="$(jq -r '.backgroundColor // empty' sim.config.json)"
+    else
+      manifest_theme="$(grep -oE 'theme_color:\s*"#[0-9a-fA-F]{6}"' vite.config.ts | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]' || true)"
+      has_background="$(grep -oE 'background_color:\s*"' vite.config.ts || true)"
+    fi
     if [ -z "$manifest_theme" ] || [ "$html_theme" != "$manifest_theme" ]; then
       new_rule "index.html theme-color ($html_theme) must equal the manifest theme_color ($manifest_theme)"
-    elif ! grep -qE 'background_color:\s*"' vite.config.ts; then
+    elif [ -z "$has_background" ]; then
       new_rule "PWA manifest is missing background_color"
     else
       pass "theme-color matches manifest theme_color"
