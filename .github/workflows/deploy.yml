@@ -11,6 +11,12 @@ on:
       dist-path:
         type: string
         default: "dist"
+      deploy-private:
+        # Private repos can't publish Pages on the org's plan, so the deploy is skipped
+        # for them by default instead of failing. Set true only if the plan allows
+        # Pages from private repos.
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -18,7 +24,20 @@ permissions:
   id-token: write
 
 jobs:
+  # Leaves a visible notice instead of a red run when a private repo skips the deploy.
+  skip-private:
+    if: ${{ github.event.repository.private && !inputs.deploy-private }}
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Explain skipped deploy
+        run: |
+          msg="Repository is private; skipping the GitHub Pages deploy. Make it public (or pass deploy-private: true) to publish."
+          echo "::notice title=Pages deploy skipped::$msg"
+          echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+
   deploy:
+    if: ${{ !github.event.repository.private || inputs.deploy-private }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

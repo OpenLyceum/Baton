@@ -126,6 +126,10 @@ jobs:
       id-token: write
 ```
 
+Private repos skip the deploy (with a run notice) instead of failing, since the org plan can't
+serve Pages from them; the job runs again automatically once the repo is made public. Pass
+`with: { deploy-private: true }` only if the plan ever allows private Pages.
+
 The deploy also publishes the sim's `build:single` output (one self-contained, minified HTML
 file for opening from disk or uploading to an LMS) at `<Pages URL>/<Repo>-single.html`, e.g.
 `https://openlyceum.github.io/TitrationLab/TitrationLab-single.html`. Repos without a
