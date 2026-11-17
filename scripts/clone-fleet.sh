@@ -104,7 +104,14 @@ is_skipped() {
 WORKSPACE="$(repos_workspace_root)"
 total=0 cloned=0 updated=0 present=0 failed=0
 
-for repo in $(repos_names); do
+# Resolve the full selection before touching any checkout. A command
+# substitution inside a for loop does not propagate a failed catalog query.
+if ! names="$(repos_names)"; then
+  echo "Could not read repository list from $(repos_catalog_path)." >&2
+  exit 1
+fi
+
+while IFS= read -r repo && [[ -n "$repo" ]]; do
   if is_skipped "$repo"; then
     echo "==== $repo (skipped) ===="
     continue
@@ -140,7 +147,7 @@ for repo in $(repos_names); do
   else
     echo "  clone failed: $url"; failed=$((failed + 1))
   fi
-done
+done <<< "$names"
 
 echo "----"
 echo "Summary: $total repo(s) — $cloned cloned, $updated updated, $present present, $failed failed."
