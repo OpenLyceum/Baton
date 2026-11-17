@@ -25,9 +25,24 @@ tests/
   **/*.test.ts             Vitest unit tests, mirroring the source tree under tests/
   fuzz/fuzz.spec.ts        template-owned Playwright fuzz smoke (npm run test:fuzz)
   browser/*.spec.ts        sim-specific Playwright specs (engine, focus, screenshots)
-vitest.config.ts           environment: "happy-dom"; include: ["tests/**/*.test.ts"];
-                           setupFiles: ["./tests/setup.ts"]; execArgv: ["--expose-gc"]
+vitest.config.ts           template-owned: environment: "happy-dom"; include: ["tests/**/*.test.ts"];
+                           setupFiles: ["./tests/setup.ts"]; execArgv: ["--expose-gc"]; drift guards
 ```
+
+**Drift guards** (template-owned, fleet-wide):
+
+- `expect.requireAssertions`: a test with no `expect()` fails. A check that only calls
+  `expect.fail` inside an `if` asserts nothing when it passes. Assert the result instead,
+  e.g. `expect(leakedKeys, "not collected").toEqual([])`.
+- `sequence.shuffle` (files and tests): order-dependent tests surface. Seed shared randomness
+  (`dotRandom.setSeed(1)` in `beforeEach`) rather than relying on run order. Reproduce an order
+  with `npx vitest run --sequence.seed=<seed>`.
+- `restoreMocks` / `unstubGlobals` / `unstubEnvs`: spies and stubs end with their test.
+- `retry: 0`: fix flaky tests; never add retries.
+- `tests/setup.ts` fails a test that writes `console.error` / `console.warn`. When the warning
+  is the behaviour under test, spy and assert it:
+  `const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);` then
+  `expect(warn).toHaveBeenCalledWith(...)`. (`() => {}` fails Biome's empty-block rule.)
 
 Tests live **only** under root `tests/`. Never co-locate them next to source or use
 `__tests__/`; the compliance gate fails both. Mirror the source path: a test for
@@ -209,6 +224,7 @@ keep them out of the default `npm test` path and document skip conditions in the
 - A browser spec under `tests/fuzz/` → it runs inside every `test:fuzz` and Fleet Health smoke.
 - Editing `tests/setup.ts` or `tests/helpers/memoryLeak.ts` in one sim → template drift; change the template.
 - Assuming WebGPU works in Playwright without the launch flags above → adapter is `null`.
+- A diagnostic `console.warn` that fires on normal input (e.g. "found fewer states than requested" when the request is only a ceiling) → every test touching it fails the console guard; fix the condition, don't silence it.
 
 Related skills: scenerystack-model, scenerystack-code-review, scenerystack-disposal,
 scenerystack-numerics.

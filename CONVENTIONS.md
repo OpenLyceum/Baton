@@ -167,14 +167,14 @@ public/screenshots/wide.png  narrow.png   ← 1280×720 and 720×1280; placehold
 | Piece | Standard |
 |---|---|
 | `package.json` | `vite-plugin-pwa ^2`, `sharp` + `png-to-ico`, the shared keyword set above, `icons` script runs `node scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
-| `vite.config.ts` | `registerType: "autoUpdate"`; `includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"]`; manifest `id` (= `package.json` `name`), `categories: ["education", "science"]`, `display: "standalone"`, `display_override: ["window-controls-overlay", "standalone"]`, **no** `orientation`; PNG 192/512 + SVG `purpose: "maskable"`; `screenshots` wide + narrow; Workbox `maximumFileSizeToCacheInBytes` + `globPatterns` including `js,css,html,svg,png,woff2` |
+| `vite.config.ts` | Template-owned (drift-checked; never edit per sim). Per-sim values live in `sim.config.json` (`title`, `shortName`, `themeColor`, `backgroundColor`, `allowPermissions`, `connectSrc`, `precacheExtensions`), validated strictly at build time. The build fails on bundler warnings from project code. Fixed content: `registerType: "autoUpdate"`; `includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"]`; manifest `id` (= `package.json` `name`), `categories: ["education", "science"]`, `display: "standalone"`, `display_override: ["window-controls-overlay", "standalone"]`, **no** `orientation`; PNG 192/512 + SVG `purpose: "maskable"`; `screenshots` wide + narrow; Workbox `maximumFileSizeToCacheInBytes` + `globPatterns` including `js,css,html,svg,png,woff2` |
 | `index.html` | `mobile-web-app-capable`, `apple-mobile-web-app-capable`, `theme-color` (must match `theme_color`), `description`, Open Graph + Twitter meta (`og:image` / `twitter:image` → `./icons/icon-512.png`), favicon + SVG icon + apple-touch-icon |
 | Single-file mode | `vite build --mode single` skips `VitePWA` (inlines into one HTML file). Omit this only when the bundle cannot be self-contained (document in `AGENTS.md`) |
 
-`theme_color` / icon art may be sim-specific. `background_color` is `#000000` unless the play area is light (document it). Extra Workbox `globPatterns` (audio) or `globIgnores` / `runtimeCaching` (large WASM) are allowed when documented.
+`theme_color` / icon art may be sim-specific (`themeColor` in `sim.config.json`). `background_color` is `#000000` unless the play area is light (document it). Extra precache extensions (audio) go in `precacheExtensions`; `globIgnores` / `runtimeCaching` (large WASM) need a `vite.config.ts` carve-out.
 
 **Documented-as-allowed variations** (not violations — note each in the sim's `AGENTS.md`):
-sim-specific `vite.config.ts` plugins (e.g. TrackLab's OpenCV/video serving), `biome.json` /
+sim-specific `vite.config.ts` plugins (e.g. TrackLab's OpenCV/video serving; a carve-out of the template-owned file), `biome.json` /
 `.gitignore` additions for vendored binaries or local references, extra `package.json` scripts
 (`release` / `serve` / `watch` / domain checks), PWA extras listed above, and the a11y traversal choice (`pdomOrder`
 wrapper-Node *or* `pdomPlayAreaNode`/`pdomControlAreaNode`, per

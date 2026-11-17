@@ -16,6 +16,7 @@
     ".claude/settings.json",
     "SECURITY.md",
     "tsconfig.scripts.json",
+    "vite.config.ts",
     "vitest.config.ts",
     "playwright.config.ts",
     "scripts/generate-icons.ts",

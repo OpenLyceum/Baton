@@ -689,7 +689,7 @@ PY
     case "$entry" in
       .git|.github|.githooks|.claude|.gitignore|.gitattributes|node_modules|dist|src|tests|doc|public|scripts|assets) ;;
       AGENTS.md|README.md|CREDITS.md|SECURITY.md|package.json|package-lock.json|index.html|biome.json|biome-plugins) ;;
-      tsconfig.json|tsconfig.test.json|tsconfig.scripts.json|vite.config.ts|vitest.config.ts|playwright.config.ts) ;;
+      tsconfig.json|tsconfig.test.json|tsconfig.scripts.json|vite.config.ts|sim.config.json|vitest.config.ts|playwright.config.ts) ;;
       .dependency-cruiser.cjs|.dependency-cruiser.local.cjs|knip.json) ;;
       playwright-report|test-results|coverage|.vite|.cache) ;;
       *) carved_out "$entry" || carved_out "$entry/" || stray_root="$stray_root $entry" ;;
