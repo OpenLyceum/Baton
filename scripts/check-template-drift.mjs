@@ -5,7 +5,8 @@
  * Compares SceneryStack sims against SceneryStackTemplate using
  * config/template-manifest.json: template-owned files that must be identical
  * (after substituting the sim's package/repo name), files a sim may only extend,
- * required package.json scripts/dependencies (exact versions; shared script order, alphabetical dependencies), template-only and forbidden files,
+ * required package.json scripts/dependencies, resolved versions of shared direct dependencies,
+ * template-only and forbidden files,
  * and docs that must not be verbatim template copies.
  *
  * A sim approves a deviation with an explicit bullet under its AGENTS.md
@@ -139,6 +140,32 @@ function git(simDir, ...a) {
 
 // ── checks ────────────────────────────────────────────────────────────────────
 const templatePkg = JSON.parse(readFileSync(join(templateDir, "package.json"), "utf8"));
+const lockfile = "package-lock.json";
+const matchLockVersions = manifest.packageJson.matchDirectDependencyLockVersions;
+
+function readLockedPackages(dir) {
+  const raw = readText(join(dir, lockfile));
+  if (raw === null) throw new Error(`${lockfile} is missing`);
+  const { packages } = JSON.parse(raw);
+  if (!packages?.[""]) throw new Error(`${lockfile} has no root package entry`);
+  return packages;
+}
+
+const sharedLockVersions = new Map();
+if (matchLockVersions) {
+  try {
+    const packages = readLockedPackages(templateDir);
+    const dependencies = { ...templatePkg.dependencies, ...templatePkg.devDependencies };
+    for (const name of Object.keys(dependencies)) {
+      const version = packages[`node_modules/${name}`]?.version;
+      if (!version) throw new Error(`${lockfile} is missing a resolved version for ${name}`);
+      sharedLockVersions.set(name, version);
+    }
+  } catch (error) {
+    console.error(`Cannot read template dependency versions: ${error.message}`);
+    process.exit(2);
+  }
+}
 
 function checkSim(repoName) {
   const simDir = simDirOverride ?? join(workspace, repoName);
@@ -308,6 +335,20 @@ function checkSim(repoName) {
     if (applyOrder("overrides", cur, ordered)) pkg.overrides = ordered;
   }
   if (pkgChanged) writeFileSync(join(simDir, "package.json"), `${JSON.stringify(pkg, null, 2)}\n`);
+
+  if (matchLockVersions) {
+    try {
+      const packages = readLockedPackages(simDir);
+      for (const [name, expected] of sharedLockVersions) {
+        const version = packages[`node_modules/${name}`]?.version;
+        if (version !== expected) {
+          add("lockfile", name, `${lockfile} resolves ${version ?? "no version"} (template: ${expected})`);
+        }
+      }
+    } catch (error) {
+      add("lockfile", lockfile, error.message);
+    }
+  }
 
   // template-only and forbidden files
   for (const rel of [...(isTemplate ? [] : manifest.templateOnly.files), ...manifest.forbidden]) {

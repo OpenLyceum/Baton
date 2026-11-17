@@ -1,4 +1,4 @@
-"""Template drift: Knip starter entries and exact-file name normalization."""
+"""Template drift for Knip starter entries, exact files, and locked dependencies."""
 import json
 import os
 from pathlib import Path
@@ -39,11 +39,11 @@ class KnipTemplateDriftTests(unittest.TestCase):
     def write_config(self, directory, config):
         (directory / "knip.json").write_text(json.dumps(config))
 
-    def check(self, directory=None, name="Example"):
+    def check(self, directory=None, name="Example", flags=()):
         result = subprocess.run([
             "node", str(BATON / "scripts/check-template-drift.mjs"),
             "--dir", str(directory or self.sim), "--name", name,
-            "--template", str(self.template), "--json",
+            "--template", str(self.template), "--json", *flags,
         ], env=dict(os.environ, TEMPLATE_MANIFEST=str(self.manifest)), capture_output=True, text=True, check=False)
         return result.returncode, json.loads(result.stdout)[0]["issues"]
 
@@ -96,3 +96,45 @@ class KnipTemplateDriftTests(unittest.TestCase):
         code, issues = self.check()
         self.assertEqual(code, 1)
         self.assertEqual(issues[0]["path"], "vite.config.ts")
+
+    def prepare_lockfiles(self, sim_version):
+        manifest = json.loads(self.manifest.read_text())
+        manifest["packageJson"]["matchDirectDependencyLockVersions"] = True
+        self.manifest.write_text(json.dumps(manifest))
+        self.write_config(self.sim, {"project": ["src/**/*.ts!"], "entry": []})
+        for directory, name, version in [
+            (self.template, "scenerystack-template", "8.3.8"),
+            (self.sim, "example", sim_version),
+        ]:
+            pkg = {"name": name, "scripts": {}, "devDependencies": {"vite": "^8.3.8"}}
+            (directory / "package.json").write_text(json.dumps(pkg))
+            packages = {"": pkg, "node_modules/vite": {"version": version}}
+            if directory == self.sim:
+                packages["node_modules/extra"] = {"version": "1.0.0"}
+            (directory / "package-lock.json").write_text(json.dumps({"packages": packages}))
+
+    def test_matching_shared_versions_allow_extra_lock_entries(self):
+        self.prepare_lockfiles("8.3.8")
+        self.assertEqual(self.check(), (0, []))
+
+    def test_matching_ranges_do_not_hide_version_drift_even_with_fix(self):
+        self.prepare_lockfiles("8.3.9")
+        lockfile = self.sim / "package-lock.json"
+        original = lockfile.read_text()
+        code, issues = self.check(flags=("--fix",))
+        self.assertEqual(code, 1)
+        self.assertEqual([(issue["kind"], issue["path"]) for issue in issues], [("lockfile", "vite")])
+        self.assertIn("8.3.9 (template: 8.3.8)", issues[0]["detail"])
+        self.assertEqual(lockfile.read_text(), original)
+
+    def test_explicit_dependency_carve_out_allows_locked_version(self):
+        self.prepare_lockfiles("8.3.9")
+        (self.sim / "AGENTS.md").write_text("## Compliance carve-outs\n\n- `vite`: requires 8.3.9.\n")
+        self.assertEqual(self.check(), (0, []))
+
+    def test_missing_sim_lockfile_is_reported(self):
+        self.prepare_lockfiles("8.3.8")
+        (self.sim / "package-lock.json").unlink()
+        code, issues = self.check()
+        self.assertEqual(code, 1)
+        self.assertEqual(issues[0]["path"], "package-lock.json")

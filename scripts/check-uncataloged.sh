@@ -18,6 +18,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 CATALOG="${FLEET_CATALOG:-${OPENPHYSICS_CATALOG:-$REPO_ROOT/structure/repos.json}}"
 ALLOWLIST_FILE="${UNCATALOGED_ALLOWLIST_FILE:-$REPO_ROOT/structure/uncataloged-allowlist.txt}"
+PRIVATE_SIM_ALLOWLIST_FILE="$REPO_ROOT/structure/private-sim-allowlist.txt"
 
 command -v gh >/dev/null 2>&1 || { echo "gh CLI is required" >&2; exit 1; }
 command -v jq >/dev/null 2>&1 || { echo "jq is required" >&2; exit 1; }
@@ -50,6 +51,17 @@ org_names="$(printf '%s\n' "$org_json" | jq -r '.[].name' | sort -u)"
 listed_private="$(printf '%s\n' "$org_json" | jq '[.[] | select(.isPrivate)] | length')"
 # shellcheck disable=SC2086  # intentional word-split: allow is whitespace-separated names
 allow_names="$(printf '%s\n' $allow | grep -v '^[[:space:]]*$' | sort -u)"
+if [[ -f "$PRIVATE_SIM_ALLOWLIST_FILE" ]]; then
+  # An exemption on this list applies only while the simulation is private.
+  private_sim_names="$(awk 'NF && $1 !~ /^#/ { print $1 }' "$PRIVATE_SIM_ALLOWLIST_FILE" | sort -u)"
+  private_org_names="$(jq -r '.[] | select(.isPrivate) | .name' <<< "$org_json" | sort -u)"
+  allow_names="$(
+    {
+      printf '%s\n' "$allow_names"
+      comm -12 <(printf '%s\n' "$private_sim_names") <(printf '%s\n' "$private_org_names")
+    } | sort -u
+  )"
+fi
 
 # Org metadata reports how many private repos exist; a short private listing means
 # the token cannot see them (typical for GITHUB_TOKEN). Fail rather than report clean.

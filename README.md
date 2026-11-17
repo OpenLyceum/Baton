@@ -23,7 +23,7 @@ Pages simulation landing page.
 | [`.github/workflows/optimize-assets.yml`](.github/workflows/optimize-assets.yml) | Regenerate WebP card thumbnails from screenshots and commit them back |
 | [`.github/workflows/refresh-screenshots.yml`](.github/workflows/refresh-screenshots.yml) | Weekly/manual refresh of card screenshots from live Pages → WebP thumbnails + `docs/index.html` (opens a PR) |
 | [`.github/workflows/fleet-exec.yml`](.github/workflows/fleet-exec.yml) | Fan a command across many repos and open one PR each (manual dispatch) |
-| [`.github/workflows/fleet-health.yml`](.github/workflows/fleet-health.yml) | Weekly lint / type-check / build / test of every `active` simulation, reported as a table |
+| [`.github/workflows/fleet-health.yml`](.github/workflows/fleet-health.yml) | Weekly lint, type checks, architecture checks, Knip, build, unit tests, and fuzz for every `active` simulation |
 | [`.github/workflows/gitlab-mirror.yml`](.github/workflows/gitlab-mirror.yml) | Daily push of every repo's git history to the GitLab backup group |
 | [`.github/workflows/sync-dependabot.yml`](.github/workflows/sync-dependabot.yml) | Validate the Dependabot templates |
 | [`.github/workflows/baton-selfcheck.yml`](.github/workflows/baton-selfcheck.yml) | Validate Baton's own invariants (skills, catalog schema, Node-version sync, script syntax) and lint workflows with actionlint |
@@ -224,11 +224,16 @@ Cross-repo automation, all driven from the catalog:
   Baton only. Setup steps (fine-grained PAT or GitHub App): [`doc/fleet-auth.md`](doc/fleet-auth.md).
 - **Health report** — [`fleet-health.yml`](.github/workflows/fleet-health.yml) runs weekly,
   fanning out one matrix job per active simulation (npm download cache reused across runs) to run
-  lint, type-check, build, and test, then publishing a pass/fail table to the job summary.
+  lint, type checks, architecture checks, both Knip modes, build, unit tests, and quick browser
+  fuzz, then publishing a pass/fail table to the job summary.
   Read-only; surfaces sims broken by a shared-workflow or dependency change.
 - **Compliance audit** — [`shared-compliance-check.yml`](.github/workflows/shared-compliance-check.yml)
-  audits README structure and CI wiring across the org. The dispatch/schedule run fans out one
-  matrix job per sim and aggregates a single pass/fail table (see above).
+  audits README structure, CI wiring, and template drift across the org, including resolved
+  lockfile versions of shared direct dependencies. The drift checker reports lockfile differences
+  for review. Use npm to align the affected entries. The fleet audit reports the results in one table.
+- **Private simulations** — [`structure/private-sim-allowlist.txt`](structure/private-sim-allowlist.txt)
+  records intentional catalog exclusions. The uncataloged-repo check honors these entries only
+  while GitHub reports the repositories as private.
 - **Everyday git fan-out** — [`doc/fleet-git.md`](doc/fleet-git.md) is a cheat sheet for running
   git across your local checkouts (`pull all`, `push all`, `status all`), built on
   `parse-repos.sh paths`. Use it for ad-hoc local work; use `fleet-exec.sh` to land the same
