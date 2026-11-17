@@ -1,7 +1,8 @@
 name: Security audit
 description: >
-  Run `npm audit` and write a summary. Fails only on high/critical vulnerabilities in
-  DIRECT dependencies; transitive-only highs/criticals are reported as a non-blocking
+  Run `npm audit` and write a summary. Fails only on high/critical advisories filed
+  against a DIRECT dependency itself; transitive-only highs/criticals (including a
+  direct dep flagged solely through its own deps) are reported as a non-blocking
   warning so one upstream advisory does not red-wall every sim at once.
 
 inputs:
@@ -45,6 +46,12 @@ runs:
         // advisory against a dep pulled in by vite) are reported as a
         // non-blocking warning so a single ecosystem advisory does not red-wall
         // every sim at once. Resolve them via the offending dep's update.
+        //
+        // npm sets `isDirect` on a direct dependency even when it is only
+        // vulnerable *through* its own dependencies (e.g. vite flagged solely
+        // because it pulls in picomatch). Such entries carry only package-name
+        // strings in `via`; an advisory against the package itself appears as
+        // an object. Block only when a direct dep has its own advisory.
         const vulns = audit.vulnerabilities ?? {};
         const direct = [];
         const transitive = [];
@@ -52,7 +59,8 @@ runs:
           if ( info.severity !== 'high' && info.severity !== 'critical' ) {
             continue;
           }
-          ( info.isDirect ? direct : transitive ).push( `${name} (${info.severity})` );
+          const ownAdvisory = ( info.via ?? [] ).some( v => typeof v === 'object' && v !== null );
+          ( info.isDirect && ownAdvisory ? direct : transitive ).push( `${name} (${info.severity})` );
         }
 
         if ( transitive.length > 0 ) {
