@@ -677,6 +677,75 @@ EOF
   refute_output --partial "root entries outside the template layout"
 }
 
+# ── Repo path resolution ──────────────────────────────────────────────────────
+
+@test "REPO_DIR=. resolves to the fixture basename for GitHub queries" {
+  # Guards against basename "." → GraphQL/API queries for org/. when the caller
+  # passes the current directory as a relative path.
+  export GH_ARGS_LOG="$BATS_TEST_TMPDIR/gh-args.log"
+  : >"$GH_ARGS_LOG"
+  cat >"$STUB_BIN/gh" <<'STUB'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >>"${GH_ARGS_LOG:?}"
+case "$1" in
+  auth) exit 0 ;;
+  api)
+    if [[ "$2" == "graphql" ]]; then
+      name=""
+      for arg in "$@"; do
+        case "$arg" in
+          n=*) name="${arg#n=}" ;;
+        esac
+      done
+      if [[ "$name" == "." || -z "$name" ]]; then
+        echo "bad repo name: ${name:-empty}" >&2
+        exit 1
+      fi
+      # Emulate --jq '.data.repository.hasVulnerabilityAlertsEnabled'
+      echo "true"
+      exit 0
+    fi
+    if [[ "$2" == repos/* ]]; then
+      repo="${2#repos/*/}"
+      if [[ "$repo" == "." ]]; then
+        echo "bad repo path: $2" >&2
+        exit 1
+      fi
+      jq_expr=""
+      prev=""
+      for arg in "$@"; do
+        if [[ "$prev" == "--jq" ]]; then
+          jq_expr="$arg"
+        fi
+        prev="$arg"
+      done
+      case "$jq_expr" in
+        *private*) echo "false" ;;
+        *security_and_analysis*)
+          echo '{"dependabot_security_updates":{"status":"enabled"},"secret_scanning":{"status":"enabled"}}'
+          ;;
+        *) echo "{}" ;;
+      esac
+      exit 0
+    fi
+    exit 1
+    ;;
+  *) exit 1 ;;
+esac
+STUB
+  chmod +x "$STUB_BIN/gh"
+  cd "$SIM"
+  run env PATH="$STUB_BIN:$PATH" GH_ARGS_LOG="$GH_ARGS_LOG" \
+    "$BATON_ROOT/scripts/check-repo-compliance.sh" .
+  assert_success
+  assert_output --partial "Dependabot vulnerability alerts enabled"
+  assert_output --partial "Dependabot security updates enabled"
+  assert_output --partial "secret scanning enabled"
+  refute_output --partial "Could not verify GitHub vulnerability alerts"
+  ! grep -E '(^| )n=\.' "$GH_ARGS_LOG"
+  ! grep -E 'repos/.*/\.' "$GH_ARGS_LOG"
+}
+
 # ── Non-simulation repos ──────────────────────────────────────────────────────
 
 @test "npm repo without src/main.ts skips the simulation structure rules" {

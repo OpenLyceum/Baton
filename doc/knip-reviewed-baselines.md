@@ -13,7 +13,7 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 
 ## Required (`unused-mode: required`)
 
-51 checkouts (50 simulations + SceneryStackTemplate), as of 2026-11-17 local CI callers:
+62 checkouts (61 simulations + SceneryStackTemplate), as of 2026-11-17 local CI callers:
 
 - ACPhasor
 - BackwardAcceleration
@@ -61,39 +61,40 @@ document that deviation under `## Compliance carve-outs` in its `AGENTS.md`.
 - OscillationsAndChaos
 - Oscilloscope
 - PeriodicTrends
+- PlanetaryConfigurations
+- QuantumScattering
 - QubitSketch
 - RadioactivityAndStatistics
 - RadioWaves
+- RotatingSky
 - SceneryStackTemplate
+- SimplifiedMRI
+- SolarSystemModels
+- StandingWaves
+- StellarWobble
+- SternGerlach
+- TheRamp
+- TrackLab
+- VariableStarPhotometry
 - WaveComposer
 
 ## Advisory (`unused-mode: advisory`)
 
-24 simulations still on advisory CI. Each must keep an AGENTS carve-out naming
+14 simulations still on advisory CI. Each must keep an AGENTS carve-out naming
 `.github/workflows/ci.yml` and the pending Knip review:
 
 - ParticleZoo
 - PhotonInteractions
-- PlanetaryConfigurations
 - PlateTectonics
 - Precession
 - QuantumAtom3D
 - QuantumPotential
 - RelativisticDynamics
 - Resonance
-- RotatingSky
-- SimplifiedMRI
-- SolarSystemModels
 - SpecialRelativity
 - SpectroscopyLab
-- StandingWaves
-- StellarWobble
-- SternGerlach
-- TheRamp
 - TitrationLab
-- TrackLab
 - TransitHunter
-- VariableStarPhotometry
 - VernierScales
 - Zenith
 
@@ -145,3 +146,18 @@ Validation logs: `/tmp/OpticsLab-followup-validation.log`,
 `/tmp/RadioWaves-followup-validation.log`. Tooling reruns are in the matching
 `/tmp/<Repo>-followup-tooling-tests.log` files; the two Knip reports are in
 `/tmp/<Repo>-knip-followup.log`.
+
+## 2026-11-17 promotions: TrackLab and nine ≤3-finding advisories
+
+Both default and production Knip 6.45.1 reports are empty with exit code 0 under
+Node v26.13.0 for these ten working checkouts (no source cleanup needed — findings
+from the 2026-11-15 inventory were already cleared):
+
+- TrackLab (was clean/clean in the inventory)
+- TheRamp, VariableStarPhotometry, SolarSystemModels
+- SternGerlach, PlanetaryConfigurations
+- StandingWaves, StellarWobble, SimplifiedMRI, RotatingSky
+
+Each CI caller now uses `unused-mode: required`, and the obsolete advisory carve-out
+bullet was removed from `AGENTS.md` (the whole Compliance section was dropped when it
+would have been empty). Hosted CI was not re-checked for these uncommitted promotions.
