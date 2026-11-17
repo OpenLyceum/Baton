@@ -316,7 +316,9 @@ Lists repos under the GitHub org that are missing from `structure/repos.json`, s
 forgotten onboarding can't stay hidden. Intentional non-members (the superproject itself,
 the textbook bundle) are kept in an in-script allowlist, extendable via `UNCATALOGED_ALLOWLIST`
 or `structure/uncataloged-allowlist.txt`. Requires `gh` (authed) and `jq`; exits 1 if any
-uncataloged repo is found.
+uncataloged repo is found. Also exits 1 when the token's private-repo listing is shorter
+than the org's `total_private_repos` (the default `GITHUB_TOKEN` is public-only — use
+`FLEET_PAT` in CI, as `baton-selfcheck` does).
 
 ## generate-screenshots.sh
 

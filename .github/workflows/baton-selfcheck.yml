@@ -83,9 +83,11 @@ jobs:
       - name: Detect uncataloged repos
         # Compare the live GitHub org against structure/repos.json so a repo that
         # was created on GitHub but never onboarded can't stay invisible to the
-        # fleet tooling. Read-only; the default token can list public org repos.
+        # fleet tooling. Prefer FLEET_PAT: github.token cannot list private org
+        # repos, which would hide uncataloged private sims. The script also fails
+        # when listed private count < org total_private_repos (incomplete view).
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.FLEET_PAT || github.token }}
         run: scripts/check-uncataloged.sh
 
       - name: Lint shell scripts (syntax)

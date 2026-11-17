@@ -43,9 +43,22 @@ if [[ -f "$ALLOWLIST_FILE" ]]; then
 fi
 
 catalog_names="$(jq -r '.repos[].name' "$CATALOG" | sort -u)"
-org_names="$(gh repo list "$ORG" --limit 200 --json name -q '.[].name' | sort -u)"
+# Include visibility so we can detect a public-only token (github.token in Actions
+# cannot list private org repos, which would hide uncataloged private sims).
+org_json="$(gh repo list "$ORG" --limit 200 --json name,isPrivate)"
+org_names="$(printf '%s\n' "$org_json" | jq -r '.[].name' | sort -u)"
+listed_private="$(printf '%s\n' "$org_json" | jq '[.[] | select(.isPrivate)] | length')"
 # shellcheck disable=SC2086  # intentional word-split: allow is whitespace-separated names
 allow_names="$(printf '%s\n' $allow | grep -v '^[[:space:]]*$' | sort -u)"
+
+# Org metadata reports how many private repos exist; a short private listing means
+# the token cannot see them (typical for GITHUB_TOKEN). Fail rather than report clean.
+org_private_total="$(gh api "orgs/$ORG" --jq '.total_private_repos // 0' 2>/dev/null || echo 0)"
+if [[ "$org_private_total" =~ ^[0-9]+$ ]] && (( listed_private < org_private_total )); then
+  echo "Incomplete GitHub listing for $ORG: saw $listed_private private repo(s), org reports $org_private_total." >&2
+  echo "Use a token that can list private org repos (e.g. FLEET_PAT), not a public-only GITHUB_TOKEN." >&2
+  exit 1
+fi
 
 # uncataloged = (org − catalog) − allow
 uncataloged="$(

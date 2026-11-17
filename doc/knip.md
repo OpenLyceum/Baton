@@ -6,11 +6,11 @@ Run it inside the member repo after `npm ci`, using the fleet's Node 26 runtime.
 It reports unused files, exports, types, dependencies, and circular dependencies across
 the project. TypeScript and Biome remain responsible for their existing checks.
 
-Knip runs in a separate CI job, **required after baseline review** and advisory
-while adoption or cleanup is still in progress. Both default and
-production reports, stderr, and exit codes are uploaded as the `knip-reports`
-artifact. Advisory findings do not block unrelated build/test checks. Knip is not part of release
-scripts or git hooks.
+Knip runs in a separate CI job with `unused-mode: required` for every SceneryStack
+simulation and SceneryStackTemplate (see [`knip-reviewed-baselines.md`](knip-reviewed-baselines.md)).
+Both default and production reports, stderr, and exit codes are uploaded as the
+`knip-reports` artifact. The reusable workflow still accepts `advisory` for exceptional
+carve-outs, but none are in use. Knip is not part of release scripts or git hooks.
 
 ```bash
 npm run knip
@@ -156,14 +156,14 @@ inventory. Its dry-run executes the command but only previews the commit/push/PR
 stage. Use the inventory script to retain reports from installed local checkouts.
 
 The reusable CI input `unused-mode` accepts `off` (default for other callers),
-`advisory`, or `required`. The template uses `required`; existing sims are promoted
-individually after baseline review. The job runs separately from the existing build job.
-After reviewing both reports and
-running lint, type checks, tests, architecture checks, and build, set the sim's
-caller to `unused-mode: required`. A sim still using `advisory` documents its
-remaining adoption work in AGENTS compliance carve-outs. Required mode fails CI if either run fails;
-repository branch protection must require the job if merge enforcement is desired.
-Do not promote a sim merely because its normal-mode report is empty.
+`advisory`, or `required`. Every SceneryStack simulation and SceneryStackTemplate
+already uses `required`. The job runs separately from the existing build job.
+New sims should ship with `unused-mode: required` after both Knip modes, lint, type
+checks, tests, architecture checks, and build are green. A temporary `advisory`
+caller must document remaining adoption work under AGENTS compliance carve-outs.
+Required mode fails CI if either run fails; repository branch protection must
+require the job if merge enforcement is desired. Do not promote a sim merely because
+its normal-mode report is empty.
 
 The initial rollout and reviewed pilot are recorded in
 [`knip-rollout.md`](knip-rollout.md); current validation and promotion decisions are in
