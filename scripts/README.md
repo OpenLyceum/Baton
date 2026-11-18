@@ -31,7 +31,7 @@ the monorepo checkout.
 | [`sync-claude-settings.sh`](sync-claude-settings.sh) | Roll the `scenerystack` Claude Code plugin out to sim repos' `.claude/settings.json` |
 | [`lib/repos.sh`](lib/repos.sh) | Bash helper functions for other scripts |
 | [`check-repo-compliance.sh`](check-repo-compliance.sh) | README/CI/structure compliance (bootstrap, i18n, memory-leak suite, KeyboardHelp, githooks, PWA, …) |
-| [`check-memory-leak-coverage.sh`](check-memory-leak-coverage.sh) | Inventory `dispose()` overrides vs `tests/memory-leak.test.ts` (`<Sim>` or `--all`); compliance reports gaps as WARN |
+| [`check-memory-leak-coverage.sh`](check-memory-leak-coverage.sh) | Inventory `dispose()` overrides vs `tests/memory-leak.test.ts` (`<Sim>` or `--all`); compliance reports gaps and orphaned `memory-leak:` carve-outs as WARN. Parser: [`check-memory-leak-inventory.mjs`](check-memory-leak-inventory.mjs) (class bodies + suite bindings; `--json`) |
 | [`check-template-drift.sh`](check-template-drift.sh) | Content drift of template-owned files / scripts / deps vs SceneryStackTemplate (`--all`, `--fix`); wraps [`check-template-drift.mjs`](check-template-drift.mjs), which reads `config/template-manifest.json` and honours AGENTS.md "Compliance carve-outs" |
 | [`check-skill-conformance.mjs`](check-skill-conformance.mjs) | Grep-level probes distilled from `skills/*/SKILL.md` (`<Sim>`, `--all`, `--summary`); `fail` probes are required in sim CI, `warn` probes are reported; approve with a `` `skill:<probe>` `` carve-out |
 | [`list-carve-outs.mjs`](list-carve-outs.mjs) | Inventory of AGENTS.md `## Compliance carve-outs` bullets per sim (total / temporary / missing reason); the weekly compliance table shows each count |

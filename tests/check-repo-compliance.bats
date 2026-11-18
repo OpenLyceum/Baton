@@ -601,6 +601,25 @@ strict_compliance() {
   assert_output --partial "must use tests/helpers/memoryLeak.ts"
 }
 
+@test "memory-leak inventory ignores a class named only in an import path" {
+  # StandingWaves: importing EquationReadoutNode from PhaseControlPanel.js does not cover PhaseControlPanel.
+  printf 'export class OwnerPanel { public dispose(): void {} }\nexport class ReadoutNode { public dispose(): void {} }\n' \
+    >"$SIM/src/intro/model/OwnerPanel.ts"
+  printf 'import { ReadoutNode } from "../src/intro/model/OwnerPanel.js";\nnew ReadoutNode().dispose();\n' \
+    >>"$SIM/tests/memory-leak.test.ts"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "WARN: memory-leak inventory gap: OwnerPanel —"
+}
+
+@test "orphaned memory-leak carve-out warns" {
+  printf '\n## Compliance carve-outs\n\n- `memory-leak:FixtureModel` — stale.\n' >>"$SIM/AGENTS.md"
+  run_compliance "$SIM"
+  assert_success
+  assert_output --partial "OK: memory-leak inventory: all dispose() overrides listed"
+  assert_output --partial "WARN: orphaned memory-leak carve-outs (no longer flagged by the inventory): FixtureModel"
+}
+
 @test "index.html description disagreeing with package.json fails in strict mode" {
   sed -i 's|content="Fixture sim."|content="Something else."|' "$SIM/index.html"
   strict_compliance "$SIM"

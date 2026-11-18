@@ -133,10 +133,13 @@ tsconfig.test.json          extends tsconfig.json; include: ["tests", "src/**/*.
   check; `keepAlive` holds long-lived Properties through the WeakRef check). Sim-specific
   scenarios follow in the same file using shared `forceGC()` / `expectNoListenerGrowth()` —
   never a private copy.   An empty case list requires `emptyOk` plus custom coverage (hollow suites **fail**).
-  Every `src/` class that defines `dispose()` (except `*ScreenView` / `*Screen` / `*Sim` /
-  `YourModel`) should be named in the suite or carved out as `` `memory-leak:<Class>` ``
-  under `## Compliance carve-outs` — compliance **WARNs** on gaps
-  (`Baton/scripts/check-memory-leak-coverage.sh`). Dynamic sims that add/remove nodes at
+  Every `src/` class that defines `dispose()` in its own body or inherits one from a parent
+  class in the same sim (except `*ScreenView` / `*Screen` / `*Sim` / `YourModel`) should be
+  used by the suite (value import, construction, case `name:`, or a
+  `// memory-leak-covers: A, B` / `// memory-leak-covers-subclasses: Base` comment for factory
+  probes) or carved out as `` `memory-leak:<Class>` `` under `## Compliance carve-outs` —
+  compliance **WARNs** on gaps and on orphaned carve-outs
+  (`Baton/scripts/check-memory-leak-coverage.sh`, parser in `check-memory-leak-inventory.mjs`). Dynamic sims that add/remove nodes at
   runtime should expand it like `OpticsLab`. Browser soak: `npm run test:soak` (not Fleet
   Health fuzz).
 

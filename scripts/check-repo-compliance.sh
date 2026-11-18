@@ -583,53 +583,28 @@ if set(names) <= trivial and not custom and len(names) <= 1:
 sys.exit(0)
 PY
 
-    # Inventory (advisory): classes in src/ that define dispose() should appear in the
-    # leak suite or be carved out as `memory-leak:<Class>`. ScreenViews / Sims /
-    # YourModel placeholders are skipped. Hard-fail is reserved for hollow suites;
-    # closing the inventory gap is a fleet sweep tracked by this WARN.
-    inv_out="$(python3 - <<'PY'
-import re, sys
-from pathlib import Path
-
-suite = Path("tests/memory-leak.test.ts").read_text()
-agents = Path("AGENTS.md").read_text() if Path("AGENTS.md").exists() else ""
-carved = set()
-for m in re.finditer(r"^## Compliance carve-outs?\s*$([\s\S]*?)(?=^## |\Z)", agents, re.M):
-    for bullet in re.split(r"\n(?=\s*[-*] )", m.group(1)):
-        lead = re.match(r"\s*[-*] +`([^`\n]+)`", bullet)
-        if lead and lead.group(1).startswith("memory-leak:"):
-            carved.add(lead.group(1).split(":", 1)[1].strip())
-
-missing = []
-class_re = re.compile(r"(?m)^\s*(?:export\s+)?(?:abstract\s+)?class\s+(\w+)\b")
-dispose_re = re.compile(
-    r"(?:public|protected|private)\s+(?:override\s+)?dispose\s*\([^;]*\)\s*(?::\s*[^{]+)?\s*\{"
-    r"|override\s+dispose\s*\([^;]*\)\s*(?::\s*[^{]+)?\s*\{"
-)
-for path in Path("src").rglob("*.ts"):
-    if path.name.endswith(".d.ts"):
-        continue
-    src = path.read_text()
-    for cm in class_re.finditer(src):
-        name = cm.group(1)
-        if name.endswith(("ScreenView", "Screen", "Sim")) or name == "YourModel":
-            continue
-        body = src[cm.end(): cm.end() + 12000]
-        if not dispose_re.search(body):
-            continue
-        if name in suite or name in carved:
-            continue
-        if re.search(rf'name:\s*["\'][^"\']*{re.escape(name)}[^"\']*["\']', suite):
-            continue
-        missing.append(name)
-
-if missing:
-    uniq = sorted(set(missing))
-    print(", ".join(uniq[:12]) + ("…" if len(uniq) > 12 else ""))
-    sys.exit(1)
-sys.exit(0)
-PY
-)" && pass "memory-leak inventory: all dispose() overrides listed" || warn "memory-leak inventory gap: $inv_out — list in describeDisposalLeaks or carve out as \`memory-leak:<Class>\`"
+    # Inventory (advisory): classes in src/ that define dispose() (own body, or inherited
+    # from a same-sim parent) must be used by the leak suite or carved out as
+    # `memory-leak:<Class>`. ScreenViews / Sims / YourModel placeholders are skipped.
+    # check-memory-leak-inventory.mjs parses class bodies and suite bindings (not text
+    # windows / substrings). Hard-fail is reserved for hollow suites; gaps and orphaned
+    # carve-outs are WARN.
+    if ! command -v node >/dev/null 2>&1; then
+      warn "memory-leak inventory skipped: node not available"
+    elif inv_json="$(node "$SCRIPT_DIR/check-memory-leak-inventory.mjs" --json "$REPO_DIR")" || [ -n "$inv_json" ]; then
+      inv_out="$(jq -r '.[0].missing | map(.name) | (.[:12] | join(", ")) + (if length > 12 then "…" else "" end)' <<<"$inv_json")"
+      inv_orphans="$(jq -r '.[0].orphaned // [] | join(", ")' <<<"$inv_json")"
+      if [ -z "$inv_out" ]; then
+        pass "memory-leak inventory: all dispose() overrides listed"
+      else
+        warn "memory-leak inventory gap: $inv_out — list in describeDisposalLeaks or carve out as \`memory-leak:<Class>\`"
+      fi
+      if [ -n "$inv_orphans" ]; then
+        warn "orphaned memory-leak carve-outs (no longer flagged by the inventory): $inv_orphans — delete the \`memory-leak:<Class>\` bullets"
+      fi
+    else
+      warn "memory-leak inventory could not run (check-memory-leak-inventory.mjs failed)"
+    fi
   fi
 
   # Browser memory soak (CONVENTIONS.md §5): template-owned Playwright soak, not fuzz.

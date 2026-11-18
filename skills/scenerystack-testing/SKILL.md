@@ -90,9 +90,20 @@ Do not copy a private `forceGC`; the compliance gate fails a suite that bypasses
 `tests/helpers/memoryLeak.ts`. Hollow suites also fail: `describeDisposalLeaks([])`
 without `{ emptyOk }` + custom coverage, or a TimeModel/NumberProperty-only list with no
 other `forceGC` / `expectNoListenerGrowth` tests. Missing disposal inventory entries produce
-a warning. Cover classes that define `dispose()` in the suite file or document an exception
-as `` `memory-leak:<Class>` `` under `## Compliance carve-outs`. The inventory check skips
-`*ScreenView`, `*Screen`, and `*Sim` classes.
+a warning. Cover classes that define `dispose()` (in their own body, or inherited from a
+same-sim parent) in the suite file or document an exception as `` `memory-leak:<Class>` ``
+under `## Compliance carve-outs`. The inventory check skips `*ScreenView`, `*Screen`, and
+`*Sim` classes, and warns on carve-outs it no longer needs.
+
+"Cover" means the suite uses the class: a value import, `new Foo()`, passing `Foo` to a
+helper, or a `name: "Foo …"` case. A name that only appears in an import path, a string or
+a prose comment does not count, and `import type` alone does not count. An abstract base is
+covered by a covered subclass. Factory probes that never name the class declare it:
+
+```typescript
+// memory-leak-covers-subclasses: BaseElement (every element via createDefaultElement(ALL_KEYS))
+// memory-leak-covers: DetectorChartPanel (owned by DetectorView), RayPropagationView
+```
 
 ```typescript
 import { NumberProperty } from "scenerystack/axon";
