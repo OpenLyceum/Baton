@@ -76,8 +76,7 @@ jobs:
             exit 1
           fi
 
-      # Required: only probes at level "fail" (zero gaps fleet-wide when promoted) can
-      # fail here; "warn" probes print but pass. See scripts/check-skill-conformance.mjs.
+      # Required conventions can fail here. Heuristic probes report warnings.
       - name: Skill conformance
         if: hashFiles('src/main.ts') != ''
         env:

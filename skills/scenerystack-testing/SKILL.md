@@ -63,29 +63,22 @@ skips `useExplicitType` under `tests/**`.
 
 ## A model unit test
 
-Test physics/algorithm code directly — construct the model object, step or call it, assert
-on Property values:
+Test physics or geometry directly with an independent expected value. This example adapts
+the arc geometry test in OpticsLab's `tests/common/model/optics/curved-geometry.test.ts`:
 
 ```typescript
-import { describe, it, expect } from "vitest";
-import { Vector2 } from "scenerystack/dot";
-import { LensModel } from "../../../src/optics-lab/model/LensModel.js";
+import { describe, expect, it } from "vitest";
+import { ArcMirror } from "../../../../src/common/model/mirrors/ArcMirror.js";
+import { point } from "../../../../src/common/model/optics/Geometry.js";
 
-describe("LensModel", () => {
-  it("forms a real image beyond the focal point (thin-lens equation)", () => {
-    const lens = new LensModel({ focalLength: 1 });
-    lens.objectPositionProperty.value = new Vector2(-3, 0);
-
-    // 1/f = 1/do + 1/di  ⇒  di = 1.5 for f=1, do=3
-    expect(lens.imageDistanceProperty.value).toBeCloseTo(1.5, 6);
-    expect(lens.imageTypeProperty.value).toBe("real");
-  });
-
-  it("resets every Property", () => {
-    const lens = new LensModel({ focalLength: 1 });
-    lens.objectPositionProperty.value = new Vector2(-5, 2);
-    lens.reset();
-    expect(lens.objectPositionProperty.value).toEqual(lens.objectPositionProperty.initialValue);
+describe("ArcMirror arc geometry", () => {
+  it.each([-1, 1])("preserves curvature side %i when changing radius", (side) => {
+    const element = new ArcMirror(point(-1, 0), point(1, 0), point(0, side));
+    element.setRadius(2);
+    expect(element.p3.x).toBe(0);
+    expect(element.p3.y).toBeCloseTo(side * (2 - Math.sqrt(3)), 12);
+    expect(element.getRadius()).toBeCloseTo(2, 12);
+    element.dispose();
   });
 });
 ```
@@ -96,9 +89,10 @@ describe("LensModel", () => {
 Do not copy a private `forceGC`; the compliance gate fails a suite that bypasses
 `tests/helpers/memoryLeak.ts`. Hollow suites also fail: `describeDisposalLeaks([])`
 without `{ emptyOk }` + custom coverage, or a TimeModel/NumberProperty-only list with no
-other `forceGC` / `expectNoListenerGrowth` tests. Every `src/` class that defines
-`dispose()` (except `*ScreenView` / `*Screen` / `*Sim`) must appear in the suite file or
-be carved out as `` `memory-leak:<Class>` `` under `## Compliance carve-outs`.
+other `forceGC` / `expectNoListenerGrowth` tests. Missing disposal inventory entries produce
+a warning. Cover classes that define `dispose()` in the suite file or document an exception
+as `` `memory-leak:<Class>` `` under `## Compliance carve-outs`. The inventory check skips
+`*ScreenView`, `*Screen`, and `*Sim` classes.
 
 ```typescript
 import { NumberProperty } from "scenerystack/axon";

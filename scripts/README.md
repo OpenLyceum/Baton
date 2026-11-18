@@ -269,10 +269,12 @@ node scripts/check-skill-conformance.mjs --all             # gaps per sim
 node scripts/check-skill-conformance.mjs Zenith --strict   # also fail on warn-level probes
 ```
 
-**Ratchet.** A new probe starts at `level: "warn"`: it prints, never fails. When
-`--summary --all` shows it at zero gaps, set it to `"fail"`. From then on the required
-"Skill conformance" step in each sim's compliance job stops regressions. Approve a real
-exception under `## Compliance carve-outs` with `` - `skill:<probe>`: reason ``.
+Start new probes at `level: "warn"`. Keep checks for the presence of familiar API patterns
+advisory even when the entire fleet passes. Use `"fail"` for a required convention only
+when the probe can reliably identify a violation and the fleet scan confirms the rule is
+ready to enforce. The shared CI workflow reports warnings and fails on blocking gaps.
+`--strict` treats warnings as failures for local audits. Approve an exception under
+`## Compliance carve-outs` with `` - `skill:<probe>`: reason ``.
 
 ## list-carve-outs.mjs
 

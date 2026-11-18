@@ -9,9 +9,10 @@
  * preferences, StringManager/locales, toFixed/Math.random/hardcoded Text/inline colors,
  * model→view imports).
  *
- * Ratchet: a new probe starts at level "warn" (reported, never fails). Once
- * `--summary --all` shows it at zero gaps fleet-wide, set it to level "fail" so it
- * cannot regress. A "fail" gap exits 1; --strict also fails on "warn" gaps.
+ * Use level "fail" only for probes that identify a specific required convention
+ * and can reliably distinguish violations from valid alternatives. Keep heuristic
+ * probes at "warn" even when the fleet has zero gaps. A "fail" gap exits 1;
+ * --strict also fails on "warn" gaps.
  *
  * A sim approves a deviation with a bullet under its AGENTS.md "## Compliance carve-outs":
  *   - `skill:drag-listener`: the caliper's arrow keys are already owned by the jaw slider
@@ -156,7 +157,7 @@ const PROBES = [
   },
   {
     id: "keyboard-help-dialog",
-    level: "fail",
+    level: "warn",
     skill: "scenerystack-keyboard-help-dialog",
     run(files) {
       const help = files.filter((f) => /KeyboardHelpContent\.ts$/.test(f.rel));
@@ -170,7 +171,7 @@ const PROBES = [
   },
   {
     id: "optionize",
-    level: "fail",
+    level: "warn",
     skill: "scenerystack-optionize",
     run(files) {
       return anyHit(files, /\boptionize\b|\bcombineOptions\b/) ? OK : gap("src/", "no optionize/combineOptions call");
@@ -178,7 +179,7 @@ const PROBES = [
   },
   {
     id: "layout",
-    level: "fail",
+    level: "warn",
     skill: "scenerystack-layout",
     run(files) {
       return anyHit(files, /\blayoutBounds\b|\bnew [VH]Box\b|\bAlignBox\b|\bGridBox\b/, isView)
@@ -188,7 +189,7 @@ const PROBES = [
   },
   {
     id: "ui-controls",
-    level: "fail",
+    level: "warn",
     skill: "scenerystack-ui-controls",
     run(files) {
       return anyHit(files, /from\s+["']scenerystack\/sun["']/) ? OK : gap("src/", "no scenerystack/sun import");
@@ -227,7 +228,7 @@ const PROBES = [
   },
   {
     id: "sound",
-    level: "fail",
+    level: "warn",
     skill: "scenerystack-sound",
     run(files) {
       const raw = firstHit(files, /\bnew (Audio|AudioContext|webkitAudioContext)\s*\(/);

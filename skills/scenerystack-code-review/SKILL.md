@@ -14,9 +14,9 @@ PhET `js/`/grunt layout.
 
 Choose the requested scope: a targeted functional review follows the relevant model/control paths; a full pre-release CRC uses the checklist below. Read [Functional review checks](references/functional-review.md) when reviewing time controls, recordings, state transitions, numerical solvers, or resource lifecycles.
 
-For a local/automated review, record scope, actionable findings, fixes, validation, and limitations in `doc/`. Create or update GitHub review/companion issues only when the user requests that workflow; a local review does not require them. For a release CRC, track missing designer/performance/accessibility sign-offs as release gaps without blocking unrelated source analysis.
+For a review-only request, report findings, validation, and limitations in the response. Write a report in `doc/` when the requested deliverable calls for one. Create or update GitHub review or companion issues only when the user requests that workflow. For a release CRC, track missing designer, performance, or accessibility sign-offs as release gaps and continue independent source analysis.
 
-Use the existing scripts for lint, app/scripts/test type checks, tests, build, and applicable compliance checks. A failing prerequisite limits what can be validated: investigate/report it, and continue independent source analysis when useful. Distinguish pre-existing failures from regressions. Fix confirmed defects within the requested scope, preserve unrelated working-tree changes, and add focused regressions where they demonstrate the failure.
+Use the existing scripts for lint, app/scripts/test type checks, tests, build, and applicable compliance checks. A failing prerequisite limits what can be validated: investigate/report it, and continue independent source analysis when useful. Distinguish pre-existing failures from regressions. When the user asks for fixes, keep them within the requested scope, preserve unrelated working-tree changes, and add focused regressions where they demonstrate the failure.
 
 Checked checklist boxes mean the item was reviewed; report any finding separately. Distinguish local compliance from unavailable remote security probes. Record actual Node version and any mismatch with the repository requirement. Dependency/security/configuration maintenance does not count as a functional review of physics or controls.
 
@@ -129,7 +129,8 @@ findings. Full auto/manual split:
 - [ ] `bash ../Baton/scripts/check-repo-compliance.sh <SimDir>` prints `Compliance check
   passed`. Report failures; distinguish local checks from unavailable remote probes.
 - [ ] `bash ../Baton/scripts/check-template-drift.sh <SimDir>` reports no drift in
-  template-owned files (or `package.json` scripts/deps/key order). `--fix` restores them.
+  template-owned files or `package.json` scripts, dependencies, and key order. Use
+  `--fix` only when the requested fixes include template synchronization.
   A deliberate deviation needs a `**Template drift**` entry under `AGENTS.md`
   ## Compliance carve-outs; prose that merely mentions the file does not count.
 
@@ -163,15 +164,14 @@ What the gate can't judge — check these by eye:
 
 - [ ] Code generally follows SceneryStack/PhET conventions and the repo's AGENTS.md guidance. Confirm
   it meets project standards — no need to check every item exhaustively.
-- [ ] `npm run fix` (Biome) introduces no changes, i.e. formatting and import ordering are already
-  clean.
 - [ ] Numbers are formatted with `toFixed`/`toFixedNumber` from `scenerystack/dot` (never
   JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
   scenerystack-numerics. The template's `no-native-tofixed` Biome plugin flags native calls in
   `src/`; each `biome-ignore lint/plugin/no-native-tofixed` needs a reason. The same goes for the
   `no-math-random`, `no-hardcoded-text` and `no-inline-color` plugins.
-- [ ] `npm run lint` passes. It runs with `--error-on-warnings`, so a `"warn"` rule fails the
-  same as an error; every `biome-ignore` states a specific reason.
+- [ ] `npm run lint` verifies formatting and import order without writing files. It runs with
+  `--error-on-warnings`, so a `"warn"` rule fails the same as an error. Every `biome-ignore` states a
+  specific reason.
 - [ ] Text uses `PhetFont` (or a shared font constant), not CSS font strings such as
   `"16px sans-serif"`. Canvas `ctx.font` strings are the exception.
 - [ ] No `!` non-null assertions in `src/` without a comment (Biome warns); prefer a narrowing
@@ -205,7 +205,7 @@ What the gate can't judge — check these by eye:
   ```
 
 - [ ] No significant duplicated blocks; anything reusable is lifted into `src/common/` or shared code.
-- [ ] No leftover `TODO` / `FIXME` / `REVIEW` comments — resolve them or promote to GitHub issues.
+- [ ] Flag unresolved `TODO`, `FIXME`, and `REVIEW` comments that affect release readiness.
 - [ ] No undocumented magic numbers; extract them as named, documented constants.
 - [ ] Constants shared across files are centralized in `src/{Prefix}Constants.ts` (plus any
   documented nested extras); the sim doesn't silently break when plausible constant values change.
@@ -250,7 +250,7 @@ scenerystack-accessibility and the repo's `SimScreenSummaryContent.ts` / `SimKey
 ## Rules
 
 - Run compliance + template-drift before eyeballing structure; do not duplicate their checklists.
-- Record scope, findings, fixes, and limitations; distinguish pre-existing failures from regressions.
+- Report scope, findings, validation, and limitations. Apply fixes only when requested and distinguish pre-existing failures from regressions.
 - Checked boxes mean reviewed; report findings separately.
 - For time/recording/solver behavior, also read [functional-review.md](references/functional-review.md).
 

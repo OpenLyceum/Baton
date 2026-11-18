@@ -89,6 +89,8 @@ node.addInputListener(listener);
 
 A node that handles keys must be focusable and named: give it a `tagName` (e.g. `"div"` or `"button"`) and an `accessibleName`, or it won't be reachable in the PDOM.
 
+Verify reachability by moving keyboard focus to the actual PDOM target, pressing the bound key, and checking the resulting state change. See [the testing skill](../scenerystack-testing/SKILL.md#regressions-from-functional-reviews).
+
 **Global hotkeys** (active regardless of focus) use `KeyboardListener.createGlobal` or a `HotkeyData` with `global: true`:
 
 ```typescript

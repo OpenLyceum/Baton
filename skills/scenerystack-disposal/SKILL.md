@@ -68,22 +68,43 @@ For asynchronous acquisition (microphone, sensor, device), invalidate the curren
 
 ## Dynamic collections
 
-When the view mirrors a model `createObservableArray()`, add a node on `addItemAddedListener` and **dispose it** on `addItemRemovedListener`:
+When the view mirrors a model `createObservableArray()` of unique particles, keep one node
+per particle. Seed the view from existing items, then register one add listener and one
+remove listener. If the view is disposed first, unregister both listeners before disposing
+the remaining nodes.
 
 ```typescript
-model.particles.addItemAddedListener((particle) => {
+const particleNodes = new Map<Particle, ParticleNode>();
+const addParticle = (particle: Particle): void => {
   const node = new ParticleNode(particle, modelViewTransform);
+  particleNodes.set(particle, node);
   this.particleLayer.addChild(node);
-  const removed = (removedParticle: Particle) => {
-    if (removedParticle === particle) {
-      this.particleLayer.removeChild(node);
-      node.dispose();                                   // <-- the easy line to forget
-      model.particles.removeItemRemovedListener(removed);
-    }
-  };
-  model.particles.addItemRemovedListener(removed);
-});
+};
+const removeParticle = (particle: Particle): void => {
+  const node = particleNodes.get(particle);
+  if (node) {
+    particleNodes.delete(particle);
+    this.particleLayer.removeChild(node);
+    node.dispose();
+  }
+};
+
+model.particles.forEach(addParticle);
+model.particles.addItemAddedListener(addParticle);
+model.particles.addItemRemovedListener(removeParticle);
+
+// In the constructor. Call this closure from dispose() before super.dispose().
+this.disposeParticleCollection = () => {
+  model.particles.removeItemAddedListener(addParticle);
+  model.particles.removeItemRemovedListener(removeParticle);
+  for (const particle of particleNodes.keys()) {
+    removeParticle(particle);
+  }
+};
 ```
+
+Test item removal and view disposal with items still present. Keep the model alive while
+checking cleanup. See [the testing skill](../scenerystack-testing/SKILL.md#memory-leak-suite).
 
 ## Rules
 
@@ -99,7 +120,7 @@ model.particles.addItemAddedListener((particle) => {
 - `someExternalProperty.link(listener)` in a dynamic node with no matching `unlink` in `dispose()` → classic leak; the node is retained forever.
 - `removeChild(node)` without `node.dispose()` → the node's own listeners still fire.
 - A `DerivedProperty` built on model Properties, created per dynamic object, never disposed.
-- Adding an item-removed listener but never removing **it**, so the closure (and node) leak even after the item is gone.
+- Leaving array listeners registered after the owning view is disposed, so later mutations still reach the view.
 - Relying on Reset All to "clean up" — reset restores values, it does not dispose nodes.
 
 Related skills: scenerystack-model, scenerystack-axon, scenerystack-testing,

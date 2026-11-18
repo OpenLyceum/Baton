@@ -19,6 +19,10 @@ description: Use whenever a view needs display text or you add/rename user-visib
   "controls": {
     "values": "Values",
     "soundSpeed": "Speed of Sound"
+  },
+  "a11y": {
+    "controlPanel": "Sound controls",
+    "controlPanelHelp": "Adjust the speed of sound."
   }
 }
 ```

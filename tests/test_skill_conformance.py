@@ -62,7 +62,8 @@ class SkillConformanceTests(unittest.TestCase):
 
     def test_keyboard_help_stub_is_a_gap(self):
         self.write({"src/demo/view/DemoKeyboardHelpContent.ts": "export const s = new BasicActionsKeyboardHelpSection();\n"})
-        _, probes = self.run_check()
+        code, probes = self.run_check()
+        self.assertEqual(code, 0)
         self.assertEqual(probes["keyboard-help-dialog"]["status"], "gap")
 
     def test_model_view_transform_in_model_is_a_gap(self):
@@ -75,6 +76,16 @@ class SkillConformanceTests(unittest.TestCase):
         code, probes = self.run_check()
         self.assertEqual(probes["drag-listener"]["status"], "gap")
         self.assertEqual(code, 0)
+        self.assertEqual(self.run_check("--strict")[0], 1)
+
+    def test_missing_common_api_patterns_are_advisory(self):
+        self.write({"src/demo/view/DemoScreenView.ts": "export class DemoScreenView {}\n"})
+        code, probes = self.run_check()
+        self.assertEqual(code, 0)
+        for name in ("optionize", "layout", "ui-controls"):
+            with self.subTest(probe=name):
+                self.assertEqual(probes[name]["status"], "gap")
+                self.assertEqual(probes[name]["level"], "warn")
         self.assertEqual(self.run_check("--strict")[0], 1)
 
     def test_keyboard_drag_satisfies_drag_listener(self):
@@ -100,7 +111,8 @@ class SkillConformanceTests(unittest.TestCase):
 
     def test_sound_manager_requires_supports_sound(self):
         self.write({"src/demo/view/Sounds.ts": "soundManager.addSoundGenerator(x);\n", "src/init.ts": "export {};\n"})
-        _, probes = self.run_check()
+        code, probes = self.run_check()
+        self.assertEqual(code, 0)
         self.assertEqual(probes["sound"]["status"], "gap")
         self.write({"src/init.ts": "init({ supportsSound: true });\n"})
         self.assertEqual(self.run_check()[1]["sound"]["status"], "follow")
