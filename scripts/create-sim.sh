@@ -634,6 +634,21 @@ fi
 
 cd "$TARGET_PATH"
 
+# Snapshot the pristine template tree before rename/scaffold so drift --fix still
+# works when the workspace has no local SceneryStackTemplate checkout (remote path).
+PRISTINE_TEMPLATE="$(mktemp -d "${TMPDIR:-/tmp}/create-sim-template.XXXXXX")"
+cleanup_pristine() {
+  rm -rf "$PRISTINE_TEMPLATE"
+}
+trap cleanup_pristine EXIT
+rsync -a \
+  --exclude node_modules \
+  --exclude dist \
+  --exclude .git \
+  --exclude .cache \
+  --exclude .vite \
+  "$TARGET_PATH/" "$PRISTINE_TEMPLATE/"
+
 echo ""
 echo "npm install..."
 npm install
@@ -669,18 +684,19 @@ npm run check
 echo ""
 echo "check-template-drift --fix..."
 TEMPLATE_DIR="$(repos_workspace_root)/SceneryStackTemplate"
+DRIFT_TEMPLATE="$PRISTINE_TEMPLATE"
 if [[ -f "$TEMPLATE_DIR/package.json" ]]; then
-  node "$SCRIPT_DIR/check-template-drift.mjs" --fix --dir "$PWD" --name "$REPO" --template "$TEMPLATE_DIR"
-else
-  echo "warning: no local SceneryStackTemplate at $TEMPLATE_DIR; run check-template-drift.sh --fix $REPO later" >&2
+  DRIFT_TEMPLATE="$TEMPLATE_DIR"
 fi
+node "$SCRIPT_DIR/check-template-drift.mjs" --fix --dir "$PWD" --name "$REPO" --template "$DRIFT_TEMPLATE"
 
 # Fail closed before catalog / onboard / publish when the seed still has placeholders
-# or structural gaps. COMPLIANCE_STRICT is accepted (and currently ignored) for older
-# callers; the gate itself fails on template leftovers and required structure.
+# or structural gaps. Use --local so fresh GitHub defaults (alerts off until
+# sync-github-settings) do not block create-time; full remote audits stay for
+# normal compliance runs after onboard.
 echo ""
-echo "check-repo-compliance..."
-if ! COMPLIANCE_STRICT=1 "$SCRIPT_DIR/check-repo-compliance.sh" "$PWD"; then
+echo "check-repo-compliance --local..."
+if ! COMPLIANCE_STRICT=1 "$SCRIPT_DIR/check-repo-compliance.sh" --local "$PWD"; then
   echo "error: compliance failed after scaffold — fix the seed before onboard/publish" >&2
   exit 1
 fi

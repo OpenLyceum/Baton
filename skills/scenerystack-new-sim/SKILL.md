@@ -40,9 +40,10 @@ If you used GitHub **Use this template** instead of `create-sim.sh`:
 npm install
 npm run rename -- --id my-new-sim --name "My New Sim"   # sim-level rename only
 npm run scaffold-screens -- --screens Intro,Lab         # optional --shared-model; starters default off
+# Put a real package description in package.json before compliance (placeholder fails audits).
 npm run fix                                             # required — see below
-npm run check && npm run build && npm test
 ../Baton/scripts/check-template-drift.sh --fix MyNewSim # drop one-shot scripts + template-only docs/tests
+npm run check && npm run build && npm test              # exercise the final generated tree
 bash ../Baton/scripts/check-repo-compliance.sh .
 ```
 

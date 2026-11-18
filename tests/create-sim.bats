@@ -1,24 +1,10 @@
 #!/usr/bin/env bats
 #
-# create-sim.sh create-time scaffold: flag threading, template-only cleanup, compliance gate.
+# create-sim.sh create-time scaffold: flag threading, compliance gate mode, template-only cleanup.
 
 setup() {
   load 'helpers/common'
   stub_gh
-  WORK="$BATS_TEST_TMPDIR/workspace"
-  mkdir -p "$WORK"
-  # Isolate git identity for disposable repos without touching the real ~/.gitconfig.
-  export HOME="$BATS_TEST_TMPDIR/home"
-  mkdir -p "$HOME"
-  git config --file "$HOME/.gitconfig" user.email "cursor-agent@example.invalid"
-  git config --file "$HOME/.gitconfig" user.name "Cursor Agent"
-  # Disposable local template snapshot (no node_modules — create-sim will npm install).
-  rsync -a --exclude node_modules --exclude .git --exclude dist \
-    "$BATON_ROOT/../SceneryStackTemplate/" "$WORK/SceneryStackTemplate/"
-  git -C "$WORK/SceneryStackTemplate" init -b main >/dev/null
-  git -C "$WORK/SceneryStackTemplate" add -A >/dev/null
-  git -C "$WORK/SceneryStackTemplate" commit -m 'template fixture' >/dev/null
-  export FLEET_WORKSPACE="$WORK"
   export PATH="$STUB_BIN:$PATH"
 }
 
@@ -30,13 +16,41 @@ setup() {
   assert_output --partial "--shared-model"
 }
 
+@test "create-sim compliance gate uses --local before onboard" {
+  run grep -n 'check-repo-compliance' "$BATON_ROOT/scripts/create-sim.sh"
+  assert_success
+  assert_output --partial "--local"
+  # Gate must appear before onboard/catalog work uses GitHub settings sync.
+  # Match the invocation (quoted path may sit between .sh and --local).
+  local compliance_line onboard_line
+  compliance_line="$(grep -nE 'check-repo-compliance\.sh".*--local|--local.*check-repo-compliance' "$BATON_ROOT/scripts/create-sim.sh" | head -1 | cut -d: -f1)"
+  # Call sites after the create-from-template branch, not function definitions.
+  onboard_line="$(grep -nE '^[[:space:]]+(run_onboard_github|run_onboard_assets|insert_catalog_entry)\b' "$BATON_ROOT/scripts/create-sim.sh" | head -1 | cut -d: -f1)"
+  [[ -n "$compliance_line" && -n "$onboard_line" ]]
+  [[ "$compliance_line" -lt "$onboard_line" ]]
+}
+
 @test "create-sim --local-only strips demos, drops template-only files, and passes compliance" {
   # Full npm install is heavy; opt in with CREATE_SIM_E2E=1 (generators.test covers the
   # scaffold path; this guards the create-sim shell pipeline including compliance).
   if [[ "${CREATE_SIM_E2E:-}" != "1" ]]; then
     skip "set CREATE_SIM_E2E=1 to run the full local-only create-sim pipeline"
   fi
-  run env PATH="$STUB_BIN:$PATH" FLEET_WORKSPACE="$WORK" \
+
+  WORK="$BATS_TEST_TMPDIR/workspace"
+  mkdir -p "$WORK"
+  export GIT_CONFIG_GLOBAL="$BATS_TEST_TMPDIR/gitconfig"
+  git config --file "$GIT_CONFIG_GLOBAL" user.email "cursor-agent@example.invalid"
+  git config --file "$GIT_CONFIG_GLOBAL" user.name "Cursor Agent"
+
+  rsync -a --exclude node_modules --exclude .git --exclude dist \
+    "$BATON_ROOT/../SceneryStackTemplate/" "$WORK/SceneryStackTemplate/"
+  git -C "$WORK/SceneryStackTemplate" init -b main >/dev/null
+  git -C "$WORK/SceneryStackTemplate" add -A >/dev/null
+  git -C "$WORK/SceneryStackTemplate" commit -m 'template fixture' >/dev/null
+  export FLEET_WORKSPACE="$WORK"
+
+  run env PATH="$STUB_BIN:$PATH" FLEET_WORKSPACE="$WORK" GIT_CONFIG_GLOBAL="$GIT_CONFIG_GLOBAL" \
     "$BATON_ROOT/scripts/create-sim.sh" \
     --repo WaveLab \
     --id wave-lab \
@@ -46,7 +60,7 @@ setup() {
     --local-only \
     --no-push
   assert_success
-  assert_output --partial "check-repo-compliance"
+  assert_output --partial "check-repo-compliance --local"
   assert_output --partial "Bootstrap complete"
 
   local sim="$WORK/WaveLab"

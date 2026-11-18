@@ -33,8 +33,11 @@ Baton/scripts/create-sim.sh \
 Omit `--screens` for a single screen named after `--name`. `--shared-model` scaffolds
 `src/common/model/SharedModel.ts` (fleet-style composition). Optional starters default off:
 `--with-time-model` and `--with-control-options` (Panel/ButtonOptions always stay).
-`create-sim` strips template demos, runs `check-template-drift --fix`, then
-`check-repo-compliance` and **fails before** catalog/onboard/publish if compliance fails.
+`create-sim` strips template demos, runs `check-template-drift --fix` (using the
+workspace template when present, otherwise a pristine pre-rename snapshot), then
+`check-repo-compliance --local` and **fails before** catalog/onboard/publish if the
+tree audit fails. `--local` skips live GitHub security probes so fresh-repo defaults
+do not block create; run a full compliance audit after onboard/settings sync.
 `--onboard` inserts the catalog row, captures a screenshot, builds the WebP card,
 regenerates `docs/index.html`, and updates the OpenLyceum README Layout table; `--pr`
 opens Baton + OpenLyceum PRs. Pass `--local-only` to bootstrap from a local
@@ -49,8 +52,11 @@ npm run rename -- --id my-new-sim --name "My New Sim"
 npm run scaffold-screens -- --screens Intro,Lab
 # optional: --with-time-model --with-control-options
 npm run fix && npm run check
+# Write a real one-sentence package.json description (not the rename placeholder).
 Baton/scripts/check-template-drift.sh --fix MyNewSim
-COMPLIANCE_STRICT=1 Baton/scripts/check-repo-compliance.sh ../MyNewSim
+npm test
+npm run check:architecture && npm run knip
+COMPLIANCE_STRICT=1 Baton/scripts/check-repo-compliance.sh --local ../MyNewSim
 ```
 
 Then confirm:
