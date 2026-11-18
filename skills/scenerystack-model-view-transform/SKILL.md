@@ -1,6 +1,6 @@
 ---
 name: scenerystack-model-view-transform
-description: Use whenever a view needs to place model objects on screen, convert between model and view coordinates, or scale physical quantities to pixels. Covers ModelViewTransform2 factory methods and the model-vs-view coordinate convention.
+description: Use when converting model↔view coordinates or scaling physical quantities to pixels — ModelViewTransform2 factories and the model-vs-view coordinate convention.
 ---
 
 # SceneryStack ModelViewTransform2

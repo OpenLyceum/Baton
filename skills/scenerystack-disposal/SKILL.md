@@ -1,6 +1,6 @@
 ---
 name: scenerystack-disposal
-description: Use when creating nodes, listeners, or Properties that do not live for the whole sim — dynamic objects, anything added and removed at runtime, or anything that links to a Property it does not own. Covers dispose(), the disposeEmitter, unlinking listeners, tearing down DerivedProperty/Multilink, and avoiding the memory leaks that fuzz testing catches.
+description: Use when creating short-lived nodes, listeners, or Properties — dispose(), disposeEmitter, unlink, DerivedProperty/Multilink teardown, and leak patterns caught by fuzz/memory-leak tests.
 ---
 
 # SceneryStack Disposal & Memory
@@ -102,4 +102,5 @@ model.particles.addItemAddedListener((particle) => {
 - Adding an item-removed listener but never removing **it**, so the closure (and node) leak even after the item is gone.
 - Relying on Reset All to "clean up" — reset restores values, it does not dispose nodes.
 
-Related skills: scenerystack-model, scenerystack-drag-listener, scenerystack-code-review.
+Related skills: scenerystack-model, scenerystack-axon, scenerystack-testing,
+scenerystack-drag-listener, scenerystack-code-review.

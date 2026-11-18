@@ -1,6 +1,6 @@
 ---
 name: scenerystack-color-profiles
-description: Use when adding, changing, or theming colors in a SceneryStack sim — ProfileColorProperty, the per-sim *Colors.ts file, projector mode, or fixing low-contrast UI (checkboxes, combo boxes, NumberDisplay / NumberControl readouts) that look fine in projector mode but fail in the default dark profile.
+description: Use when adding or theming colors — ProfileColorProperty, per-sim *Colors.ts, projector mode, or low-contrast Checkbox/ComboBox/NumberDisplay in the dark default profile.
 ---
 
 # SceneryStack Color Profiles

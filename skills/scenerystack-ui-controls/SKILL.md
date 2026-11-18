@@ -1,6 +1,6 @@
 ---
 name: scenerystack-ui-controls
-description: Use when adding standard UI controls to a simulation — sliders, number spinners, checkboxes, radio buttons, combo boxes, push buttons, the Reset All button, playback controls, or themed Panel/Dialog chrome. Covers the sun and scenery-phet component libraries, the Property-backed value pattern, and wiring controls to model state.
+description: Use when adding standard controls — Slider/NumberControl, Checkbox, radios, ComboBox, ResetAllButton, TimeControlNode, SimPanel/Dialog. Covers interruptSubtreeInput on Reset All and Property-backed wiring.
 ---
 
 # SceneryStack UI Controls

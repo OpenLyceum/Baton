@@ -1,6 +1,6 @@
 ---
 name: scenerystack-coding-conventions
-description: Use when writing or reviewing TypeScript in an OpenLyceum SceneryStack sim — naming, constructor signatures (positional params + options object), documentation style, access modifiers, type inference, enumerations, optionize, TReadOnlyProperty annotations, assertions, non-null assertions, excess-property checking, and read-vs-write Property APIs. Trigger when deciding how to structure a class/method or when a review flags a style/convention issue.
+description: Use when writing or reviewing TypeScript style in a SceneryStack sim — naming, constructors, docs, access modifiers, inference, assertions, optionize, excess-property checks. For Properties see scenerystack-axon; for enums see scenerystack-enumeration.
 ---
 
 # SceneryStack TypeScript Coding Conventions
@@ -8,8 +8,8 @@ description: Use when writing or reviewing TypeScript in an OpenLyceum ScenerySt
 How TypeScript is written in OpenLyceum SceneryStack sims (SceneryStack template: Vite + TypeScript +
 **Biome**, source under `src/`). Adapted from PhET's coding conventions and trimmed to what applies here.
 Formatting and import ordering are enforced by `biome.json` (`npm run lint` / `npm run fix`) — this skill
-covers the judgment calls Biome can't make. Related skills: scenerystack-optionize,
-scenerystack-constants, scenerystack-color-profiles, scenerystack-strings, scenerystack-accessibility.
+covers the judgment calls Biome can't make. Property/DerivedProperty APIs:
+scenerystack-axon. Enumerations: scenerystack-enumeration.
 
 ## General style
 
@@ -120,9 +120,11 @@ new Property<Laser>( new Laser() );  // ❌ redundant
 
 ### Enumerations
 
-- **String-literal unions are the default** — idiomatic and lightweight.
+- **String-literal unions** for local/non-Property choices — idiomatic and lightweight.
 - `as const` on a `string[]` exposes both the union and runtime values; pairs with `StringUnionProperty`.
-- Use `EnumerationValue` + `EnumerationProperty` only when you need rich instance methods.
+- Use `EnumerationValue` + `EnumerationProperty` when the choice is Property-backed and
+  bound to radios/combo, or when members need rich instance methods (see
+  scenerystack-enumeration).
 
 ### Parameter types
 
@@ -134,13 +136,9 @@ function computeHabitat( animal: Animal ): Habitat { ... }  // ✅ not Dog, if b
 
 ### Prefer `TReadOnlyProperty` for annotations
 
-Type constructor params and fields as `TReadOnlyProperty<T>` rather than a concrete `DerivedProperty<...>`
-to minimize coupling.
-
-```ts
-constructor( halfLifeProperty: TReadOnlyProperty<number>,
-             isStableProperty: TReadOnlyProperty<boolean> ) { ... }
-```
+Type constructor params and fields as `TReadOnlyProperty<T>` rather than a concrete
+`DerivedProperty<...>`. Full Property patterns (DerivedProperty, Multilink, read-vs-write
+APIs): scenerystack-axon.
 
 ### Options and optionize
 
@@ -228,36 +226,30 @@ const p2: PersonOptions = obj;                           // ❌ typo slips throu
 
 ### Read vs write Property APIs
 
-When a field is publicly readable but only internally writable, pick one pattern below — **never** a
-writable public field with a "don't write this" comment.
+Do not expose a writable public Property with a "don't write this" comment. Use the dual-reference
+or getter patterns in scenerystack-axon.
 
-**Pattern 1 — dual references** (preferred when the Property itself must be public): a `public readonly`
-`TReadOnlyProperty<T>` and a `private readonly` (underscore-prefixed) writable `Property<T>` pointing at
-the same instance. Use `protected` if subclasses must write.
+## Rules
 
-```ts
-public readonly positionProperty: TReadOnlyProperty<Vector2>;
-private readonly _positionProperty: Property<Vector2>;
-// constructor: this._positionProperty = new Vector2Property( ... ); this.positionProperty = this._positionProperty;
-```
+- Descriptive names; no non-standard abbreviations; every Property name ends in `Property`.
+- Constructors: positional required values, options object for defaults — always via `optionize`.
+- Prefer built-in access modifiers; annotate outward Property params as `TReadOnlyProperty<T>`.
+- No `enum` / `namespace`; no `!` non-null assertions without a safety comment.
+- Pass option objects as inline literals so excess-property checking catches typos.
+- Fonts are `PhetFont`; never CSS font strings on scenery nodes.
 
-**Pattern 2 — getter for the value** (callers need only the current value):
+## Common mistakes
 
-```ts
-public get position(): Vector2 { return this.positionProperty.value; }
-```
-
-**Pattern 3 — getter for the Property as read-only** (callers observe reactively); back it with an
-underscore-prefixed field:
-
-```ts
-public get positionProperty(): TReadOnlyProperty<Vector2> { return this._positionProperty; }
-```
-
-Patterns 1 and 3 suit reactive observers; Pattern 2 suits value-only access.
+- `merge` instead of `optionize` → outdated API; use scenerystack-optionize.
+- String union for a Property-backed radio/combo choice that should be `EnumerationValue`.
+- Writable public Property with a comment forbidding writes → use scenerystack-axon patterns.
+- `!` without a comment, or silencing `noNonNullAssertion` without an `AGENTS.md` note.
+- CSS font strings on scenery `Text` / nodes instead of `PhetFont`.
 
 ## Further reading
 
-- scenerystack-optionize, scenerystack-constants, scenerystack-color-profiles, scenerystack-strings
 - [TypeScript Design Goals](https://github.com/Microsoft/TypeScript/wiki/TypeScript-Design-Goals)
 - *Effective TypeScript* — Dan Vanderkam (Items 11, 19, 29)
+
+Related skills: scenerystack-optionize, scenerystack-axon, scenerystack-enumeration,
+scenerystack-constants, scenerystack-strings, scenerystack-accessibility.

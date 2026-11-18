@@ -1,9 +1,12 @@
 ---
 name: scenerystack-preferences
-description: Use when configuring the Preferences dialog — enabling projector mode, dynamic locale, sound, interactive highlights, or adding a custom preference control. Covers PreferencesModel options and the customPreferences createContent hook. Wired in src/main.ts.
+description: Use when configuring Preferences — projector mode, dynamic locale, sound, interactive highlights, or customPreferences createContent. Wired via PreferencesModel in main.ts.
 ---
 
 # SceneryStack Preferences
+
+Structural prefs trio and file layout: [CONVENTIONS.md](../../CONVENTIONS.md) §3.
+This skill is the PreferencesModel / customPreferences API.
 
 The Preferences dialog (gear icon) is configured by a single `PreferencesModel` passed to `new Sim(...)` in `src/main.ts`. Its built-in tabs (Visual, Audio, Language, Input, Simulation) are turned on with boolean options; sim-specific controls are added through `customPreferences`.
 

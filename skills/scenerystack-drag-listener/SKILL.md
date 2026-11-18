@@ -1,6 +1,6 @@
 ---
 name: scenerystack-drag-listener
-description: Use whenever a node must be draggable by mouse, touch, or keyboard. Covers DragListener, KeyboardDragListener, RichDragListener, the positionProperty+transform pattern, drag bounds, and pairing pointer drag with keyboard drag for accessibility.
+description: Use whenever a node must be draggable by mouse, touch, or keyboard — DragListener, KeyboardDragListener, RichDragListener, positionProperty+transform, drag bounds, dual-input a11y.
 ---
 
 # SceneryStack Drag Listeners

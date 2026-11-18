@@ -28,19 +28,21 @@ folder is well-formed and listed here.
 
 | Skill | Use when |
 |---|---|
-| [`scenerystack-coding-conventions`](scenerystack-coding-conventions/SKILL.md) | Writing/reviewing TypeScript — naming, constructor signatures, optionize, access modifiers, type inference, assertions, read-vs-write Property APIs. |
-| [`scenerystack-code-review`](scenerystack-code-review/SKILL.md) | Running a pre-release Code Review (CRC) on a sim — build/fuzz, memory leaks, performance, i18n, structure conformance, rename residue, keyboard-help stubs, accessibility. |
-| [`scenerystack-testing`](scenerystack-testing/SKILL.md) | Adding/changing unit tests — `vitest` specs for model/physics code, the fleet-standard `tests/` layout, listing disposables for the shared `describeDisposalLeaks` harness, pointer + keyboard fuzz, `tests/browser/` specs, WebGPU launch flags. |
+| [`scenerystack-coding-conventions`](scenerystack-coding-conventions/SKILL.md) | Writing/reviewing TypeScript — naming, constructor signatures, optionize, access modifiers, type inference, assertions. |
+| [`scenerystack-axon`](scenerystack-axon/SKILL.md) | Reactive axon state — `Property` / `DerivedProperty` / `Multilink`, `TReadOnlyProperty`, read-vs-write Property APIs. |
+| [`scenerystack-code-review`](scenerystack-code-review/SKILL.md) | Pre-release CRC — build/fuzz, leaks, i18n, structure, a11y; functional checks in that skill's `references/functional-review.md`. |
+| [`scenerystack-testing`](scenerystack-testing/SKILL.md) | Unit / memory-leak / fuzz / browser tests — `tests/` layout, `describeDisposalLeaks`, `test:fuzz` vs `tests/browser`, `test:soak`. |
 
 ### Model & math
 
 | Skill | Use when |
 |---|---|
-| [`scenerystack-model`](scenerystack-model/SKILL.md) | Creating/changing a model — state, physics, the `step(dt)`/`reset()` loop, reactive Properties, the `TModel` contract, model/view separation, GPU-only `common/gpu/` carve-outs. |
+| [`scenerystack-model`](scenerystack-model/SKILL.md) | Creating/changing a model — state, physics, `step(dt)`/`reset()`, `TModel`, model/view separation. |
 | [`scenerystack-model-view-transform`](scenerystack-model-view-transform/SKILL.md) | Converting between model and view coordinates or scaling physical quantities to pixels — `ModelViewTransform2`. |
 | [`scenerystack-constants`](scenerystack-constants/SKILL.md) | A number, size, or physical parameter appears in code — define it in root `*Constants.ts` (plus documented nested extras) instead of inlining a magic value. |
 | [`scenerystack-numerics`](scenerystack-numerics/SKILL.md) | Writing a model's numerical core — integrating motion over `dt`, stable time steps, Euler vs. higher-order integration, `Utils`/`LinearFunction`/`dotRandom`, `toFixed` (never `Number.toFixed`), determinism. |
-| [`scenerystack-enumeration`](scenerystack-enumeration/SKILL.md) | A model/view needs a fixed set of named choices (mode, state, tool) — `EnumerationValue`, `EnumerationProperty`, and why to prefer it over string unions or numeric constants. |
+| [`scenerystack-enumeration`](scenerystack-enumeration/SKILL.md) | Property-backed named choices for radios/combo — `EnumerationValue` / `EnumerationProperty` (string unions OK for local/non-Property). |
+| [`scenerystack-webgpu`](scenerystack-webgpu/SKILL.md) | GPU field solvers — `common/gpu/`, WebGPU/WGSL, no-adapter UX, Playwright WebGPU flags. |
 
 ### View & layout
 
@@ -50,8 +52,8 @@ folder is well-formed and listed here.
 | [`scenerystack-color-profiles`](scenerystack-color-profiles/SKILL.md) | Adding/theming colors — `ProfileColorProperty`, the per-sim `*Colors.ts`, projector mode, and contrast gotchas (Checkbox, ComboBox, NumberDisplay) that fail in the dark default profile. |
 | [`scenerystack-drag-listener`](scenerystack-drag-listener/SKILL.md) | Making a node draggable by mouse, touch, or keyboard — `DragListener`, `KeyboardDragListener`, `RichDragListener`, drag bounds. |
 | [`scenerystack-optionize`](scenerystack-optionize/SKILL.md) | A constructor takes configurable options — `optionize<>()`, `SelfOptions`/`Options`, `EmptySelfOptions`, `combineOptions`. |
-| [`scenerystack-ui-controls`](scenerystack-ui-controls/SKILL.md) | Adding standard controls — sliders, spinners, checkboxes, radio buttons, combo boxes, buttons, Reset All, themed `<Prefix>Panel`/`Dialog` — from `sun`/`scenery-phet`, wired to model Properties. |
-| [`scenerystack-custom-drawing`](scenerystack-custom-drawing/SKILL.md) | Rendering custom graphics the standard nodes don't cover — curves, filled regions, arrows, dynamic paths, dense fields via `CanvasNode`/WebGL/WebGPU, spectral CIE XYZ colour. |
+| [`scenerystack-ui-controls`](scenerystack-ui-controls/SKILL.md) | Standard controls — sliders, `ResetAllButton` + `interruptSubtreeInput`, `TimeControlNode`, themed `<Prefix>Panel`/`Dialog`, Property-backed wiring. |
+| [`scenerystack-custom-drawing`](scenerystack-custom-drawing/SKILL.md) | Custom graphics — Path/kite, scenery-phet helpers, `CanvasNode` dense fields, spectral CIE XYZ (GPU engines → webgpu skill). |
 | [`scenerystack-animation`](scenerystack-animation/SKILL.md) | Something must move or change smoothly over time, independent of the physics step — the twixt `Animation` class, `Easing`, chaining/looping, animate vs. integrate. |
 
 ### Text & localization

@@ -1,6 +1,6 @@
 ---
 name: scenerystack-new-sim
-description: Use when creating a new OpenLyceum SceneryStack simulation from SceneryStackTemplate — forking via create-sim.sh or rename + scaffold-screens, fixing post-rename residue, filling keyboard-help stubs, and onboarding into the fleet catalog. Covers the two-step rename/scaffold flow, stray Sim* type aliases, and common bootstrap gotchas.
+description: Use when creating a sim from SceneryStackTemplate — create-sim.sh or rename+scaffold-screens, Sim* residue, keyboard-help stubs, fleet catalog onboarding.
 ---
 
 # SceneryStack New Sim

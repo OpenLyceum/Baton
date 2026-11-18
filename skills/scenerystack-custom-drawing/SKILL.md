@@ -1,6 +1,6 @@
 ---
 name: scenerystack-custom-drawing
-description: Use when rendering custom graphics that the standard nodes don't cover — drawing a curve, a filled region, an arrow, a dynamic path, choosing a renderer for performance, or painting dense fields (fringes, fluids) via CanvasNode / WebGL / WebGPU. Covers Path + kite Shape, scenery-phet helpers, renderer hints, and spectral colour (CIE XYZ vs VisibleColor).
+description: Use when drawing custom graphics — Path/kite Shape, scenery-phet helpers, renderer hints, CanvasNode dense fields, or spectral CIE XYZ colour. For WebGPU/WebGL field engines see scenerystack-webgpu.
 ---
 
 # SceneryStack Custom Drawing
@@ -72,8 +72,7 @@ wrong tool. Prefer, in order:
 2. **WebGL** (e.g. Resonance particle renderer) — many sprites / particles where a CPU
    buffer cannot keep up.
 3. **WebGPU compute** (e.g. FluidDynamics) — the field *is* GPU state; there is no CPU
-   model to step. Document the `src/common/gpu/` carve-out in the sim's `AGENTS.md`
-   (see scenerystack-model).
+   model to step. Full carve-out, bridge node, and no-adapter UX: scenerystack-webgpu.
 
 Do **not** open a bare `<canvas>` / `CanvasRenderingContext2D` outside scenery — that
 escapes layout and accessibility. `CanvasNode` is the supported escape hatch.
@@ -109,4 +108,5 @@ optical path lengths / wavelengths in the model; convert units at the view bound
 - Averaging `VisibleColor` / sRGB across wavelengths → broadband light looks yellow-green instead of white.
 - Putting theme hex/`addColorStop` literals in a canvas painter instead of `*Colors.ts` → projector mode and dark profile break (see RadioWaves CRC).
 
-Related skills: scenerystack-model-view-transform, scenerystack-color-profiles, scenerystack-constants, scenerystack-layout, scenerystack-model.
+Related skills: scenerystack-model-view-transform, scenerystack-color-profiles,
+scenerystack-constants, scenerystack-layout, scenerystack-webgpu.

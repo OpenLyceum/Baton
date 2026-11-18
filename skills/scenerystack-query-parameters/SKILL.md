@@ -1,6 +1,6 @@
 ---
 name: scenerystack-query-parameters
-description: Use when a sim needs URL-configurable startup options or debug flags — defining a typed query-parameter schema with QueryStringMachine, validation, and the public flag. Trigger when adding a "?foo=bar" toggle or a developer/debug parameter.
+description: Use when adding a URL startup option or debug flag — typed QueryStringMachine schema, validation, public flag. Trigger on ?foo=bar toggles.
 ---
 
 # SceneryStack Query Parameters

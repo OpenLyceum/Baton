@@ -1,6 +1,6 @@
 ---
 name: scenerystack-strings
-description: Use whenever a view needs display text, or you add/rename/remove user-visible text. Covers the StringManager singleton, strings_*.json files, LocalizedString.getNestedStringProperties, and consuming *StringProperty in nodes. Trigger on any hardcoded UI string.
+description: Use whenever a view needs display text or you add/rename user-visible strings — StringManager, strings_*.json, LocalizedString, *StringProperty. Trigger on hardcoded UI text.
 ---
 
 # SceneryStack Strings (StringManager)
@@ -86,4 +86,4 @@ const label = new Text(strings.soundSpeedStringProperty, { font, fill: SimColors
 - Passing `someStringProperty.value` to a `Text` → text freezes at the launch locale.
 - Building sentences with `a + " " + b` → breaks translation word order; use a pattern string.
 
-Related skills: scenerystack-i18n, scenerystack-color-profiles.
+Related skills: scenerystack-i18n, scenerystack-accessibility, scenerystack-ui-controls.

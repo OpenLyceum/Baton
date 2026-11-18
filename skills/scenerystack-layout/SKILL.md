@@ -1,6 +1,6 @@
 ---
 name: scenerystack-layout
-description: Use when positioning nodes on screen — arranging controls, aligning panels to screen edges, stacking content, or spacing items. Covers layoutBounds, VBox/HBox/GridBox, AlignBox/AlignGroup, struts, Panel, and avoiding magic pixel values.
+description: Use when positioning nodes — layoutBounds, VBox/HBox/GridBox, AlignBox/AlignGroup, struts, Panel. For control widgets themselves see scenerystack-ui-controls.
 ---
 
 # SceneryStack Layout
@@ -77,4 +77,5 @@ const b = group.createBox(nodeB, { xAlign: "left" }); // a and b now equal width
 - Anchoring overlays to `layoutBounds` when they must touch the real window edge → use `visibleBounds` there.
 - Repeating the same margin literal in many files → hoist to a layout-constants module.
 
-Related skills: scenerystack-optionize, scenerystack-model-view-transform, scenerystack-color-profiles.
+Related skills: scenerystack-ui-controls, scenerystack-optionize,
+scenerystack-model-view-transform, scenerystack-accessibility.

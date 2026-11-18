@@ -1,6 +1,6 @@
 ---
 name: scenerystack-numerics
-description: Use when writing the numerical core of a model — integrating motion over dt, choosing a stable time step, clamping or mapping values, or using the dot math utilities. Covers fixed vs. variable time steps, Euler vs. higher-order integration, Utils/LinearFunction/dotRandom, toFixed (never Number.toFixed), and keeping physics deterministic.
+description: Use when writing numerical model core — integrating over dt, stable steps, Euler vs higher-order, Utils/LinearFunction/dotRandom, toFixed (never Number.toFixed), determinism.
 ---
 
 # SceneryStack Numerics

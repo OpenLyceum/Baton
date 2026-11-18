@@ -1,6 +1,6 @@
 ---
 name: scenerystack-keyboard-help-dialog
-description: Use when documenting a sim's keyboard controls in the Keyboard Shortcuts dialog (? icon). Covers KeyboardHelpSection, KeyboardHelpSectionRow.fromHotkeyData, TwoColumnKeyboardHelpContent, the BasicActions/SliderControls prebuilt sections, and wiring via createKeyboardHelpNode.
+description: Use when documenting keyboard controls in the ? dialog — KeyboardHelpSection, fromHotkeyData, TwoColumnKeyboardHelpContent, createKeyboardHelpNode; never ship the template stub.
 ---
 
 # SceneryStack Keyboard Help Dialog

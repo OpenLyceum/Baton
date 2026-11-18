@@ -1,11 +1,20 @@
 ---
 name: scenerystack-enumeration
-description: Use when a model or view needs a fixed set of named choices — a mode, a state, a tool selection — backed by a Property and bound to radio buttons or a combo box. Covers the EnumerationValue class pattern, EnumerationProperty, and why to prefer it over string unions or numeric constants.
+description: Use when a fixed named choice is bound to radios/combo or EnumerationProperty — EnumerationValue pattern. Prefer string unions for local/non-Property choices; see scenerystack-coding-conventions.
 ---
 
 # SceneryStack Enumeration
 
-When state is "one of a fixed set" (mode = wave | particle, tool = ruler | timer | none), model it with the **`EnumerationValue` class pattern** from `scenerystack/phet-core` and an **`EnumerationProperty`** from `scenerystack/axon` — not a string union or a bag of numeric constants. The enum carries real instances, so a `Property` of it works cleanly with radio buttons, combo boxes, and `Multilink`.
+When a **Property-backed** choice is "one of a fixed set" (mode = wave | particle, tool =
+ruler | timer | none) and binds to radios/combo boxes, model it with the
+**`EnumerationValue` class pattern** from `scenerystack/phet-core` and an
+**`EnumerationProperty`** from `scenerystack/axon`. The enum carries real instances, so a
+`Property` of it works cleanly with controls and `Multilink`.
+
+**String-literal unions** remain fine for local/non-Property choices (function args,
+narrow internals, one-off switches). Prefer `EnumerationValue` when the value is model
+state behind a Property or needs rich instance methods — aligned with
+scenerystack-coding-conventions.
 
 ## The pattern
 
@@ -55,19 +64,22 @@ new AquaRadioButtonGroup(model.sourceModeProperty, [
 
 ## Rules
 
-- Use the `EnumerationValue` class pattern for any fixed, named choice set in model/view state.
+- Use `EnumerationValue` + `EnumerationProperty` for Property-backed named choices bound to radios/combo (or when members need methods).
+- Prefer a string-literal union (optionally `as const` + `StringUnionProperty`) for local/non-Property choices.
 - The `static enumeration = new Enumeration(ThisClass)` line goes **last**, after every member.
-- Back the choice with `EnumerationProperty`; reset it in the model's `reset()` like any other Property (see scenerystack-model).
+- Reset the `EnumerationProperty` in the model's `reset()` like any other Property (see scenerystack-model).
 - Compare by identity (`mode === SourceMode.PULSE`) — members are singletons.
-- Provide the user-visible label per member at the control via localized `*StringProperty`s (see scenerystack-strings), not on the enum.
-- This is the modern API — use `Enumeration`/`EnumerationValue` from `phet-core`, not the deprecated `EnumerationDeprecated`.
+- Provide user-visible labels at the control via localized `*StringProperty`s (see scenerystack-strings), not on the enum.
+- Use `Enumeration`/`EnumerationValue` from `phet-core`, not the deprecated `EnumerationDeprecated`.
 
 ## Common mistakes
 
-- A `string` union (`"wave" | "particle"`) or magic numbers instead of an enum → no singletons, weaker typing, awkward with `EnumerationProperty` and radio groups.
+- Magic numbers instead of an enum or string union → weak typing and awkward radio groups.
+- Using a string union for a Property bound to radios/combo when `EnumerationProperty` would be clearer.
 - Declaring `static enumeration` before the members → it can't see them; it must be last.
 - Forgetting to reset the `EnumerationProperty` in `reset()` → mode survives Reset All.
-- Comparing with deep equality instead of `===` — members are unique instances; identity is correct and cheapest.
-- Reaching for `EnumerationDeprecated` (the old map-based API) in new code.
+- Comparing with deep equality instead of `===` — members are unique instances.
+- Reaching for `EnumerationDeprecated` in new code.
 
-Related skills: scenerystack-model, scenerystack-ui-controls, scenerystack-strings.
+Related skills: scenerystack-model, scenerystack-ui-controls, scenerystack-strings,
+scenerystack-coding-conventions, scenerystack-axon.

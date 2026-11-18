@@ -1,6 +1,6 @@
 ---
 name: scenerystack-screen-view
-description: Use when wiring a simulation's entry point — creating the Sim, defining a Screen, building a ScreenView, setting screen icons and background, or connecting a screen's model to its view. Covers the joist Sim/Screen/ScreenView trio (imported via scenerystack/sim), the model factory pattern, and the per-frame step hand-off.
+description: Use when wiring Sim/Screen/ScreenView — model factory, screen icons/background, multi-screen icons, per-frame step hand-off. Imported via scenerystack/sim.
 ---
 
 # SceneryStack Screen & Sim Setup
@@ -142,4 +142,6 @@ from the SVG brand icon (app icons still come from `npm run icons`).
 - Reordering `main.ts` imports so `brand.js` is no longer first → breaks the bootstrap chain.
 - Multi-screen sims with no `homeScreenIcon` / hardcoded bitmap icons that ignore `*Colors`.
 
-Related skills: scenerystack-model, scenerystack-layout, scenerystack-ui-controls, scenerystack-color-profiles, scenerystack-optionize, scenerystack-preferences.
+Related skills: scenerystack-model, scenerystack-layout, scenerystack-ui-controls,
+scenerystack-accessibility, scenerystack-color-profiles, scenerystack-optionize,
+scenerystack-preferences, scenerystack-keyboard-help-dialog.

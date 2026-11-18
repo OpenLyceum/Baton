@@ -1,9 +1,12 @@
 ---
 name: scenerystack-constants
-description: Use when a number, size, color-independent magnitude, or physical parameter appears in code — define it in a *Constants.ts module instead of inlining a magic value. Covers the SI-unit constants pattern, layout constants, root vs documented nested extras, and as const grouping.
+description: Use when a number, size, or physical parameter appears in code — put it in *Constants.ts. Covers SI units, layout constants, root vs nested extras, and as const grouping.
 ---
 
 # SceneryStack Constants
+
+Structural file placement (root `*Constants.ts`, nested extras):
+[CONVENTIONS.md](../../CONVENTIONS.md) §2. This skill is the SI / naming idiom.
 
 Magic numbers don't belong in the body of a model or view. Each sim collects its fixed values into one or more `*Constants.ts` modules — physical parameters in **SI units**, layout values in pixels — so they're named, documented, and changed in one place.
 

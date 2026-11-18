@@ -1,6 +1,6 @@
 ---
 name: scenerystack-accessibility
-description: Use whenever making a sim usable with a keyboard and screen reader — naming interactive nodes, writing help text and descriptions, announcing dynamic changes, adding keyboard listeners and global hotkeys, and interactive highlights. Covers accessibleName, accessibleHelpText, accessibleParagraph, addAccessibleResponse, KeyboardListener, HotkeyData, and the InteractiveHighlighting mixin.
+description: Use when making a sim usable with keyboard and screen reader — accessibleName, help text, announcements, KeyboardListener/HotkeyData, interactive highlights. Covers PDOM naming and the InteractiveHighlighting mixin.
 ---
 
 # SceneryStack Accessibility

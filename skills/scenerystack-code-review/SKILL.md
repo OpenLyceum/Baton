@@ -1,6 +1,6 @@
 ---
 name: scenerystack-code-review
-description: Use to run a pre-release Code Review (CRC) on an OpenLyceum SceneryStack sim built from the SceneryStack template — build/run/fuzz checks, memory-leak audit, performance, usability, i18n, repo-structure conformance, coding conventions, math libraries, maintainability, and accessibility. Trigger when asked to "code review", "do a CRC", "pre-release review", or audit a sim against project standards.
+description: Use when asked to code review, do a CRC, pre-release review, or audit a SceneryStack sim against project standards. Covers build/fuzz, memory leaks, i18n, structure, conventions, and accessibility checklist.
 ---
 
 # SceneryStack Code Review (CRC)
@@ -8,10 +8,7 @@ description: Use to run a pre-release Code Review (CRC) on an OpenLyceum Scenery
 A Code Review is the pre-release audit of an OpenLyceum sim against project standards. Our sims are
 **Vite + TypeScript + Biome** projects forked from `SceneryStackTemplate` (`npm run rename`), so
 this checklist is tailored to that layout (`src/`, `doc/`, `public/`, `biome.json`) — **not** the classic
-PhET `js/`/grunt layout. Related skills: scenerystack-new-sim, scenerystack-accessibility,
-scenerystack-i18n, scenerystack-color-profiles, scenerystack-constants,
-scenerystack-query-parameters, scenerystack-preferences, scenerystack-keyboard-help-dialog,
-scenerystack-testing.
+PhET `js/`/grunt layout.
 
 ## How to run a review
 
@@ -125,32 +122,16 @@ accessed through `src/i18n/StringManager.ts`.
 
 ### Repository Structure
 
-Run the automated gate first — it already covers most of this, so don't re-derive file layout
-by hand:
+Run the automated gates first — do not re-derive file layout by hand. Treat failures as CRC
+findings. Full auto/manual split:
+[`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist".
 
 - [ ] `bash ../Baton/scripts/check-repo-compliance.sh <SimDir>` prints `Compliance check
-  passed`. On its own this verifies: no root `LICENSE`/`CONTRIBUTING.md`; the `README.md`
-  six-section outline; CI/deploy workflow wiring and Dependabot; the bootstrap chain
-  (`src/{init,assert,splash,brand,main}.ts`, `main.ts` importing `./brand.js` first);
-  `<Prefix>Namespace.ts` / `<Prefix>Colors.ts` / `*Constants.ts` at `src/` root;
-  `src/preferences/` and `src/i18n/` file presence plus locale parity; `tests/` layout, the
-  memory-leak suite, and `--expose-gc`; `.githooks/`; the PWA manifest, assets, and
-  `index.html` meta; the `biome.json` schema pin; and repo security settings. Its
-  standardization rules also fail on: template placeholders (`exampleToggle`,
-  `exampleControl`, `Sim*.ts`); a `profileColor()`-style helper in `<Prefix>Colors.ts`; an
-  unused template `TimeModel`; `export default class`; relative imports without `.js`;
-  `init.ts` not reading `version` from `package.json`; a description that is not
-  single-sourced from `package.json` (`index.html` `%SIM_DESCRIPTION%` and the manifest)
-  or still the rename placeholder; README Tech Stack majors that disagree with
-  `package.json`; and a missing `tests/setup.ts` or fuzz harness. Report failures and distinguish local checks from unavailable remote probes — see [`CONVENTIONS.md`](../../CONVENTIONS.md) §"Per-sim checklist" for the
-  full auto/manual split.
-
+  passed`. Report failures; distinguish local checks from unavailable remote probes.
 - [ ] `bash ../Baton/scripts/check-template-drift.sh <SimDir>` reports no drift in
-  template-owned files (configs, `tests/setup.ts`, `tests/helpers/memoryLeak.ts`, fuzz,
-  bootstrap `assert`/`brand`/`splash`, workflows) or in `package.json` scripts, dependency
-  versions, and key order. `--fix` restores them. A deliberate deviation needs a
-  `**Template drift**` entry under `AGENTS.md` ## Compliance carve-outs; prose that merely
-  mentions the file does not count.
+  template-owned files (or `package.json` scripts/deps/key order). `--fix` restores them.
+  A deliberate deviation needs a `**Template drift**` entry under `AGENTS.md`
+  ## Compliance carve-outs; prose that merely mentions the file does not count.
 
 What the gate can't judge — check these by eye:
 
@@ -171,8 +152,8 @@ What the gate can't judge — check these by eye:
   scenerystack-query-parameters).
 - [ ] Any nested topical constants files (beyond the root `{Prefix}Constants.ts`) are
   documented in `AGENTS.md` (see scenerystack-constants).
-- [ ] GPU-only field state lives under a documented `src/common/gpu/` carve-out with
-  parameters in `model/` (see scenerystack-model).
+- [ ] GPU-only field state lives under a documented `gpu/` carve-out with parameters in
+  `model/` (see scenerystack-webgpu).
 - [ ] `package.json` has no unused dependencies; no dev-only relaxations left in
   `tsconfig*`/`vite.config.ts`/`vitest.config.ts`/`biome.json` (disabled lint rules, loosened
   `strict`/type checks, debug flags).
@@ -249,8 +230,10 @@ scenerystack-accessibility and the repo's `SimScreenSummaryContent.ts` / `SimKey
 **Alternative Input**
 
 - [ ] Passes the keyboard fuzz test: `?fuzzBoard&ea`.
-- [ ] Traversal order is set via `ScreenView.pdomPlayAreaNode.pdomOrder` and
-  `pdomControlAreaNode.pdomOrder`.
+- [ ] Traversal order uses one approved pattern from
+  [`ACCESSIBILITY.md`](../../ACCESSIBILITY.md) / scenerystack-accessibility — either a
+  wrapper `Node` with `pdomOrder` (template default) **or**
+  `pdomPlayAreaNode` / `pdomControlAreaNode`. Never set `pdomOrder` on `ScreenView` itself.
 - [ ] `KeyboardListener` keys are defined with `HotkeyData`, shared between the listener and the
   keyboard-help dialog so each binding lives in one place.
 - [ ] Keyboard-help content documents the controls users actually have (not the template stub).
@@ -264,7 +247,25 @@ scenerystack-accessibility and the repo's `SimScreenSummaryContent.ts` / `SimKey
 - [ ] Accessibility strings have no leading space before a terminal period (some screen readers read
   ` .` as "dot").
 
+## Rules
+
+- Run compliance + template-drift before eyeballing structure; do not duplicate their checklists.
+- Record scope, findings, fixes, and limitations; distinguish pre-existing failures from regressions.
+- Checked boxes mean reviewed; report findings separately.
+- For time/recording/solver behavior, also read [functional-review.md](references/functional-review.md).
+
+## Common mistakes
+
+- Requiring only `pdomPlayAreaNode`/`pdomControlAreaNode` and failing template-style wrapper `pdomOrder`.
+- Re-deriving compliance rules in prose instead of running `check-repo-compliance.sh`.
+- Shipping keyboard-help stub content that the gate does not catch.
+- Treating a NumberProperty-only memory-leak suite as full coverage (see scenerystack-testing).
+
 ---
 
 *PhET-iO is not used in OpenLyceum template sims; if a sim adds it, review against the upstream PhET-iO
 instrumentation guide separately.*
+
+Related skills: scenerystack-coding-conventions, scenerystack-testing, scenerystack-disposal,
+scenerystack-accessibility, scenerystack-ui-controls, scenerystack-new-sim,
+scenerystack-keyboard-help-dialog, scenerystack-webgpu.

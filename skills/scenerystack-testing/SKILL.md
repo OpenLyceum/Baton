@@ -1,18 +1,23 @@
 ---
 name: scenerystack-testing
-description: Use when adding or changing unit tests for a simulation — writing vitest specs for model/physics code, listing disposables in the memory-leak suite, or adding fuzz/Playwright specs. Covers the standardized tests/ layout, the template-owned setup and describeDisposalLeaks harness (idempotentDispose, forceGC early-exit), what is worth testing, pointer + keyboard fuzz, tests/browser specs, and WebGPU launch flags for GPU sims.
+description: Use when adding unit, memory-leak, fuzz, or browser tests — tests/ layout (CONVENTIONS §5), describeDisposalLeaks, test:fuzz vs tests/browser, test:soak. WebGPU Playwright flags: scenerystack-webgpu.
 ---
 
 # SceneryStack Testing
+
+**Layout authority:** [CONVENTIONS.md](../../CONVENTIONS.md) §5. This skill is harness
+idioms, what to test, and common mistakes — not a second copy of the folder gate.
 
 Every OpenLyceum SceneryStack sim ships Vitest unit tests under root `tests/` and a
 `test` script in `package.json`. CI runs `npm test` when that script is present. Prefer
 testing the **model** (pure logic, physics, math) — not Scenery rendering.
 
-Algorithm-heavy sims (OpticsLab, Resonance, WaveComposer, MazeGame, SternGerlach, Zenith,
-ExtrasolarPlanets, MotionsOfTheSun, …) carry denser suites; PhET ports often start with a
-smoke + reset suite and grow physics invariants over time. SceneryStackTemplate is the layout
-reference (CONVENTIONS §5).
+`tests/fuzz/` → `npm run test:fuzz` (Fleet Health smoke). `tests/browser/` → sim-specific
+Playwright (engines, focus, screenshots) plus template `test:soak`. Do not put browser
+specs under `fuzz/`.
+
+Algorithm-heavy sims carry denser suites; PhET ports often start with smoke + reset and
+grow. SceneryStackTemplate is the layout reference.
 
 ## The standardized layout
 
@@ -195,27 +200,8 @@ exactly that reason (see its `vite.config.ts`).
 
 ## WebGPU / GPU sims in Playwright
 
-Headless Chromium often returns `null` from `navigator.gpu.requestAdapter()` unless
-launched with WebGPU enabled. For engine / screenshot suites in `tests/browser/` (e.g. the FluidDynamics engine spec):
-
-```typescript
-chromium.launch({
-  args: ["--enable-unsafe-webgpu", "--enable-features=Vulkan"],
-});
-```
-
-To exercise a no-WebGPU fallback path deliberately:
-
-```typescript
-chromium.launch({
-  args: ["--disable-features=WebGPU,WebGPUService"],
-});
-```
-
-Absence of `vulkaninfo` on the host is **not** evidence that WebGPU is unavailable —
-verify with a real browser launch. GPU engine suites may be slow on software rasterizers;
-keep them out of the default `npm test` path and document skip conditions in the sim's
-`AGENTS.md`.
+Launch flags, no-adapter paths, and GPU carve-outs: **scenerystack-webgpu**. Keep GPU
+engine suites out of default `npm test`; document skip conditions in the sim's `AGENTS.md`.
 
 ## Rules
 
@@ -240,8 +226,8 @@ keep them out of the default `npm test` path and document skip conditions in the
 - `idempotentDispose: true` on an axon-backed object → the second `dispose()` throws by design.
 - A browser spec under `tests/fuzz/` → it runs inside every `test:fuzz` and Fleet Health smoke.
 - Editing `tests/setup.ts` or `tests/helpers/memoryLeak.ts` in one sim → template drift; change the template.
-- Assuming WebGPU works in Playwright without the launch flags above → adapter is `null`.
+- Assuming WebGPU works in Playwright without scenerystack-webgpu launch flags → adapter is `null`.
 - A diagnostic `console.warn` that fires on normal input (e.g. "found fewer states than requested" when the request is only a ceiling) → every test touching it fails the console guard; fix the condition, don't silence it.
 
 Related skills: scenerystack-model, scenerystack-code-review, scenerystack-disposal,
-scenerystack-numerics.
+scenerystack-numerics, scenerystack-webgpu, scenerystack-axon.

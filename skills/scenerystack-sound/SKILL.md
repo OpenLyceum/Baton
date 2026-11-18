@@ -1,6 +1,6 @@
 ---
 name: scenerystack-sound
-description: Use when adding sound to a simulation — UI feedback sounds, sonification of a changing quantity, or an audio Preferences tab. Covers the tambo library, soundManager, SoundClip, registering generators, gating on the sound-enabled Property, and importing audio assets.
+description: Use when adding sound — UI clips, sonification, or Audio Preferences tab. Covers tambo, soundManager, SoundClip, sound-enabled gating, and audio assets.
 ---
 
 # SceneryStack Sound

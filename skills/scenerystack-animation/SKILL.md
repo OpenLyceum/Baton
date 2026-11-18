@@ -1,6 +1,6 @@
 ---
 name: scenerystack-animation
-description: Use when something must move or change smoothly over time independent of the physics step — a panel sliding in, a fade, a value easing to a target, or a transition between view states. Covers the twixt Animation class, Easing, chaining/looping, and when to animate vs. integrate in the model step.
+description: Use when something must move smoothly independent of physics step — panel slide, fade, ease-to-target, view transitions. Covers twixt Animation, Easing, chaining/looping, and animate vs integrate in step.
 ---
 
 # SceneryStack Animation

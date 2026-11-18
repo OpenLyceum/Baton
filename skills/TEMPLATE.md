@@ -1,6 +1,6 @@
 ---
 name: scenerystack-<topic>
-description: Use when <the concrete trigger — what the contributor is doing or what file/API they touch>. Covers <the 3–5 specific things this skill teaches>.
+description: Use when <the concrete trigger — what the contributor is doing or what file/API they touch>. Covers <the 3–5 specific things this skill teaches>. Keep ≤280 characters so skill matchers can disambiguate.
 ---
 
 # SceneryStack <Topic>

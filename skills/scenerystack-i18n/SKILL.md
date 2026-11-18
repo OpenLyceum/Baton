@@ -1,6 +1,6 @@
 ---
 name: scenerystack-i18n
-description: Use when adding or maintaining translations — adding a locale, keeping locale files in sync, interpolating values with PatternStringProperty, formatting units, or enabling the runtime language picker. The localization workflow that sits on top of StringManager.
+description: Use when adding a locale, syncing locale files, PatternStringProperty interpolation, units formatting, or the runtime language picker — localization on top of StringManager.
 ---
 
 # SceneryStack Internationalization (i18n)

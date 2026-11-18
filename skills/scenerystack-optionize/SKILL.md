@@ -1,6 +1,6 @@
 ---
 name: scenerystack-optionize
-description: Use whenever a Node/component constructor takes configurable options, or you need to merge caller-provided options with defaults and forward the rest to a superclass. Covers optionize<>(), SelfOptions/Options types, EmptySelfOptions, and combineOptions.
+description: Use whenever a constructor takes options — optionize<>(), SelfOptions/Options, EmptySelfOptions, combineOptions. Merge defaults and forward superclass options.
 ---
 
 # SceneryStack optionize
@@ -85,4 +85,4 @@ const switchOptions = combineOptions<ToggleSwitchOptions>(
 - Wrong type order — it is `<Full, Self, Parent>`. Mixing Self and Parent produces confusing errors.
 - Hand-merging with `{ ...defaults, ...providedOptions }` — loses the type guarantees and nested-option handling.
 
-Related skills: scenerystack-layout, scenerystack-preferences, scenerystack-color-profiles.
+Related skills: scenerystack-coding-conventions, scenerystack-ui-controls, scenerystack-layout.
