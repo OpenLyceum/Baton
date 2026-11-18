@@ -241,7 +241,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 | `ownedIfPresent` | Optional starter (e.g. `src/common/TimeModel.ts`): a sim may delete it, but a kept copy must match `exact`ly — configure it, don't fork it |
 | `linesSuperset` | Every template line present (`.gitignore`; extra lines allowed) |
 | `jsonExtend` | JSON equal to the template except the listed paths, whose arrays may only grow |
-| `templateOnly` | Template tooling (`rename`, `scaffold-screens`) must not linger in a sim |
+| `templateOnly` | Template tooling (`rename`, `scaffold-screens`, `tests/generators.test.ts`, template-only docs) must not linger in a sim |
 | `forbidden` | Dead or foreign files (`.fuzz-playwright.config.ts`, `CLAUDE.md`, ESLint/Prettier, `.cursor/`) |
 | `noTemplateCopies` | Sim docs sharing ≥60% of their lines with the template's copy |
 | `packageJson` | Every template script (same command), every template dependency (same version specifier), shared keys in template order with sim-specific entries after, `engines`/`license`/`type`, override keys |

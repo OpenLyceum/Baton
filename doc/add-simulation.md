@@ -31,11 +31,14 @@ Baton/scripts/create-sim.sh \
 ```
 
 Omit `--screens` for a single screen named after `--name`. `--shared-model` scaffolds
-`src/common/model/SharedModel.ts` (fleet-style composition). `--onboard` inserts the catalog row, captures a
-screenshot, builds the WebP card, regenerates `docs/index.html`, and updates the
-OpenLyceum README Layout table; `--pr` opens Baton + OpenLyceum PRs.
-Pass `--local-only` to bootstrap from a local `SceneryStackTemplate` checkout without
-creating a GitHub repo.
+`src/common/model/SharedModel.ts` (fleet-style composition). Optional starters default off:
+`--with-time-model` and `--with-control-options` (Panel/ButtonOptions always stay).
+`create-sim` strips template demos, runs `check-template-drift --fix`, then
+`check-repo-compliance` and **fails before** catalog/onboard/publish if compliance fails.
+`--onboard` inserts the catalog row, captures a screenshot, builds the WebP card,
+regenerates `docs/index.html`, and updates the OpenLyceum README Layout table; `--pr`
+opens Baton + OpenLyceum PRs. Pass `--local-only` to bootstrap from a local
+`SceneryStackTemplate` checkout without creating a GitHub repo.
 
 **Or — GitHub UI:** open [SceneryStackTemplate](https://github.com/OpenLyceum/SceneryStackTemplate),
 click **Use this template**, then in the new clone:
@@ -44,7 +47,10 @@ click **Use this template**, then in the new clone:
 npm install
 npm run rename -- --id my-new-sim --name "My New Sim"
 npm run scaffold-screens -- --screens Intro,Lab
-npm run check
+# optional: --with-time-model --with-control-options
+npm run fix && npm run check
+Baton/scripts/check-template-drift.sh --fix MyNewSim
+COMPLIANCE_STRICT=1 Baton/scripts/check-repo-compliance.sh ../MyNewSim
 ```
 
 Then confirm:

@@ -38,6 +38,8 @@ CATALOG=0
 ONBOARD=0
 OPEN_PR=0
 SHARED_MODEL=0
+WITH_TIME_MODEL=0
+WITH_CONTROL_OPTIONS=0
 EXISTING=0
 DESCRIPTION=""
 SHORT_DESCRIPTION=""
@@ -62,6 +64,8 @@ Options:
                        astronomy, or earth-science
   --github-topics LIST Optional extra GitHub topics (kebab-case), e.g. game,pwa
   --shared-model       Scaffold src/common/model/SharedModel.ts; each screen composes it
+  --with-time-model    Keep TimeModel and compose it into screen models (default: off)
+  --with-control-options  Keep *ControlOptions.ts (default: off; Panel/ButtonOptions stay)
   --path DIR           Checkout path (default: $FLEET_WORKSPACE/<repo>)
   --description TEXT   Full catalog / Pages card description
   --short-description TEXT  Optional GitHub About blurb (≤350 chars)
@@ -377,6 +381,14 @@ while [[ $# -gt 0 ]]; do
       SHARED_MODEL=1
       shift
       ;;
+    --with-time-model)
+      WITH_TIME_MODEL=1
+      shift
+      ;;
+    --with-control-options)
+      WITH_CONTROL_OPTIONS=1
+      shift
+      ;;
     --existing)
       EXISTING=1
       shift
@@ -423,7 +435,8 @@ if [[ "$EXISTING" -eq 0 && -e "$TARGET_PATH" ]]; then
 fi
 
 if [[ -z "$DESCRIPTION" ]]; then
-  DESCRIPTION="A SceneryStack simulation: ${SIM_NAME}."
+  # Avoid the rename-sim placeholder prefix that check-repo-compliance rejects.
+  DESCRIPTION="${SIM_NAME} is a SceneryStack simulation."
 fi
 
 if [[ "$LOCAL_ONLY" -eq 0 ]] && ! command -v gh >/dev/null 2>&1; then
@@ -439,6 +452,12 @@ if [[ -n "$SCREENS" ]]; then
 fi
 if [[ "$SHARED_MODEL" -eq 1 ]]; then
   SCREEN_ARGS+=(--shared-model)
+fi
+if [[ "$WITH_TIME_MODEL" -eq 1 ]]; then
+  SCREEN_ARGS+=(--with-time-model)
+fi
+if [[ "$WITH_CONTROL_OPTIONS" -eq 1 ]]; then
+  SCREEN_ARGS+=(--with-control-options)
 fi
 
 # Structured screen list for catalog: [{id, title}, ...]
@@ -553,6 +572,8 @@ echo "  screens:  ${SCREENS:-"(default: $SIM_NAME)"}"
 echo "  topics:   ${TOPICS:-"(none)"}"
 echo "  subject:  $SUBJECT"
 echo "  shared:   $([[ "$SHARED_MODEL" -eq 1 ]] && echo yes || echo no)"
+echo "  time model: $([[ "$WITH_TIME_MODEL" -eq 1 ]] && echo yes || echo no)"
+echo "  control options: $([[ "$WITH_CONTROL_OPTIONS" -eq 1 ]] && echo yes || echo no)"
 echo "  onboard:  $([[ "$ONBOARD" -eq 1 ]] && echo yes || echo no)"
 echo "  existing: $([[ "$EXISTING" -eq 1 ]] && echo "yes (adopt already-on-GitHub repo)" || echo "no (create from template)")"
 echo "  template: $TEMPLATE_REPO"
@@ -652,6 +673,16 @@ if [[ -f "$TEMPLATE_DIR/package.json" ]]; then
   node "$SCRIPT_DIR/check-template-drift.mjs" --fix --dir "$PWD" --name "$REPO" --template "$TEMPLATE_DIR"
 else
   echo "warning: no local SceneryStackTemplate at $TEMPLATE_DIR; run check-template-drift.sh --fix $REPO later" >&2
+fi
+
+# Fail closed before catalog / onboard / publish when the seed still has placeholders
+# or structural gaps. COMPLIANCE_STRICT is accepted (and currently ignored) for older
+# callers; the gate itself fails on template leftovers and required structure.
+echo ""
+echo "check-repo-compliance..."
+if ! COMPLIANCE_STRICT=1 "$SCRIPT_DIR/check-repo-compliance.sh" "$PWD"; then
+  echo "error: compliance failed after scaffold — fix the seed before onboard/publish" >&2
+  exit 1
 fi
 fi  # end of the create-from-template branch (--existing skips it)
 
