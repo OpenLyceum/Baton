@@ -48,8 +48,9 @@ npm run lint && npm run check && npm run check:architecture && npm run check:unu
 
 `rename` rewrites package metadata / prefixes. `scaffold-screens` emits `src/<kebab>/`
 packages from `src/sim-screen/`, writes `common/{Prefix}ScreenIcons.ts`, rewrites
-`main.ts` + `StringManager` + locale JSON, strips template demos on forks (empty
-preferences shell; no `example*` / `exampleEnabledProperty`), drops unused starters
+`main.ts` + `StringManager` + locale JSON, strips template demos on forks (no live
+`example*` / `exampleEnabledProperty`; commented `showGrid` preference, accessible-control,
+and TimeModel patterns stay to copy), drops unused starters
 unless `--with-time-model` / `--with-control-options`, writes short `AGENTS.md` /
 `doc/model.md` / `doc/implementation-notes.md`, then **deletes** the prototype. It is
 **one-shot** — a second run exits with "No prototype screen package found". Growing
@@ -78,7 +79,8 @@ only if you skipped scaffold or opted into starters without using them:
   placeholder fails. `vite.config.ts` fills `index.html` (`%SIM_DESCRIPTION%`, Open Graph,
   Twitter) and the PWA manifest from it. Never edit those copies by hand.
 - **`exampleToggle` / `exampleControl`.** Must not remain in `src/` (compliance fails).
-  Forks should already have an empty preferences shell (see scenerystack-preferences).
+  Forks start with an empty preferences shell that carries a commented `showGrid`
+  pattern; follow it (and scenerystack-preferences) when adding a real preference.
 - **`TimeModel` / `*ControlOptions`.** Default off at create time. If you passed
   `--with-time-model` / `--with-control-options`, compose or delete unused copies and keep
   `tests/memory-leak.test.ts` listing real disposables (see scenerystack-testing).
