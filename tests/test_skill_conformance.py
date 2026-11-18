@@ -118,5 +118,36 @@ class SkillConformanceTests(unittest.TestCase):
         self.assertEqual(self.run_check()[1]["sound"]["status"], "follow")
 
 
+    def test_pointer_only_note_satisfies_drag_listener(self):
+        self.write({"src/demo/view/HandleNode.ts": "// Pointer-only: the slider owns the arrows.\nnew DragListener({});\n"})
+        _, probes = self.run_check()
+        self.assertEqual(probes["drag-listener"]["status"], "follow")
+
+    def test_keyboard_drag_elsewhere_does_not_cover_a_bare_file(self):
+        self.write({
+            "src/demo/view/HandleNode.ts": "new RichDragListener({});\n",
+            "src/demo/view/FieldNode.ts": "new DragListener({});\n",
+        })
+        _, probes = self.run_check()
+        self.assertEqual(probes["drag-listener"]["status"], "gap")
+        self.assertEqual(probes["drag-listener"]["path"], "src/demo/view/FieldNode.ts")
+
+    def test_offscreen_canvas_painted_through_scenery_is_allowed(self):
+        self.write({"src/demo/view/HeatmapNode.ts": (
+            'const buffer = document.createElement("canvas");\n'
+            'const context = buffer.getContext("2d");\n'
+            "export const image = new Image(buffer);\n"
+        )})
+        _, probes = self.run_check()
+        self.assertEqual(probes["custom-drawing"]["status"], "follow")
+
+    def test_canvas_shown_through_a_dom_node_is_a_gap(self):
+        self.write({"src/demo/view/LensNode.ts": (
+            'const lensCanvas = document.createElement("canvas");\n'
+            "export const node = new DOM(lensCanvas);\n"
+        )})
+        _, probes = self.run_check()
+        self.assertEqual(probes["custom-drawing"]["status"], "gap")
+
 if __name__ == "__main__":
     unittest.main()

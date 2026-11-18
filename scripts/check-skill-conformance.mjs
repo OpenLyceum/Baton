@@ -210,11 +210,17 @@ const PROBES = [
     level: "warn",
     skill: "scenerystack-drag-listener",
     run(files) {
-      const pointer = firstHit(files, /\bnew DragListener\b/);
-      if (!pointer) return null;
-      return anyHit(files, /\b(KeyboardDragListener|RichDragListener|RichPointerDragListener|SoundDragListener|SoundRichDragListener)\b/)
-        ? OK
-        : gap(pointer.rel, "pointer DragListener with no keyboard drag anywhere");
+      // Per file, as the skill reads: a plain DragListener is right when something else
+      // already owns the keys (a KeyboardListener / HotkeyData, an AccessibleSlider), and the
+      // file says so in a "pointer-only" comment naming the keyboard path.
+      const drags = files.filter((f) => /\bnew DragListener\b/.test(f.code));
+      if (drags.length === 0) return null;
+      const keyboard =
+        /\b(KeyboardDragListener|RichDragListener|SoundRichDragListener|KeyboardListener|AccessibleSlider|AccessibleValueHandler)\b/;
+      const bare = drags.find((f) => !keyboard.test(f.code) && !/pointer-only/i.test(f.raw));
+      return bare
+        ? gap(bare.rel, "DragListener with no keyboard listener in the file and no 'pointer-only' comment naming the keyboard path")
+        : OK;
     },
   },
   {
@@ -222,8 +228,12 @@ const PROBES = [
     level: "warn",
     skill: "scenerystack-custom-drawing",
     run(files) {
-      const hit = firstHit(files, /\.getContext\(|\bHTMLCanvasElement\b|document\.createElement\(\s*["']canvas["']/);
-      return hit ? gap(hit.rel, "DOM canvas outside scenery (CanvasNode / kite Shape)") : null;
+      // Offscreen canvases (ImageData buffers, sprites, textures, GPU targets, pixel
+      // readback) are fine when the result is painted through CanvasNode / Image / Pattern /
+      // Sprites. The skill forbids a canvas *displayed* outside scenery.
+      if (!anyHit(files, /\.getContext\(|\bHTMLCanvasElement\b|document\.createElement\(\s*["']canvas["']/)) return null;
+      const shown = firstHit(files, /\bnew DOM\(\s*[\w.]*[Cc]anvas\b|\.(appendChild|append|prepend)\(\s*[\w.]*[Cc]anvas\b/);
+      return shown ? gap(shown.rel, "canvas displayed through a DOM node or attached to the document (paint it through CanvasNode / Image)") : OK;
     },
   },
   {
@@ -252,6 +262,7 @@ for (const sim of sims) {
   }
   const files = walk(join(simDir, "src")).map((p) => ({
     rel: relative(simDir, p).split("\\").join("/"),
+    raw: readFileSync(p, "utf8"),
     code: stripComments(readFileSync(p, "utf8")),
   }));
   const approved = carveOuts(simDir);
