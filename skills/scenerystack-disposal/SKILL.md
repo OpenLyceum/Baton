@@ -66,6 +66,20 @@ Removing or disposing a parent is not evidence that every owned child, trace, to
 
 For asynchronous acquisition (microphone, sensor, device), invalidate the current request on Stop, reset, screen deactivation, or disposal. A generation/token check after each await, including audio resume, prevents an obsolete completion from updating status or replacing a newer error. Release resources returned by stale requests without tearing down a newer session. Record ownership as soon as each resource is created so partial startup failures can stop tracks, disconnect nodes, and close owned contexts.
 
+## What a rebuilt node actually leaks
+
+When a node rebuilds its children, the leaks usually come from localized string
+Properties (`StringProperty`, `PatternStringProperty`, a `DerivedProperty` over strings)
+and accessible-name Properties: a `Text`, label or `accessibleName` links to them for as
+long as it exists. A color Property passed as `fill` or `stroke` is different. The node
+subscribes to it only while drawn on a `Display` and releases it on removal, even without
+`dispose()`. (A color Property you `link` yourself is a manual listener and still needs
+an `unlink`.)
+
+In memory-leak tests, assert listener counts on the string and accessible-name
+Properties. Color-Property counts only reveal a leak if the test attaches the node to a
+`Display`.
+
 ## Dynamic collections
 
 When the view mirrors a model `createObservableArray()` of unique particles, keep one node
