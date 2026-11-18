@@ -74,14 +74,10 @@ Shared:
 
 Sim carve-outs (allowed via `config/template-manifest.json` extend keys):
 
-- DataLab and BasicCoordinatesAndSeasons list their directly invoked data generators
-  as `entry`.
 - Astronomy sims with optional Java-based Flash decompilers list `java` in
   `ignoreBinaries` (system prerequisite, not an npm package).
 - RadioactivityAndStatistics lists the standalone USB probe server and browser script
   as `entry`.
-- TrackLab retains `@techstark/opencv-js` in `ignoreDependencies`: its Vite plugin
-  serves/copies the file from `node_modules` by path instead of importing it.
 
 ## `@public` vs delete `export` vs `@internal`
 
