@@ -70,7 +70,8 @@ Options:
   --path DIR           Checkout path (default: $FLEET_WORKSPACE/<repo>)
   --short-description TEXT  Optional GitHub About blurb (≤350 chars)
   --local-only         Copy local SceneryStackTemplate; do not create a GitHub repo
-  --no-push            Do not git push the sim (default: no auto-push unless --pr)
+  --no-push            Do not git push the sim (default: only the pristine template
+                       snapshot is pushed at repo creation; the bootstrap is pushed by --pr)
   --catalog            Insert a repos.json entry in Baton (no commit)
   --onboard            Full fleet onboarding: catalog + screenshot + WebP + Pages
                        index + GitHub baseline + superproject README Layout row
@@ -602,7 +603,15 @@ if [[ "$EXISTING" -eq 1 ]]; then
   fi
 else
   TEMPLATE_WORK="$(mktemp -d "${TMPDIR:-/tmp}/create-sim-template.XXXXXX")"
-  trap 'rm -rf -- "$TEMPLATE_WORK"' EXIT
+  REMOTE_CREATED=0
+  cleanup_create() {
+    local status=$?
+    rm -rf -- "$TEMPLATE_WORK"
+    if [[ "$status" -ne 0 && "$REMOTE_CREATED" -eq 0 && -e "$TARGET_PATH" ]]; then
+      echo "note: no GitHub repo was created; remove $TARGET_PATH before re-running" >&2
+    fi
+  }
+  trap cleanup_create EXIT
 
   if [[ "$LOCAL_ONLY" -eq 1 ]]; then
     SRC_TEMPLATE="$WORKSPACE/SceneryStackTemplate"
@@ -680,12 +689,15 @@ else
   if [[ "$LOCAL_ONLY" -eq 0 ]]; then
     echo ""
     echo "Creating GitHub repo from the validated checkout..."
-    gh repo create "$ORG/$REPO" \
-      --public \
-      --description "$DESCRIPTION" \
-      --homepage "${PAGES_BASE}/${REPO}" \
-      --source . \
-      --remote origin
+    # Push the pristine snapshot commit so the remote has `main` before the
+    # GitHub baseline runs (default_branch / Pages fail on an empty repo). The
+    # validated rename + scaffold stays uncommitted for review or --pr.
+    create_args=(--public --description "$DESCRIPTION" --homepage "${PAGES_BASE}/${REPO}" --source . --remote origin)
+    if [[ "$NO_PUSH" -eq 0 ]]; then
+      create_args+=(--push)
+    fi
+    gh repo create "$ORG/$REPO" "${create_args[@]}"
+    REMOTE_CREATED=1
   fi
 fi
 
@@ -732,7 +744,11 @@ if [[ "$ONBOARD" -eq 1 ]]; then
   echo ""
   echo "Workspace README..."
   update_workspace_readme
-  run_onboard_github
+  if [[ "$LOCAL_ONLY" -eq 0 ]]; then
+    run_onboard_github
+  else
+    echo "Skipping GitHub baseline (--local-only: no remote repo)."
+  fi
 fi
 
 if [[ "$OPEN_PR" -eq 1 ]]; then

@@ -90,8 +90,25 @@ NODE
   grep -q '^npm run check:architecture$' "$CREATE_TEST_LOG"
   grep -q '^npm run check:unused$' "$CREATE_TEST_LOG"
   grep -q '^npm run test$' "$CREATE_TEST_LOG"
-  grep -q '^gh repo create .* --source \. --remote origin$' "$CREATE_TEST_LOG"
+  grep -q '^gh repo create .* --source \. --remote origin --push$' "$CREATE_TEST_LOG"
   ! grep -Eq '^gh (auth|api) ' "$CREATE_TEST_LOG"
+  # Only the pristine snapshot is committed; the validated bootstrap awaits review.
+  [[ "$(git -C "$FLEET_WORKSPACE/WaveLab" rev-list --count HEAD)" == 1 ]]
+}
+
+@test "create-sim --no-push creates the GitHub repo without pushing" {
+  make_remote_fixture
+  run "$BATON_ROOT/scripts/create-sim.sh" --repo WaveLab --name "Wave Lab" --description "Fixture sim." --no-push
+  assert_success
+  grep -q '^gh repo create .* --source \. --remote origin$' "$CREATE_TEST_LOG"
+}
+
+@test "create-sim names the leftover checkout when validation fails" {
+  make_remote_fixture
+  export CREATE_TEST_FAIL_UNUSED=1
+  run "$BATON_ROOT/scripts/create-sim.sh" --repo WaveLab --name "Wave Lab" --description "Fixture sim."
+  assert_failure
+  assert_output --partial "no GitHub repo was created; remove $FLEET_WORKSPACE/WaveLab"
 }
 
 @test "create-sim --local-only strips demos, drops template-only files, and passes compliance" {

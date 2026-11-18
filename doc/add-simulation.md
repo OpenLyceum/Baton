@@ -37,9 +37,10 @@ Omit `--screens` for a single screen named after `--name`. `--shared-model` scaf
 `create-sim` requires a one-sentence description of what the sim models. It strips
 template demos, fixes drift against the pristine source snapshot, then runs lint,
 typecheck, architecture, Knip, unit tests, and local compliance. For remote
-creates, Baton provisions an empty GitHub repository after the checks pass.
-`--onboard --pr` commits and pushes the bootstrap unless `--no-push` is set.
-Otherwise, review and commit the generated files before the first push. Run full
+creates, Baton creates the GitHub repository only after the checks pass, and
+pushes the pristine template snapshot so `main` exists for the settings baseline
+(skipped with `--no-push`). `--onboard --pr` commits and pushes the bootstrap
+unless `--no-push` is set. Otherwise, review and commit the generated files and push. Run full
 compliance after the repository's security settings are configured.
 `--onboard` inserts the catalog row, captures a screenshot, builds the WebP card,
 regenerates `docs/index.html`, and updates the OpenLyceum README Layout table; `--pr`
