@@ -15,14 +15,15 @@ landing page at [openlyceum.github.io/Baton](https://openlyceum.github.io/Baton/
 
 ## 1. Create the simulation repository
 
-**Preferred — Baton create-sim** (creates the GitHub repo from the template, renames,
-scaffolds screens, runs check):
+**Preferred — Baton create-sim** stages and validates the sim in a local checkout
+before creating its GitHub repository.
 
 ```bash
 # From the OpenLyceum workspace (Baton sibling to sims)
 Baton/scripts/create-sim.sh \
   --repo MyNewSim \
   --name "My New Sim" \
+  --description "Explore how waves overlap and interfere." \
   --screens Intro,Lab \
   --topics "optics,interference" \
   --shared-model \
@@ -33,11 +34,13 @@ Baton/scripts/create-sim.sh \
 Omit `--screens` for a single screen named after `--name`. `--shared-model` scaffolds
 `src/common/model/SharedModel.ts` (fleet-style composition). Optional starters default off:
 `--with-time-model` and `--with-control-options` (Panel/ButtonOptions always stay).
-`create-sim` strips template demos, runs `check-template-drift --fix` (using the
-workspace template when present, otherwise a pristine pre-rename snapshot), then
-`check-repo-compliance --local` and **fails before** catalog/onboard/publish if the
-tree audit fails. `--local` skips live GitHub security probes so fresh-repo defaults
-do not block create; run a full compliance audit after onboard/settings sync.
+`create-sim` requires a one-sentence description of what the sim models. It strips
+template demos, fixes drift against the pristine source snapshot, then runs lint,
+typecheck, architecture, Knip, unit tests, and local compliance. For remote
+creates, Baton provisions an empty GitHub repository after the checks pass.
+`--onboard --pr` commits and pushes the bootstrap unless `--no-push` is set.
+Otherwise, review and commit the generated files before the first push. Run full
+compliance after the repository's security settings are configured.
 `--onboard` inserts the catalog row, captures a screenshot, builds the WebP card,
 regenerates `docs/index.html`, and updates the OpenLyceum README Layout table; `--pr`
 opens Baton + OpenLyceum PRs. Pass `--local-only` to bootstrap from a local
@@ -49,14 +52,13 @@ click **Use this template**, then in the new clone:
 ```bash
 npm install
 npm run rename -- --id my-new-sim --name "My New Sim"
+# Write a one-sentence description of what the sim models in package.json.
 npm run scaffold-screens -- --screens Intro,Lab
 # optional: --with-time-model --with-control-options
-npm run fix && npm run check
-# Write a real one-sentence package.json description (not the rename placeholder).
-Baton/scripts/check-template-drift.sh --fix MyNewSim
-npm test
-npm run check:architecture && npm run knip
-COMPLIANCE_STRICT=1 Baton/scripts/check-repo-compliance.sh --local ../MyNewSim
+npm run fix
+../Baton/scripts/check-template-drift.sh --fix MyNewSim
+npm run lint && npm run check && npm run check:architecture && npm run check:unused && npm test
+../Baton/scripts/check-repo-compliance.sh --local .
 ```
 
 Then confirm:

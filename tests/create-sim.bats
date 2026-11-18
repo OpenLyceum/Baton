@@ -16,18 +16,82 @@ setup() {
   assert_output --partial "--shared-model"
 }
 
-@test "create-sim compliance gate uses --local before onboard" {
-  run grep -n 'check-repo-compliance' "$BATON_ROOT/scripts/create-sim.sh"
+make_remote_fixture() {
+  export FLEET_WORKSPACE="$BATS_TEST_TMPDIR/workspace"
+  export CREATE_TEST_LOG="$BATS_TEST_TMPDIR/calls"
+  export CREATE_TEST_TEMPLATE="$BATS_TEST_TMPDIR/template"
+  export CREATE_TEST_NODE="$(command -v node)"
+  export GIT_CONFIG_GLOBAL="$BATS_TEST_TMPDIR/gitconfig"
+  git config --file "$GIT_CONFIG_GLOBAL" user.email "tests@example.invalid"
+  git config --file "$GIT_CONFIG_GLOBAL" user.name "Baton tests"
+  make_compliant_sim "$CREATE_TEST_TEMPLATE"
+  git -C "$CREATE_TEST_TEMPLATE" init -qb main
+  git -C "$CREATE_TEST_TEMPLATE" add -A
+  git -C "$CREATE_TEST_TEMPLATE" commit -qm "Create template fixture"
+  touch "$CREATE_TEST_LOG"
+
+  cat >"$STUB_BIN/gh" <<'GH'
+#!/usr/bin/env bash
+set -euo pipefail
+printf 'gh %s\n' "$*" >>"$CREATE_TEST_LOG"
+case "$1 $2" in
+  "repo clone") git clone -q "$CREATE_TEST_TEMPLATE" "$4" ;;
+  "repo create") git remote add origin "https://example.invalid/$3" ;;
+  *) exit 1 ;;
+esac
+GH
+  cat >"$STUB_BIN/npm" <<'NPM'
+#!/usr/bin/env bash
+printf 'npm %s\n' "$*" >>"$CREATE_TEST_LOG"
+[[ "$*" != "run check:unused" || "${CREATE_TEST_FAIL_UNUSED:-0}" != 1 ]]
+NPM
+  cat >"$STUB_BIN/node" <<'NODE'
+#!/usr/bin/env bash
+if [[ "$1" == */check-template-drift.mjs ]]; then
+  exit 0
+fi
+exec "$CREATE_TEST_NODE" "$@"
+NODE
+  chmod +x "$STUB_BIN/"{gh,npm,node}
+}
+
+@test "create-sim requires a description before contacting GitHub" {
+  make_remote_fixture
+  run "$BATON_ROOT/scripts/create-sim.sh" --repo WaveLab --name "Wave Lab"
+  assert_failure
+  assert_output --partial "error: --description is required"
+  [[ ! -s "$CREATE_TEST_LOG" ]]
+}
+
+@test "create-sim leaves GitHub untouched when a generated fork fails Knip" {
+  make_remote_fixture
+  export CREATE_TEST_FAIL_UNUSED=1
+  run "$BATON_ROOT/scripts/create-sim.sh" --repo WaveLab --name "Wave Lab" --description "Fixture sim."
+  assert_failure
+  grep -q '^gh repo clone ' "$CREATE_TEST_LOG"
+  grep -q '^npm run check:unused$' "$CREATE_TEST_LOG"
+  [[ "$(cat "$CREATE_TEST_LOG")" != *"gh repo create "* ]]
+}
+
+@test "create-sim leaves GitHub untouched when local compliance fails" {
+  make_remote_fixture
+  run "$BATON_ROOT/scripts/create-sim.sh" \
+    --repo WaveLab --name "Wave Lab" --description "A SceneryStack simulation: Wave Lab."
+  assert_failure
+  assert_output --partial "package.json description is the rename-sim placeholder"
+  [[ "$(cat "$CREATE_TEST_LOG")" != *"gh repo create "* ]]
+}
+
+@test "create-sim creates a GitHub repo after source compliance passes" {
+  make_remote_fixture
+  run "$BATON_ROOT/scripts/create-sim.sh" --repo WaveLab --name "Wave Lab" --description "Fixture sim."
   assert_success
-  assert_output --partial "--local"
-  # Gate must appear before onboard/catalog work uses GitHub settings sync.
-  # Match the invocation (quoted path may sit between .sh and --local).
-  local compliance_line onboard_line
-  compliance_line="$(grep -nE 'check-repo-compliance\.sh".*--local|--local.*check-repo-compliance' "$BATON_ROOT/scripts/create-sim.sh" | head -1 | cut -d: -f1)"
-  # Call sites after the create-from-template branch, not function definitions.
-  onboard_line="$(grep -nE '^[[:space:]]+(run_onboard_github|run_onboard_assets|insert_catalog_entry)\b' "$BATON_ROOT/scripts/create-sim.sh" | head -1 | cut -d: -f1)"
-  [[ -n "$compliance_line" && -n "$onboard_line" ]]
-  [[ "$compliance_line" -lt "$onboard_line" ]]
+  [[ "$output" == *"Compliance check passed"*'Creating GitHub repo from the validated checkout'* ]]
+  grep -q '^npm run check:architecture$' "$CREATE_TEST_LOG"
+  grep -q '^npm run check:unused$' "$CREATE_TEST_LOG"
+  grep -q '^npm run test$' "$CREATE_TEST_LOG"
+  grep -q '^gh repo create .* --source \. --remote origin$' "$CREATE_TEST_LOG"
+  ! grep -Eq '^gh (auth|api) ' "$CREATE_TEST_LOG"
 }
 
 @test "create-sim --local-only strips demos, drops template-only files, and passes compliance" {
@@ -55,6 +119,7 @@ setup() {
     --repo WaveLab \
     --id wave-lab \
     --name "Wave Lab" \
+    --description "Explore how waves overlap and interfere." \
     --screens Intro,Lab \
     --shared-model \
     --local-only \

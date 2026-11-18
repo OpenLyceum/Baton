@@ -6,12 +6,10 @@ description: Use when creating a sim from SceneryStackTemplate — create-sim.sh
 # SceneryStack New Sim
 
 New sims start from [`SceneryStackTemplate`](https://github.com/OpenLyceum/SceneryStackTemplate).
-Prefer **`Baton/scripts/create-sim.sh`** — it creates the repo (or adopts `--existing` /
-`--local-only`), runs rename + scaffold (demo strip + short AGENTS/docs; optional
-`--with-time-model` / `--with-control-options` default off), `npm run fix`, `npm run check`,
-`check-template-drift --fix` (drops rename/scaffold, generators tests, template-only docs),
-then **`check-repo-compliance`** and fails before catalog/onboard if compliance fails. Fleet
-onboarding (catalog, screenshot, Pages) is documented in
+Prefer **`Baton/scripts/create-sim.sh`**. It stages the sim locally, strips demos,
+fixes template drift, and runs lint, typecheck, architecture, Knip, unit tests, and
+local compliance before creating its GitHub repository. Optional starters default off.
+Fleet onboarding (catalog, screenshot, Pages) is documented in
 [`Baton/doc/add-simulation.md`](../../doc/add-simulation.md); this skill covers the
 **code** bootstrap and the residue that `tsc`/Biome miss.
 
@@ -22,6 +20,7 @@ onboarding (catalog, screenshot, Pages) is documented in
 Baton/scripts/create-sim.sh \
   --repo MyNewSim \
   --name "My New Sim" \
+  --description "Explore how waves overlap and interfere." \
   --screens Intro,Lab \
   --topics "optics,interference" \
   --shared-model \
@@ -39,12 +38,12 @@ If you used GitHub **Use this template** instead of `create-sim.sh`:
 ```bash
 npm install
 npm run rename -- --id my-new-sim --name "My New Sim"   # sim-level rename only
+# Write a one-sentence description of what the sim models in package.json.
 npm run scaffold-screens -- --screens Intro,Lab         # optional --shared-model; starters default off
-# Put a real package description in package.json before compliance (placeholder fails audits).
 npm run fix                                             # required — see below
 ../Baton/scripts/check-template-drift.sh --fix MyNewSim # drop one-shot scripts + template-only docs/tests
-npm run check && npm run build && npm test              # exercise the final generated tree
-bash ../Baton/scripts/check-repo-compliance.sh .
+npm run lint && npm run check && npm run check:architecture && npm run check:unused && npm test
+../Baton/scripts/check-repo-compliance.sh --local .
 ```
 
 `rename` rewrites package metadata / prefixes. `scaffold-screens` emits `src/<kebab>/`
