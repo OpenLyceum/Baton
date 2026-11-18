@@ -97,6 +97,41 @@ class KnipTemplateDriftTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(issues[0]["path"], "vite.config.ts")
 
+    def prepare_owned_file(self, template_text, sim_text=None):
+        manifest = json.loads(self.manifest.read_text())
+        manifest["ownedIfPresent"] = ["src/common/TimeModel.ts"]
+        self.manifest.write_text(json.dumps(manifest))
+        self.write_config(self.sim, {"project": ["src/**/*.ts!"], "entry": []})
+        for directory, text in [(self.template, template_text), (self.sim, sim_text)]:
+            if text is not None:
+                (directory / "src/common").mkdir(parents=True, exist_ok=True)
+                (directory / "src/common/TimeModel.ts").write_text(text)
+
+    def test_owned_if_present_file_may_be_deleted(self):
+        self.prepare_owned_file("export class TimeModel {}\n")
+        self.assertEqual(self.check(), (0, []))
+
+    def test_owned_if_present_file_must_match_when_kept(self):
+        self.prepare_owned_file("export class TimeModel {}\n", "export class TimeModel { fork = 1; }\n")
+        code, issues = self.check()
+        self.assertEqual(code, 1)
+        self.assertEqual(issues[0]["path"], "src/common/TimeModel.ts")
+
+    def test_owned_if_present_fork_can_be_carved_out(self):
+        self.prepare_owned_file("export class TimeModel {}\n", "export class TimeModel { fork = 1; }\n")
+        (self.sim / "AGENTS.md").write_text(
+            "## Compliance carve-outs\n\n- `src/common/TimeModel.ts`: adds a custom clock\n"
+        )
+        self.assertEqual(self.check(), (0, []))
+
+    def test_owned_if_present_fix_syncs_a_fork_but_not_a_deletion(self):
+        self.prepare_owned_file("export class TimeModel {}\n", "export class TimeModel { fork = 1; }\n")
+        self.check(flags=("--fix",))
+        self.assertEqual((self.sim / "src/common/TimeModel.ts").read_text(), "export class TimeModel {}\n")
+        (self.sim / "src/common/TimeModel.ts").unlink()
+        self.check(flags=("--fix",))
+        self.assertFalse((self.sim / "src/common/TimeModel.ts").exists())
+
     def prepare_lockfiles(self, sim_version):
         manifest = json.loads(self.manifest.read_text())
         manifest["packageJson"]["matchDirectDependencyLockVersions"] = True

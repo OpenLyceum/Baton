@@ -76,6 +76,17 @@ jobs:
             exit 1
           fi
 
+      # Required: only probes at level "fail" (zero gaps fleet-wide when promoted) can
+      # fail here; "warn" probes print but pass. See scripts/check-skill-conformance.mjs.
+      - name: Skill conformance
+        if: hashFiles('src/main.ts') != ''
+        env:
+          INPUT_REPO: ${{ inputs.repo-name }}
+          CALLER_REPO: ${{ github.event.repository.name }}
+        run: |
+          REPO="${INPUT_REPO:-$CALLER_REPO}"
+          node .org-compliance/scripts/check-skill-conformance.mjs --dir "$PWD" --name "$REPO"
+
   # Org-wide audit (dispatch/schedule). Fan out one sim per runner so they audit in
   # parallel with isolated logs, mirroring fleet-health.yml: `discover` builds the
   # sim list from the catalog, `audit` checks each, `report` aggregates pass/fail.
@@ -129,7 +140,7 @@ jobs:
           set -uo pipefail
           WORKDIR=$(mktemp -d)
           if ! gh repo clone "$OWNER/$SIM" "$WORKDIR" -- --depth 1 --quiet; then
-            echo "| $SIM | ❌ clone | – |" > "row-$SIM.md"
+            echo "| $SIM | ❌ clone | – | – | – |" > "row-$SIM.md"
             exit 1
           fi
           rc=0
@@ -143,7 +154,21 @@ jobs:
             drift="❌"
             rc=1
           fi
-          echo "| $SIM | $compliance | $drift |" > "row-$SIM.md"
+          skills="–"
+          if [ -f "$WORKDIR/src/main.ts" ]; then
+            if ! node scripts/check-skill-conformance.mjs --dir "$WORKDIR" --name "$SIM"; then
+              skills="❌"
+              rc=1
+            elif node scripts/check-skill-conformance.mjs --strict --dir "$WORKDIR" --name "$SIM" >/dev/null; then
+              skills="✅"
+            else
+              skills="⚠️" # warn-level probe gaps only
+            fi
+          fi
+          # Carve-out count is informational: a number that keeps growing is drift
+          # being approved one bullet at a time (scripts/list-carve-outs.mjs).
+          carve_outs=$(node scripts/list-carve-outs.mjs --count --dir "$WORKDIR" --name "$SIM")
+          echo "| $SIM | $compliance | $drift | $skills | $carve_outs |" > "row-$SIM.md"
           rm -rf "$WORKDIR"
           exit "$rc"
 
@@ -173,12 +198,12 @@ jobs:
           {
             echo "# Fleet compliance report"
             echo
-            echo "| Repo | Compliance | Template drift |"
-            echo "|---|:--:|:--:|"
+            echo "| Repo | Compliance | Template drift | Skill probes | Carve-outs |"
+            echo "|---|:--:|:--:|:--:|--:|"
             find rows -name '*.md' -exec cat {} + 2>/dev/null | sort || true
           } >> "$GITHUB_STEP_SUMMARY"
 
           if find rows -name '*.md' -exec cat {} + 2>/dev/null | grep -q '❌'; then
-            echo "One or more simulations failed compliance or drifted from the template — see the table above (fix drift with scripts/check-template-drift.sh --fix <Sim>)." >&2
+            echo "One or more simulations failed compliance, drifted from the template, or failed a skill probe — see the table above (fix drift with scripts/check-template-drift.sh --fix <Sim>; probes with scripts/check-skill-conformance.mjs <Sim>)." >&2
             exit 1
           fi

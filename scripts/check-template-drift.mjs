@@ -4,7 +4,8 @@
  *
  * Compares SceneryStack sims against SceneryStackTemplate using
  * config/template-manifest.json: template-owned files that must be identical
- * (after substituting the sim's package/repo name), files a sim may only extend,
+ * (after substituting the sim's package/repo name), optional starter files that
+ * must be identical when a sim keeps them (`ownedIfPresent`), files a sim may only extend,
  * required package.json scripts/dependencies, resolved versions of shared direct dependencies,
  * template-only and forbidden files,
  * and docs that must not be verbatim template copies.
@@ -17,7 +18,7 @@
  * Usage:
  *   node scripts/check-template-drift.mjs <Sim> [<Sim> …]
  *   node scripts/check-template-drift.mjs --all          # every local simulation in the catalog
- *   node scripts/check-template-drift.mjs --fix <Sim>    # copy exact files / scripts, remove forbidden files
+ *   node scripts/check-template-drift.mjs --fix <Sim>    # copy exact/owned files and scripts, remove forbidden files
  *   node scripts/check-template-drift.mjs --dir <path> [--name <Repo>]   # a checkout outside the workspace (CI)
  *   options: --json, --quiet (only print sims with drift), --template <dir>
  *
@@ -181,11 +182,13 @@ function checkSim(repoName) {
     if (!approved.has(path)) issues.push({ kind, path, detail });
   };
 
-  // exact files
-  for (const rel of manifest.exact) {
+  // exact files, plus optional starters that must stay unforked when a sim keeps them
+  const ownedIfPresent = new Set(manifest.ownedIfPresent ?? []);
+  for (const rel of [...manifest.exact, ...ownedIfPresent]) {
     const tpl = readText(join(templateDir, rel));
     if (tpl === null) continue;
     const cur = readText(join(simDir, rel));
+    if (cur === null && ownedIfPresent.has(rel)) continue;
     // Normalize both sides: a shared comment may legitimately mention this sim
     // as an example, while other shared comments retain the template's name.
     if (cur !== null && toTemplate(cur, sim) === toTemplate(tpl, sim)) continue;

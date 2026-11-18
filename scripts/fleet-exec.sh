@@ -30,6 +30,7 @@ BODY="Automated fleet change opened by Baton's fleet-exec runner."
 COMMIT_MSG=""
 APPLY=0
 KEEP=0
+REPLACE=0
 INSTALL=0
 CHECK_AUTH=0
 LABELS=()
@@ -66,6 +67,8 @@ Options:
   --skip NAME         Exclude a repo (repeatable)
   --install           Run `npm install` in each clone before the command
   --apply             Actually push branches and open PRs (otherwise dry-run)
+  --replace           Recurring bot runs: force-push --branch (it must be bot-owned) and,
+                      when an open PR already uses it, update that PR instead of opening one
   --keep              Keep the temporary clones instead of deleting them
   -h, --help          Show this help
 
@@ -93,6 +96,7 @@ while [[ $# -gt 0 ]]; do
     --skip) SKIPS+=("${2:?Missing value for --skip}"); shift 2 ;;
     --install) INSTALL=1; shift ;;
     --apply) APPLY=1; shift ;;
+    --replace) REPLACE=1; shift ;;
     --check-auth) CHECK_AUTH=1; shift ;;
     --keep) KEEP=1; shift ;;
     -h|--help) usage; exit 0 ;;
@@ -197,8 +201,17 @@ for repo in $NAMES; do
 
   git -C "$workdir" add -A
   git -C "$workdir" -c "user.name=$GIT_NAME" -c "user.email=$GIT_EMAIL" commit -q -m "$COMMIT_MSG"
-  if ! git -C "$workdir" push -q -u origin "$BRANCH" 2>/dev/null; then
+  push_args=(-q -u origin "$BRANCH")
+  [[ $REPLACE -eq 1 ]] && push_args=(--force "${push_args[@]}")
+  if ! git -C "$workdir" push "${push_args[@]}" 2>/dev/null; then
     echo "  push failed"; overall=1; cleanup; continue
+  fi
+
+  if [[ $REPLACE -eq 1 ]]; then
+    existing="$( cd "$workdir" && gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url' 2>/dev/null || true )"
+    if [[ -n "$existing" ]]; then
+      echo "  updated: $existing"; opened=$((opened + 1)); cleanup; continue
+    fi
   fi
 
   label_args=()

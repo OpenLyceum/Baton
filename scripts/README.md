@@ -33,6 +33,8 @@ the monorepo checkout.
 | [`check-repo-compliance.sh`](check-repo-compliance.sh) | README/CI/structure compliance (bootstrap, i18n, memory-leak suite, KeyboardHelp, githooks, PWA, …) |
 | [`check-memory-leak-coverage.sh`](check-memory-leak-coverage.sh) | Inventory `dispose()` overrides vs `tests/memory-leak.test.ts` (`<Sim>` or `--all`); compliance reports gaps as WARN |
 | [`check-template-drift.sh`](check-template-drift.sh) | Content drift of template-owned files / scripts / deps vs SceneryStackTemplate (`--all`, `--fix`); wraps [`check-template-drift.mjs`](check-template-drift.mjs), which reads `config/template-manifest.json` and honours AGENTS.md "Compliance carve-outs" |
+| [`check-skill-conformance.mjs`](check-skill-conformance.mjs) | Grep-level probes distilled from `skills/*/SKILL.md` (`<Sim>`, `--all`, `--summary`); `fail` probes are required in sim CI, `warn` probes are reported; approve with a `` `skill:<probe>` `` carve-out |
+| [`list-carve-outs.mjs`](list-carve-outs.mjs) | Inventory of AGENTS.md `## Compliance carve-outs` bullets per sim (total / temporary / missing reason); the weekly compliance table shows each count |
 | [`check-skills.sh`](check-skills.sh) | Validate the `skills/` collection and its README index (Baton self-check) |
 | [`check-node-version.sh`](check-node-version.sh) | Assert fleet Node major agrees across workflows; with sibling checkouts, also engines.node / `@types/node` |
 | [`sync-dependabot.sh`](sync-dependabot.sh) | Copy Dependabot configs from `config/` to catalog npm/pip repos (see `structure/repos.json`) |
@@ -236,6 +238,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 | Manifest key | Rule |
 |---|---|
 | `exact` | File identical to the template after substituting the sim's package / repo name |
+| `ownedIfPresent` | Optional starter (e.g. `src/common/TimeModel.ts`): a sim may delete it, but a kept copy must match `exact`ly — configure it, don't fork it |
 | `linesSuperset` | Every template line present (`.gitignore`; extra lines allowed) |
 | `jsonExtend` | JSON equal to the template except the listed paths, whose arrays may only grow |
 | `templateOnly` | Template tooling (`rename`, `scaffold-screens`) must not linger in a sim |
@@ -252,6 +255,32 @@ scripts/check-template-drift.sh --fix LadyBug     # copy exact files + scripts, 
 A sim approves a deviation by naming the path (or script) in backticks under its
 `AGENTS.md` → `## Compliance carve-outs`. **Change template-owned files in the template
 first**, then propagate with `--fix`; never hand-edit one in a single sim.
+
+## check-skill-conformance.mjs
+
+Automates the skill-conformance probe sheet that used to be filled in by hand (and went
+stale) in the superproject's `review-log.md`. Each probe is a grep over `src/` with
+comments stripped; checks already enforced elsewhere (compliance audit, Biome plugins,
+dependency-cruiser) are not repeated.
+
+```bash
+node scripts/check-skill-conformance.mjs --all --summary   # per-probe fleet counts
+node scripts/check-skill-conformance.mjs --all             # gaps per sim
+node scripts/check-skill-conformance.mjs Zenith --strict   # also fail on warn-level probes
+```
+
+**Ratchet.** A new probe starts at `level: "warn"`: it prints, never fails. When
+`--summary --all` shows it at zero gaps, set it to `"fail"`. From then on the required
+"Skill conformance" step in each sim's compliance job stops regressions. Approve a real
+exception under `## Compliance carve-outs` with `` - `skill:<probe>`: reason ``.
+
+## list-carve-outs.mjs
+
+Carve-outs are the approved exceptions to the template and the audits. Each one is cheap,
+and together they can add up to real drift, so the weekly compliance table has a
+**Carve-outs** column. `node scripts/list-carve-outs.mjs --all` lists counts, and
+`--json` gives every bullet. A bullet is *temporary* if it links an issue or says
+pending / until / migrate. Otherwise it is treated as a permanent design decision.
 
 ## Self-check scripts
 

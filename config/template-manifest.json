@@ -36,6 +36,9 @@
     "biome-plugins/no-inline-color.grit",
     "tests/biome-plugins.node-test.ts"
   ],
+  "ownedIfPresent": [
+    "src/common/TimeModel.ts"
+  ],
   "linesSuperset": [
     ".gitignore"
   ],

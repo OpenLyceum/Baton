@@ -77,8 +77,8 @@ jobs:
       - name: Check fleet Node version is in sync
         run: scripts/check-node-version.sh
 
-      - name: Test Knip inventory and template-only entries
-        run: python3 -m unittest discover -s tests -p 'test_knip_*.py'
+      - name: Test Knip inventory, template drift, and skill probes
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
 
       - name: Detect uncataloged repos
         # Compare the live GitHub org against structure/repos.json so a repo that
