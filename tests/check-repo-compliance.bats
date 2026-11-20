@@ -792,6 +792,54 @@ STUB
   ! grep -E 'repos/.*/\.' "$GH_ARGS_LOG"
 }
 
+@test "--local skips live GitHub security checks even when gh reports defaults off" {
+  # Fresh GitHub template defaults leave alerts/scanning off until sync-github-settings.
+  # create-sim's create-time gate must use --local so those remote defaults do not fail
+  # the tree audit before onboard.
+  cat >"$STUB_BIN/gh" <<'STUB'
+#!/usr/bin/env bash
+case "$1" in
+  auth) exit 0 ;;
+  api)
+    if [[ "$2" == "graphql" ]]; then
+      echo "false"
+      exit 0
+    fi
+    if [[ "$2" == repos/* ]]; then
+      jq_expr=""
+      prev=""
+      for arg in "$@"; do
+        if [[ "$prev" == "--jq" ]]; then
+          jq_expr="$arg"
+        fi
+        prev="$arg"
+      done
+      case "$jq_expr" in
+        *private*) echo "false" ;;
+        *security_and_analysis*)
+          echo '{"dependabot_security_updates":{"status":"disabled"},"secret_scanning":{"status":"disabled"}}'
+          ;;
+        *) echo "{}" ;;
+      esac
+      exit 0
+    fi
+    exit 1
+    ;;
+  *) exit 1 ;;
+esac
+STUB
+  chmod +x "$STUB_BIN/gh"
+
+  run env PATH="$STUB_BIN:$PATH" "$BATON_ROOT/scripts/check-repo-compliance.sh" "$SIM"
+  assert_failure
+  assert_output --partial "Dependabot vulnerability alerts are not enabled"
+
+  run env PATH="$STUB_BIN:$PATH" "$BATON_ROOT/scripts/check-repo-compliance.sh" --local "$SIM"
+  assert_success
+  assert_output --partial "skipping live GitHub security checks (tree-only / --local)"
+  refute_output --partial "Dependabot vulnerability alerts are not enabled"
+}
+
 # ── Non-simulation repos ──────────────────────────────────────────────────────
 
 @test "npm repo without src/main.ts skips the simulation structure rules" {

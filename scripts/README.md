@@ -27,7 +27,7 @@ the monorepo checkout.
 | [`sync-github-metadata.sh`](sync-github-metadata.sh) | Push description + website + topics to GitHub |
 | [`sync-github-settings.sh`](sync-github-settings.sh) | Check/apply GitHub repo settings baseline (security + feature flags) |
 | [`../doc/github-repo-settings.md`](../doc/github-repo-settings.md) | Documented GitHub settings baseline for sims |
-| [`create-sim.sh`](create-sim.sh) | Bootstrap a new sim from SceneryStackTemplate (rename + N screens; `--onboard` applies the full baseline incl. GitHub settings; `--existing` adopts a repo already on GitHub; `--pr` / `--shared-model`) |
+| [`create-sim.sh`](create-sim.sh) | Scaffold and validate a new sim before creating its GitHub repo (requires `--description`; `--onboard` applies the full baseline incl. GitHub settings; `--existing` adopts a repo already on GitHub; `--pr` / `--shared-model`) |
 | [`sync-claude-settings.sh`](sync-claude-settings.sh) | Roll the `scenerystack` Claude Code plugin out to sim repos' `.claude/settings.json` |
 | [`lib/repos.sh`](lib/repos.sh) | Bash helper functions for other scripts |
 | [`check-repo-compliance.sh`](check-repo-compliance.sh) | README/CI/structure compliance (bootstrap, i18n, memory-leak suite, KeyboardHelp, githooks, PWA, …) |
@@ -241,7 +241,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 | `ownedIfPresent` | Optional starter (e.g. `src/common/TimeModel.ts`): a sim may delete it, but a kept copy must match `exact`ly — configure it, don't fork it |
 | `linesSuperset` | Every template line present (`.gitignore`; extra lines allowed) |
 | `jsonExtend` | JSON equal to the template except the listed paths, whose arrays may only grow |
-| `templateOnly` | Template tooling (`rename`, `scaffold-screens`) must not linger in a sim |
+| `templateOnly` | Template tooling (`rename`, `scaffold-screens`, `tests/generators.test.ts`, template-only docs) must not linger in a sim |
 | `forbidden` | Dead or foreign files (`.fuzz-playwright.config.ts`, `CLAUDE.md`, ESLint/Prettier, `.cursor/`) |
 | `noTemplateCopies` | Sim docs sharing ≥60% of their lines with the template's copy |
 | `packageJson` | Every template script (same command), every template dependency (same version specifier), shared keys in template order with sim-specific entries after, `engines`/`license`/`type`, override keys |

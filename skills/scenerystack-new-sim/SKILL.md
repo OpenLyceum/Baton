@@ -6,11 +6,10 @@ description: Use when creating a sim from SceneryStackTemplate — create-sim.sh
 # SceneryStack New Sim
 
 New sims start from [`SceneryStackTemplate`](https://github.com/OpenLyceum/SceneryStackTemplate).
-Prefer **`Baton/scripts/create-sim.sh`** — it creates the repo (or adopts `--existing` /
-`--local-only`), runs rename + scaffold, `npm run fix`, `npm run check`, and finishes with
-`check-template-drift --fix`, which drops the one-shot rename/scaffold scripts so the sim
-starts with zero template drift. Fleet
-onboarding (catalog, screenshot, Pages) is documented in
+Prefer **`Baton/scripts/create-sim.sh`**. It stages the sim locally, strips demos,
+fixes template drift, and runs lint, typecheck, architecture, Knip, unit tests, and
+local compliance before creating its GitHub repository. Optional starters default off.
+Fleet onboarding (catalog, screenshot, Pages) is documented in
 [`Baton/doc/add-simulation.md`](../../doc/add-simulation.md); this skill covers the
 **code** bootstrap and the residue that `tsc`/Biome miss.
 
@@ -21,6 +20,7 @@ onboarding (catalog, screenshot, Pages) is documented in
 Baton/scripts/create-sim.sh \
   --repo MyNewSim \
   --name "My New Sim" \
+  --description "Explore how waves overlap and interfere." \
   --screens Intro,Lab \
   --topics "optics,interference" \
   --shared-model \
@@ -38,18 +38,23 @@ If you used GitHub **Use this template** instead of `create-sim.sh`:
 ```bash
 npm install
 npm run rename -- --id my-new-sim --name "My New Sim"   # sim-level rename only
-npm run scaffold-screens -- --screens Intro,Lab         # optional --shared-model
+# Write a one-sentence description of what the sim models in package.json.
+npm run scaffold-screens -- --screens Intro,Lab         # optional --shared-model; starters default off
 npm run fix                                             # required — see below
-npm run check && npm run build && npm test
-../Baton/scripts/check-template-drift.sh --fix MyNewSim # drop one-shot scripts, restore template-owned files
-bash ../Baton/scripts/check-repo-compliance.sh .
+../Baton/scripts/check-template-drift.sh --fix MyNewSim # drop one-shot scripts + template-only docs/tests
+npm run lint && npm run check && npm run check:architecture && npm run check:unused && npm test
+../Baton/scripts/check-repo-compliance.sh --local .
 ```
 
 `rename` rewrites package metadata / prefixes. `scaffold-screens` emits `src/<kebab>/`
 packages from `src/sim-screen/`, writes `common/{Prefix}ScreenIcons.ts`, rewrites
-`main.ts` + `StringManager` + locale JSON, then **deletes** the prototype. It is
+`main.ts` + `StringManager` + locale JSON, strips template demos on forks (no live
+`example*` / `exampleEnabledProperty`; commented `showGrid` preference, accessible-control,
+and TimeModel patterns stay to copy), drops unused starters
+unless `--with-time-model` / `--with-control-options`, writes short `AGENTS.md` /
+`doc/model.md` / `doc/implementation-notes.md`, then **deletes** the prototype. It is
 **one-shot** — a second run exits with "No prototype screen package found". Growing
-screens later is by hand (`SceneryStackTemplate/doc/multi-screen.md`).
+screens later is by hand (see the template's `doc/multi-screen.md`; forks drop that file).
 
 ## Post-rename residue `tsc` will not catch
 
@@ -67,19 +72,18 @@ Typical survivors (confirmed across forks):
 
 ## Template placeholders the gate fails on
 
-The compliance gate rejects these leftovers. Clear them before the first push:
+`create-sim` / fork `scaffold-screens` already strip demos and unused starters. Re-check
+only if you skipped scaffold or opted into starters without using them:
 
 - **Description.** Write one real sentence in `package.json` `description`; the rename
   placeholder fails. `vite.config.ts` fills `index.html` (`%SIM_DESCRIPTION%`, Open Graph,
   Twitter) and the PWA manifest from it. Never edit those copies by hand.
-- **`exampleToggle` / `exampleControl`.** Remove the example preference everywhere: model
-  Property, query parameter, strings in every locale, and the control in
-  `*PreferencesNode.ts`. Also remove the `exampleControl` a11y string. Keep the empty
-  preferences trio if the sim has no preferences (see scenerystack-preferences).
-- **`TimeModel`.** `src/common/TimeModel.ts` is a sample for sims with a clock. Compose it
-  into a model or delete it, together with `tests/TimeModel.test.ts` and its case in
-  `tests/memory-leak.test.ts`. Then list the sim's real disposables there (see
-  scenerystack-testing).
+- **`exampleToggle` / `exampleControl`.** Must not remain in `src/` (compliance fails).
+  Forks start with an empty preferences shell that carries a commented `showGrid`
+  pattern; follow it (and scenerystack-preferences) when adding a real preference.
+- **`TimeModel` / `*ControlOptions`.** Default off at create time. If you passed
+  `--with-time-model` / `--with-control-options`, compose or delete unused copies and keep
+  `tests/memory-leak.test.ts` listing real disposables (see scenerystack-testing).
 - **Version.** `src/init.ts` already reads `version` from `package.json`. Bump the version with
   `npm version`, never in `init.ts`.
 

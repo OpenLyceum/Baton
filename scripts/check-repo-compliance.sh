@@ -18,9 +18,51 @@ ORG="${FLEET_ORG:-${OPENPHYSICS_ORG:-$(jq -r '.organization' "$CATALOG")}}"
 ORG_CONFIG_REPO="$ORG/.github"
 PLUGIN_ID="$(jq -r '.enabledPlugins | keys[0]' "$CLAUDE_SETTINGS")"
 
+# Optional flags before the repo path:
+#   --local / --tree-only   Skip live GitHub security API checks (create-time / offline)
+# COMPLIANCE_LOCAL=1 is equivalent for older callers.
+LOCAL_TREE_ONLY=0
+if [[ "${COMPLIANCE_LOCAL:-0}" == "1" ]]; then
+  LOCAL_TREE_ONLY=1
+fi
+REPO_ARG=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --local | --tree-only)
+      LOCAL_TREE_ONLY=1
+      shift
+      ;;
+    -h | --help)
+      cat <<'EOF'
+Usage: check-repo-compliance.sh [--local|--tree-only] <repo-dir>
+
+  --local / --tree-only  Skip live GitHub security setting probes (tree-only audit).
+EOF
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      exit 2
+      ;;
+    *)
+      REPO_ARG="$1"
+      shift
+      break
+      ;;
+  esac
+done
+if [[ -z "$REPO_ARG" ]]; then
+  echo "Repository directory required" >&2
+  exit 2
+fi
+
 # Resolve to an absolute path up front so `basename` never sees "." when the
 # caller passes the current directory as a relative path.
-REPO_DIR="$(cd "${1:?Repository directory required}" && pwd)"
+REPO_DIR="$(cd "$REPO_ARG" && pwd)"
 cd "$REPO_DIR"
 
 echo "Checking compliance in: $(pwd)"
@@ -807,7 +849,9 @@ if [ -z "$REPO_NAME" ]; then
   REPO_NAME="$(basename "$REPO_DIR")"
 fi
 
-if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+if [[ "$LOCAL_TREE_ONLY" -eq 1 ]]; then
+  pass "skipping live GitHub security checks (tree-only / --local)"
+elif command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
   VULN_ALERTS=$(gh api graphql -f query='query($o:String!,$n:String!){ repository(owner:$o,name:$n){ hasVulnerabilityAlertsEnabled isPrivate } }' -f o="$ORG" -f n="$REPO_NAME" --jq '.data.repository.hasVulnerabilityAlertsEnabled' 2>/dev/null || echo "")
   if [ "$VULN_ALERTS" = "true" ]; then
     pass "Dependabot vulnerability alerts enabled"

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # Create a new simulation from SceneryStackTemplate.
 #
-# Uses the GitHub template repository (Use this template) when creating a remote,
-# then runs npm rename + scaffold-screens so single- or multi-screen sims share
-# one entrypoint. Optional --onboard finishes fleet landing-page assets and the
-# workspace README; --pr opens follow-up PRs in Baton / the superproject.
+# Stages a pristine template snapshot locally, then validates the renamed and
+# scaffolded sim before creating a GitHub repository. Optional --onboard
+# finishes fleet landing-page assets and the workspace README.
+# --pr opens follow-up PRs in Baton / the superproject.
 #
 # Examples:
-#   scripts/create-sim.sh --repo Friction --name "Friction" --topics "friction,forces" --onboard --pr
-#   scripts/create-sim.sh --repo Friction --name "Friction" --screens Intro,Lab --topics "friction" --shared-model
-#   scripts/create-sim.sh --repo Friction --name "Friction" --local-only --topics "friction" --onboard
+#   scripts/create-sim.sh --repo Friction --name "Friction" --description "Explore how surface friction affects motion." --topics "friction,forces" --onboard --pr
+#   scripts/create-sim.sh --repo Friction --name "Friction" --description "Explore how surface friction affects motion." --screens Intro,Lab --topics "friction" --shared-model
+#   scripts/create-sim.sh --repo Friction --name "Friction" --description "Explore how surface friction affects motion." --local-only --topics "friction" --onboard
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -38,6 +38,8 @@ CATALOG=0
 ONBOARD=0
 OPEN_PR=0
 SHARED_MODEL=0
+WITH_TIME_MODEL=0
+WITH_CONTROL_OPTIONS=0
 EXISTING=0
 DESCRIPTION=""
 SHORT_DESCRIPTION=""
@@ -51,6 +53,7 @@ Bootstrap a new SceneryStack simulation from SceneryStackTemplate.
 Required:
   --repo NAME          GitHub / folder name (PascalCase), e.g. Friction
   --name "TITLE"       Display title, e.g. "Friction" or "Wave Interference"
+  --description TEXT   Simulation description for new repos (optional with --existing)
 
 Options:
   --id <kebab>         Package id (default: kebab-case of --repo)
@@ -62,11 +65,13 @@ Options:
                        astronomy, or earth-science
   --github-topics LIST Optional extra GitHub topics (kebab-case), e.g. game,pwa
   --shared-model       Scaffold src/common/model/SharedModel.ts; each screen composes it
+  --with-time-model    Keep TimeModel and compose it into screen models (default: off)
+  --with-control-options  Keep *ControlOptions.ts (default: off; Panel/ButtonOptions stay)
   --path DIR           Checkout path (default: $FLEET_WORKSPACE/<repo>)
-  --description TEXT   Full catalog / Pages card description
   --short-description TEXT  Optional GitHub About blurb (≤350 chars)
   --local-only         Copy local SceneryStackTemplate; do not create a GitHub repo
-  --no-push            Do not git push the sim (default: no auto-push unless --pr)
+  --no-push            Do not git push the sim (default: only the pristine template
+                       snapshot is pushed at repo creation; the bootstrap is pushed by --pr)
   --catalog            Insert a repos.json entry in Baton (no commit)
   --onboard            Full fleet onboarding: catalog + screenshot + WebP + Pages
                        index + GitHub baseline + superproject README Layout row
@@ -377,6 +382,14 @@ while [[ $# -gt 0 ]]; do
       SHARED_MODEL=1
       shift
       ;;
+    --with-time-model)
+      WITH_TIME_MODEL=1
+      shift
+      ;;
+    --with-control-options)
+      WITH_CONTROL_OPTIONS=1
+      shift
+      ;;
     --existing)
       EXISTING=1
       shift
@@ -422,7 +435,11 @@ if [[ "$EXISTING" -eq 0 && -e "$TARGET_PATH" ]]; then
   exit 1
 fi
 
-if [[ -z "$DESCRIPTION" ]]; then
+if [[ ! "$DESCRIPTION" =~ [^[:space:]] ]]; then
+  if [[ "$EXISTING" -eq 0 ]]; then
+    echo "error: --description is required for a new sim; describe what it simulates" >&2
+    exit 2
+  fi
   DESCRIPTION="A SceneryStack simulation: ${SIM_NAME}."
 fi
 
@@ -439,6 +456,12 @@ if [[ -n "$SCREENS" ]]; then
 fi
 if [[ "$SHARED_MODEL" -eq 1 ]]; then
   SCREEN_ARGS+=(--shared-model)
+fi
+if [[ "$WITH_TIME_MODEL" -eq 1 ]]; then
+  SCREEN_ARGS+=(--with-time-model)
+fi
+if [[ "$WITH_CONTROL_OPTIONS" -eq 1 ]]; then
+  SCREEN_ARGS+=(--with-control-options)
 fi
 
 # Structured screen list for catalog: [{id, title}, ...]
@@ -553,6 +576,8 @@ echo "  screens:  ${SCREENS:-"(default: $SIM_NAME)"}"
 echo "  topics:   ${TOPICS:-"(none)"}"
 echo "  subject:  $SUBJECT"
 echo "  shared:   $([[ "$SHARED_MODEL" -eq 1 ]] && echo yes || echo no)"
+echo "  time model: $([[ "$WITH_TIME_MODEL" -eq 1 ]] && echo yes || echo no)"
+echo "  control options: $([[ "$WITH_CONTROL_OPTIONS" -eq 1 ]] && echo yes || echo no)"
 echo "  onboard:  $([[ "$ONBOARD" -eq 1 ]] && echo yes || echo no)"
 echo "  existing: $([[ "$EXISTING" -eq 1 ]] && echo "yes (adopt already-on-GitHub repo)" || echo "no (create from template)")"
 echo "  template: $TEMPLATE_REPO"
@@ -577,83 +602,104 @@ if [[ "$EXISTING" -eq 1 ]]; then
     echo "Adopting existing checkout: $TARGET_PATH"
   fi
 else
-if [[ "$LOCAL_ONLY" -eq 1 ]]; then
-  SRC_TEMPLATE="$WORKSPACE/SceneryStackTemplate"
-  if [[ ! -d "$SRC_TEMPLATE" ]]; then
-    echo "error: local template not found at $SRC_TEMPLATE" >&2
-    echo "  clone it first, or omit --local-only to use gh --template" >&2
-    exit 1
+  TEMPLATE_WORK="$(mktemp -d "${TMPDIR:-/tmp}/create-sim-template.XXXXXX")"
+  REMOTE_CREATED=0
+  cleanup_create() {
+    local status=$?
+    rm -rf -- "$TEMPLATE_WORK"
+    if [[ "$status" -ne 0 && "$REMOTE_CREATED" -eq 0 && -e "$TARGET_PATH" ]]; then
+      echo "note: no GitHub repo was created; remove $TARGET_PATH before re-running" >&2
+    fi
+  }
+  trap cleanup_create EXIT
+
+  if [[ "$LOCAL_ONLY" -eq 1 ]]; then
+    SRC_TEMPLATE="$WORKSPACE/SceneryStackTemplate"
+    if [[ ! -f "$SRC_TEMPLATE/package.json" ]]; then
+      echo "error: local template not found at $SRC_TEMPLATE" >&2
+      echo "  clone it first, or omit --local-only to fetch $TEMPLATE_REPO" >&2
+      exit 1
+    fi
+    echo "Copying local template → $TARGET_PATH"
+    rsync -a \
+      --exclude node_modules \
+      --exclude dist \
+      --exclude .git \
+      --exclude .cache \
+      --exclude .vite \
+      "$SRC_TEMPLATE/" "$TARGET_PATH/"
+  else
+    echo "Fetching template $TEMPLATE_REPO..."
+    gh repo clone "$TEMPLATE_REPO" "$TEMPLATE_WORK/source" -- --depth=1
+    mkdir -p "$TARGET_PATH"
+    git -C "$TEMPLATE_WORK/source" archive HEAD | tar -xf - -C "$TARGET_PATH"
   fi
-  echo "Copying local template → $TARGET_PATH"
-  rsync -a \
-    --exclude node_modules \
-    --exclude dist \
-    --exclude .git \
-    --exclude .cache \
-    --exclude .vite \
-    "$SRC_TEMPLATE/" "$TARGET_PATH/"
-  git -C "$TARGET_PATH" init -b main
-  git -C "$TARGET_PATH" add -A
-  git -C "$TARGET_PATH" commit -m "chore: copy SceneryStackTemplate" >/dev/null
-else
-  echo "Creating GitHub repo from template..."
-  (
-    cd "$PARENT"
-    gh repo create "$ORG/$REPO" \
-      --public \
-      --template "$TEMPLATE_REPO" \
-      --description "$DESCRIPTION" \
-      --homepage "${PAGES_BASE}/${REPO}" \
-      --clone
-  )
-  if [[ "$(basename "$TARGET_PATH")" != "$REPO" ]]; then
-    mv "$PARENT/$REPO" "$TARGET_PATH"
-  fi
-fi
 
-cd "$TARGET_PATH"
+  cd "$TARGET_PATH"
+  git init -b main
+  git add -A
+  git commit -m "chore: copy template snapshot" >/dev/null
 
-echo ""
-echo "npm install..."
-npm install
+  # Drift must compare against the same pristine files used for this checkout.
+  PRISTINE_TEMPLATE="$TEMPLATE_WORK/pristine"
+  mkdir "$PRISTINE_TEMPLATE"
+  git archive HEAD | tar -xf - -C "$PRISTINE_TEMPLATE"
 
-echo ""
-echo "npm run rename..."
-npm run rename -- --id "$SIM_ID" --name "$SIM_NAME"
+  echo ""
+  echo "npm install..."
+  npm install
 
-echo ""
-echo "npm run scaffold-screens..."
-npm run scaffold-screens -- "${SCREEN_ARGS[@]}"
+  echo ""
+  echo "npm run rename..."
+  npm run rename -- --id "$SIM_ID" --name "$SIM_NAME"
 
-# Keep package.json repository URL aligned with the new repo.
-if [[ -f package.json ]]; then
-  tmp="$(mktemp)"
+  # Set the description before scaffolding so generated docs see the same value.
+  tmp="$(mktemp "$TEMPLATE_WORK/package.XXXXXX")"
   jq --arg url "https://github.com/${ORG}/${REPO}.git" \
     --arg desc "$DESCRIPTION" \
     '.repository.url = $url | .description = $desc' \
     package.json >"$tmp"
   mv "$tmp" package.json
+
+  echo ""
+  echo "npm run scaffold-screens..."
+  npm run scaffold-screens -- "${SCREEN_ARGS[@]}"
+
+  echo ""
+  echo "npm run fix..."
+  npm run fix
+
+  echo ""
+  echo "check-template-drift --fix..."
+  node "$SCRIPT_DIR/check-template-drift.mjs" --fix --dir "$PWD" --name "$REPO" --template "$PRISTINE_TEMPLATE"
+
+  for check in lint check check:architecture check:unused test; do
+    echo ""
+    echo "npm run $check..."
+    npm run "$check"
+  done
+
+  echo ""
+  echo "check-repo-compliance --local..."
+  if ! "$SCRIPT_DIR/check-repo-compliance.sh" --local "$PWD"; then
+    echo "error: the generated sim failed compliance" >&2
+    exit 1
+  fi
+
+  if [[ "$LOCAL_ONLY" -eq 0 ]]; then
+    echo ""
+    echo "Creating GitHub repo from the validated checkout..."
+    # Push the pristine snapshot commit so the remote has `main` before the
+    # GitHub baseline runs (default_branch / Pages fail on an empty repo). The
+    # validated rename + scaffold stays uncommitted for review or --pr.
+    create_args=(--public --description "$DESCRIPTION" --homepage "${PAGES_BASE}/${REPO}" --source . --remote origin)
+    if [[ "$NO_PUSH" -eq 0 ]]; then
+      create_args+=(--push)
+    fi
+    gh repo create "$ORG/$REPO" "${create_args[@]}"
+    REMOTE_CREATED=1
+  fi
 fi
-
-echo ""
-echo "npm run fix..."
-npm run fix
-
-echo ""
-echo "npm run check..."
-npm run check
-
-# rename/scaffold-screens are one-shot template tools: --fix drops them (and their
-# scripts) so the new sim starts with zero template drift; anything left fails here.
-echo ""
-echo "check-template-drift --fix..."
-TEMPLATE_DIR="$(repos_workspace_root)/SceneryStackTemplate"
-if [[ -f "$TEMPLATE_DIR/package.json" ]]; then
-  node "$SCRIPT_DIR/check-template-drift.mjs" --fix --dir "$PWD" --name "$REPO" --template "$TEMPLATE_DIR"
-else
-  echo "warning: no local SceneryStackTemplate at $TEMPLATE_DIR; run check-template-drift.sh --fix $REPO later" >&2
-fi
-fi  # end of the create-from-template branch (--existing skips it)
 
 CATALOG_PATH="$(repos_catalog_path)"
 entry="$(jq -n \
@@ -698,7 +744,11 @@ if [[ "$ONBOARD" -eq 1 ]]; then
   echo ""
   echo "Workspace README..."
   update_workspace_readme
-  run_onboard_github
+  if [[ "$LOCAL_ONLY" -eq 0 ]]; then
+    run_onboard_github
+  else
+    echo "Skipping GitHub baseline (--local-only: no remote repo)."
+  fi
 fi
 
 if [[ "$OPEN_PR" -eq 1 ]]; then
