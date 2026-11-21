@@ -651,8 +651,7 @@ PY
 
   # By-hand leak soaks (CONVENTIONS.md §5): headless (Vitest, tests/soak/headless.soak.ts) and
   # browser (Playwright, tests/soak/browser.spec.ts), both template-owned harnesses, not CI.
-  # Transition: the pre-rename layout (tests/browser/memory-soak.spec.ts only) WARNs until the
-  # template sync lands fleet-wide; drop that branch afterwards.
+  # A missing headless.soak.ts: node scripts/generate-headless-soak.mjs <Sim>.
   soak_missing=""
   [ -f tests/soak/headless.soak.ts ] || soak_missing="$soak_missing tests/soak/headless.soak.ts"
   [ -f tests/soak/browser.spec.ts ] || soak_missing="$soak_missing tests/soak/browser.spec.ts"
@@ -662,10 +661,8 @@ PY
     soak_missing="$soak_missing test:soak:browser"
   if [ -z "$soak_missing" ]; then
     pass "leak soaks: tests/soak/{headless.soak,browser.spec}.ts + test:soak:{headless,browser}"
-  elif [ -f tests/browser/memory-soak.spec.ts ]; then
-    warn "legacy soak layout (tests/browser/memory-soak.spec.ts); sync from the template — missing:$soak_missing"
   else
-    new_rule "leak soaks missing:$soak_missing (template-owned; see CONVENTIONS.md §5)"
+    new_rule "leak soaks missing:$soak_missing (sync from the template; see CONVENTIONS.md §5)"
   fi
 
   # A test script and the shared setup (CONVENTIONS.md §5).
