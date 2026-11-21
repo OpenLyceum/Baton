@@ -1,6 +1,6 @@
 ---
 name: scenerystack-testing
-description: Use when adding unit, memory-leak, fuzz, or browser tests — tests/ layout (CONVENTIONS §5), describeDisposalLeaks, test:fuzz vs tests/browser, test:soak. WebGPU Playwright flags: scenerystack-webgpu.
+description: Use when adding unit, memory-leak, fuzz, or browser tests — tests/ layout (CONVENTIONS §5), describeDisposalLeaks, test:fuzz vs tests/browser, test:soak (headless + browser leak soaks). WebGPU Playwright flags: scenerystack-webgpu.
 ---
 
 # SceneryStack Testing
@@ -13,8 +13,9 @@ Every OpenLyceum SceneryStack sim ships Vitest unit tests under root `tests/` an
 testing the **model** (pure logic, physics, math) — not Scenery rendering.
 
 `tests/fuzz/` → `npm run test:fuzz` (Fleet Health smoke). `tests/browser/` → sim-specific
-Playwright (engines, focus, screenshots) plus template `test:soak`. Do not put browser
-specs under `fuzz/`.
+Playwright (engines, focus, screenshots). `tests/soak/` → the template's by-hand leak soaks
+(`npm run test:soak`). Do not put browser specs under `fuzz/`. Extensions name the runner:
+`*.test.ts` Vitest in CI, `*.soak.ts` Vitest by hand, `*.spec.ts` Playwright.
 
 Algorithm-heavy sims carry denser suites; PhET ports often start with smoke + reset and
 grow. SceneryStackTemplate is the layout reference.
@@ -30,7 +31,9 @@ tests/
   memory-leak.test.ts      lists the sim's disposables (fleet pattern)
   **/*.test.ts             Vitest unit tests, mirroring the source tree under tests/
   fuzz/fuzz.spec.ts        template-owned Playwright fuzz smoke (npm run test:fuzz)
-  browser/memory-soak.spec.ts  template-owned Reset-All heap soak (npm run test:soak)
+  soak/headless.soak.ts    the sim's screens for the headless soak (npm run test:soak:headless)
+  soak/browser.spec.ts     template-owned browser soak (npm run test:soak:browser)
+  helpers/headlessSoak.ts  template-owned headless soak harness (describeHeadlessSoak)
   browser/*.spec.ts        sim-specific Playwright specs (engine, focus, screenshots)
   architecture.node-test.ts  template-owned: runs the real dependency-cruiser CLI on fixtures
   biome-plugins.node-test.ts template-owned: runs the real biome.json + biome-plugins/*.grit
@@ -156,8 +159,16 @@ strongly referenced through the WeakRef check so a forgotten unlink fails.
   `tests/TimeModel.test.ts` too. A suite that only disposes a stand-alone `NumberProperty`
   proves the harness runs, nothing more — compliance fails that as hollow.
 - Dynamic sims that add/remove nodes at runtime should expand the suite like OpticsLab.
-- **Browser soak:** `npm run test:soak` (template-owned `tests/browser/memory-soak.spec.ts`).
-  Keep it out of Fleet Health fuzz; use it in CRC / nightly.
+- **Leak soaks:** `npm run test:soak` runs both; keep them out of CI and Fleet Health fuzz.
+  - Headless (`test:soak:headless`, ~20 s): builds every screen in Vitest, presses every control,
+    sets sliders, fuzzes model Properties, switches screens, profile and locale, Reset All, and
+    fails on rising listener or node counts. `tests/soak/headless.soak.ts` must build the screens
+    as `main.ts` does; list long-lived globals under `tracked`, hardware/file controls under
+    `exclude`, sim-only interactions under `actions`. Check the printed coverage line: a screen
+    reaching only Reset All is not exercised.
+  - Browser (`test:soak:browser`): Reset All, screen cycling, running, `?fuzz` / `?fuzzBoard`,
+    sampling the JS heap. Catches large view/render leaks the headless soak cannot reach.
+  - Replay either with `SOAK_SEED=<seed from the test name>`.
 
 ## What to test
 

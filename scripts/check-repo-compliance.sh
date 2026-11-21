@@ -649,13 +649,23 @@ PY
     fi
   fi
 
-  # Browser memory soak (CONVENTIONS.md §5): template-owned Playwright soak, not fuzz.
-  if [ ! -f tests/browser/memory-soak.spec.ts ]; then
-    new_rule "tests/browser/memory-soak.spec.ts is missing (fleet memory soak)"
-  elif ! grep -qE '"test:soak":\s*"npx playwright test tests/browser/memory-soak\.spec\.ts"' package.json; then
-    new_rule "package.json test:soak must run npx playwright test tests/browser/memory-soak.spec.ts"
+  # By-hand leak soaks (CONVENTIONS.md §5): headless (Vitest, tests/soak/headless.soak.ts) and
+  # browser (Playwright, tests/soak/browser.spec.ts), both template-owned harnesses, not CI.
+  # Transition: the pre-rename layout (tests/browser/memory-soak.spec.ts only) WARNs until the
+  # template sync lands fleet-wide; drop that branch afterwards.
+  soak_missing=""
+  [ -f tests/soak/headless.soak.ts ] || soak_missing="$soak_missing tests/soak/headless.soak.ts"
+  [ -f tests/soak/browser.spec.ts ] || soak_missing="$soak_missing tests/soak/browser.spec.ts"
+  grep -qE '"test:soak:headless":\s*"vitest run --config vitest\.soak\.config\.ts"' package.json ||
+    soak_missing="$soak_missing test:soak:headless"
+  grep -qE '"test:soak:browser":\s*"npx playwright test tests/soak/browser\.spec\.ts"' package.json ||
+    soak_missing="$soak_missing test:soak:browser"
+  if [ -z "$soak_missing" ]; then
+    pass "leak soaks: tests/soak/{headless.soak,browser.spec}.ts + test:soak:{headless,browser}"
+  elif [ -f tests/browser/memory-soak.spec.ts ]; then
+    warn "legacy soak layout (tests/browser/memory-soak.spec.ts); sync from the template — missing:$soak_missing"
   else
-    pass "memory soak: spec + test:soak script"
+    new_rule "leak soaks missing:$soak_missing (template-owned; see CONVENTIONS.md §5)"
   fi
 
   # A test script and the shared setup (CONVENTIONS.md §5).
@@ -824,7 +834,7 @@ PY
     case "$entry" in
       .git|.github|.githooks|.claude|.gitignore|.gitattributes|node_modules|dist|src|tests|doc|public|scripts|assets) ;;
       AGENTS.md|README.md|CREDITS.md|SECURITY.md|package.json|package-lock.json|index.html|biome.json|biome-plugins) ;;
-      tsconfig.json|tsconfig.test.json|tsconfig.scripts.json|vite.config.ts|sim.config.json|vitest.config.ts|playwright.config.ts) ;;
+      tsconfig.json|tsconfig.test.json|tsconfig.scripts.json|vite.config.ts|sim.config.json|vitest.config.ts|vitest.soak.config.ts|playwright.config.ts) ;;
       .dependency-cruiser.cjs|.dependency-cruiser.local.cjs|knip.json) ;;
       playwright-report|test-results|coverage|.vite|.cache) ;;
       *) carved_out "$entry" || carved_out "$entry/" || stray_root="$stray_root $entry" ;;

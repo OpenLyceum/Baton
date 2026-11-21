@@ -105,12 +105,18 @@ tests/
   memory-leak.test.ts       describeDisposalLeaks([...]) over the sim's disposables
   helpers/memoryLeak.ts     template-owned leak harness (forceGC, keepAlive,
                             expectNoListenerGrowth, describeDisposalLeaks)
-  browser/memory-soak.spec.ts  template-owned Playwright Reset-All heap soak (`npm run test:soak`)
+  soak/headless.soak.ts     by-hand headless soak over the sim's screens
+                            (`npm run test:soak:headless`, not CI)
+  helpers/headlessSoak.ts   template-owned harness (describeHeadlessSoak)
+  soak/browser.spec.ts      template-owned Playwright soak (`npm run test:soak:browser`):
+                            Reset All, screen cycling, running each screen,
+                            pointer and keyboard fuzz
   fuzz/fuzz.spec.ts         template-owned Playwright fuzz smoke (pointer + keyboard)
   **/*.test.ts              unit tests (mirror the source tree under tests/)
   **/*.spec.ts              Playwright specs, if any (e.g. tests/fuzz/, tests/browser/)
 vitest.config.ts            root; include: ["tests/**/*.test.ts"];
                             execArgv: ["--expose-gc"] when a memory-leak suite is present
+vitest.soak.config.ts       template-owned; runs only tests/soak/**/*.soak.ts
 tsconfig.test.json          extends tsconfig.json; include: ["tests", "src/**/*.d.ts"];
                             types: ["node", "vite/client"] (no vitest/globals:
                             globals are off, so tests import from "vitest")
@@ -140,8 +146,12 @@ tsconfig.test.json          extends tsconfig.json; include: ["tests", "src/**/*.
   probes) or carved out as `` `memory-leak:<Class>` `` under `## Compliance carve-outs` —
   compliance **WARNs** on gaps and on orphaned carve-outs
   (`Baton/scripts/check-memory-leak-coverage.sh`, parser in `check-memory-leak-inventory.mjs`). Dynamic sims that add/remove nodes at
-  runtime should expand it like `OpticsLab`. Browser soak: `npm run test:soak` (not Fleet
-  Health fuzz).
+  runtime should expand it like `OpticsLab`. Leak soaks: `npm run test:soak` runs the headless
+  soak, then the browser soak (by hand; not CI, not Fleet Health fuzz).
+- Test file names say which runner and when: `*.test.ts` Vitest in `npm test` / CI, `*.soak.ts`
+  Vitest by hand (`vitest.soak.config.ts`), `*.spec.ts` Playwright. Folders say what for:
+  `tests/` unit tests plus `memory-leak.test.ts`, `tests/soak/` leak soaks, `tests/fuzz/` fuzz
+  smoke, `tests/browser/` sim-specific Playwright only.
 
 ## 6. Documentation
 
@@ -235,7 +245,7 @@ rest are a quick manual scan.
 - [ ] TypeScript: named exports only (no `export default class`); relative imports end in `.js`; `<Prefix>Constants.ts` registers with the namespace. *(auto)*
 - [ ] Any tests live only under root `tests/` with `tests/setup.ts`; no co-located / `__tests__/`; a `test` script exists. *(auto)*
 - [ ] Fuzz smoke: `tests/fuzz/fuzz.spec.ts`, `playwright.config.ts`, `scripts/test-fuzz.ts`; `test:fuzz` runs `node scripts/test-fuzz.ts`. *(auto)*
-- [ ] Memory soak: `tests/browser/memory-soak.spec.ts` and `test:soak` in `package.json`. *(auto)*
+- [ ] Leak soaks: `tests/soak/headless.soak.ts`, `tests/soak/browser.spec.ts`, and `test:soak:headless` / `test:soak:browser` in `package.json`. *(auto)*
 - [ ] `tests/memory-leak.test.ts` exists, lists the sim's disposables via `describeDisposalLeaks()` from the template-owned `tests/helpers/memoryLeak.ts` (no private `forceGC`, no hollow TimeModel-only / empty-without-`emptyOk` suite), names every non-screen `dispose()` override (or carves it out), and `vitest.config.ts` enables `--expose-gc`. *(auto)*
 - [ ] `*KeyboardHelpContent.ts` exists under `src/` (Keyboard Shortcuts dialog). *(auto)*
 - [ ] `.githooks/{pre-commit,pre-push}` present; `prepare` sets `core.hooksPath`. *(auto)*

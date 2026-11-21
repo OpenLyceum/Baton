@@ -31,7 +31,7 @@ folder is well-formed and listed here.
 | [`scenerystack-coding-conventions`](scenerystack-coding-conventions/SKILL.md) | Writing/reviewing TypeScript — naming, constructor signatures, optionize, access modifiers, type inference, assertions. |
 | [`scenerystack-axon`](scenerystack-axon/SKILL.md) | Reactive axon state — `Property` / `DerivedProperty` / `Multilink`, `TReadOnlyProperty`, read-vs-write Property APIs. |
 | [`scenerystack-code-review`](scenerystack-code-review/SKILL.md) | Pre-release CRC — build/fuzz, leaks, i18n, structure, a11y; functional checks in that skill's `references/functional-review.md`. |
-| [`scenerystack-testing`](scenerystack-testing/SKILL.md) | Unit / memory-leak / fuzz / browser tests — `tests/` layout, `describeDisposalLeaks`, `test:fuzz` vs `tests/browser`, `test:soak`. |
+| [`scenerystack-testing`](scenerystack-testing/SKILL.md) | Unit / memory-leak / fuzz / browser tests — `tests/` layout, `describeDisposalLeaks`, `test:fuzz` vs `tests/browser`, `test:soak` (headless + browser leak soaks). |
 
 ### Model & math
 

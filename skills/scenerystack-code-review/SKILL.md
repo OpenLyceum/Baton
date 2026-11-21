@@ -73,8 +73,8 @@ For a full release CRC, track these companion deliverables and their sign-offs. 
   missing `dispose()` classes or carve out `` `memory-leak:<Class>` ``.
   `idempotentDispose: true` appears only on objects that promise it. Extra leak tests pass
   their `WeakRef`(s) to `forceGC` (see scenerystack-testing).
-- [ ] `npm run test:soak` (template-owned Reset-All heap soak) for CRC / leak hunts — not Fleet
-  Health fuzz. Optionally also a Chrome DevTools heap comparison with mangling disabled
+- [ ] `npm run test:soak` (template-owned headless + browser leak soaks) for CRC / leak hunts —
+  not Fleet Health fuzz. Check the headless coverage line reaches the screen's controls. Optionally also a Chrome DevTools heap comparison with mangling disabled
   (e.g. `vite build --minify false`).
 - [ ] Every SceneryStack component that registers internal observers/listeners is `dispose()`d where
   needed. Disposal may be unnecessary for a node that lives in a `ScreenView` never removed from the
