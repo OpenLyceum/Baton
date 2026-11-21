@@ -99,6 +99,19 @@ Formatting, import ordering, and many mechanical rules are enforced by **Biome**
 ESLint. Run `npm run lint` before submitting; `npm run fix` auto-applies safe fixes. (PhET's
 `@typescript-eslint`/`phet` plugin rules do not apply to this repo.)
 
+Lint fails on warnings, so the template's GritQL plugins in `biome-plugins/` act as hard gates
+in `src/`:
+
+| Plugin | Flags | Skill |
+|---|---|---|
+| `no-hardcoded-text` | display words as literal `new Text` / `new RichText` text | scenerystack-strings |
+| `no-inline-color` | literal `new Color(...)` and string `fill`/`stroke` outside `*Colors.ts` | scenerystack-color-profiles |
+| `no-native-tofixed` | `Number.prototype.toFixed` (use `toFixed` from `scenerystack/dot`) | scenerystack-numerics |
+| `no-math-random` | `Math.random()` (use `dotRandom`) | scenerystack-numerics |
+
+Suppress a deliberate case with `// biome-ignore lint/plugin/<name>: <reason>`. The plugins
+are template-owned; change them in SceneryStackTemplate, not per sim.
+
 ### Philosophy
 
 Per the [TypeScript Design Goals](https://github.com/Microsoft/TypeScript/wiki/TypeScript-Design-Goals),

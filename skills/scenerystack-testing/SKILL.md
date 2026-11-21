@@ -32,6 +32,9 @@ tests/
   fuzz/fuzz.spec.ts        template-owned Playwright fuzz smoke (npm run test:fuzz)
   browser/memory-soak.spec.ts  template-owned Reset-All heap soak (npm run test:soak)
   browser/*.spec.ts        sim-specific Playwright specs (engine, focus, screenshots)
+  architecture.node-test.ts  template-owned: runs the real dependency-cruiser CLI on fixtures
+  biome-plugins.node-test.ts template-owned: runs the real biome.json + biome-plugins/*.grit
+                           on fixtures (both via npm run test:architecture, i.e. node --test)
 vitest.config.ts           template-owned: environment: "happy-dom"; include: ["tests/**/*.test.ts"];
                            setupFiles: ["./tests/setup.ts"]; execArgv: ["--expose-gc"]; drift guards
 ```
@@ -54,6 +57,12 @@ vitest.config.ts           template-owned: environment: "happy-dom"; include: ["
 Tests live **only** under root `tests/`. Never co-locate them next to source or use
 `__tests__/`; the compliance gate fails both. Mirror the source path: a test for
 `src/optics-lab/model/Lens.ts` is `tests/optics-lab/model/Lens.test.ts`.
+
+The two `*.node-test.ts` files are **not** Vitest: `npm test` does not collect them
+(`include` is `tests/**/*.test.ts`). They guard the template's lint and architecture
+config itself, and Baton CI runs `npm run test:architecture` right before
+`npm run check:architecture` (dependency-cruiser over `src`, also in pre-push). Change them
+only in SceneryStackTemplate. Details: [`Baton/doc/dependency-cruiser.md`](../../doc/dependency-cruiser.md).
 
 Every sim runs Vitest under happy-dom with the shared `tests/setup.ts`; `jsdom` is no longer
 a fleet dependency. `setup.ts`, `helpers/memoryLeak.ts` and `fuzz/fuzz.spec.ts` are
@@ -216,7 +225,8 @@ engine suites out of default `npm test`; document skip conditions in the sim's `
 - Import sim source through the `src/…/*.js` path (`verbatimModuleSyntax`).
 - Always include a `reset()` test for any model with state.
 - Document the vitest `environment` in the sim's `AGENTS.md`; don't change it casually.
-- Run `npm test` plus `npm run check && npm run build` before pushing.
+- Run `npm test` plus `npm run check && npm run build` before pushing; after touching
+  `biome.json`, `.dependency-cruiser.cjs` or `biome-plugins/`, also `npm run test:architecture`.
 
 ## Common mistakes
 

@@ -18,7 +18,7 @@ For a review-only request, report findings, validation, and limitations in the r
 
 Use the existing scripts for lint, app/scripts/test type checks, tests, build, and applicable compliance checks. A failing prerequisite limits what can be validated: investigate/report it, and continue independent source analysis when useful. Distinguish pre-existing failures from regressions. When the user asks for fixes, keep them within the requested scope, preserve unrelated working-tree changes, and add focused regressions where they demonstrate the failure.
 
-Checked checklist boxes mean the item was reviewed; report any finding separately. Distinguish local compliance from unavailable remote security probes. Record actual Node version and any mismatch with the repository requirement. Dependency/security/configuration maintenance does not count as a functional review of physics or controls.
+Checked checklist boxes mean the item was reviewed; report any finding separately. Distinguish local compliance from unavailable remote security probes. Record actual Node version and any mismatch with the repository requirement (Node 26 and TypeScript 7 fleet-wide). Dependency/security/configuration maintenance does not count as a functional review of physics or controls.
 
 ---
 
@@ -46,8 +46,13 @@ For a full release CRC, track these companion deliverables and their sign-offs. 
 *Report failing prerequisites and their effect on validation; continue independent source review where possible.*
 
 - [ ] `npm run check` passes (`tsc --noEmit` for app, scripts, and tests) with no type errors.
-- [ ] `npm run lint` (Biome) reports no errors.
+- [ ] `npm run lint` (Biome, `--error-on-warnings`, including the template's
+  `biome-plugins/*.grit` rules) reports no errors.
 - [ ] `npm test` (Vitest) passes.
+- [ ] `npm run test:architecture` and `npm run check:architecture` (dependency-cruiser
+  boundaries; see [`Baton/doc/dependency-cruiser.md`](../../doc/dependency-cruiser.md)) pass.
+- [ ] `npm run check:unused` (Knip) passes; Knip is `unused-mode: required` fleet-wide
+  ([`Baton/doc/knip.md`](../../doc/knip.md)).
 - [ ] `npm run build` (`tsc && vite build`) completes without warnings/errors and emits `dist/`.
 - [ ] The `dist/` bundle size is reasonable versus comparable sims.
 - [ ] The sim starts in both dev (`npm start`) and built (`npm run preview`) modes.
@@ -133,6 +138,9 @@ findings. Full auto/manual split:
   `--fix` only when the requested fixes include template synchronization.
   A deliberate deviation needs a `**Template drift**` entry under `AGENTS.md`
   ## Compliance carve-outs; prose that merely mentions the file does not count.
+- [ ] `node ../Baton/scripts/check-skill-conformance.mjs <Sim>` (sim name) reports no unapproved
+  gaps (`--strict` also fails on `warn` probes). Approved deviations are
+  `` `skill:<name>` `` bullets under `AGENTS.md` ## Compliance carve-outs.
 
 What the gate can't judge — check these by eye:
 
