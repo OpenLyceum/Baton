@@ -137,14 +137,15 @@ one does corrupt the pool. Skip `RichText` internals in a helper like that.
 
 1. **Rule out JIT warm-up.** Compiled-code growth can look like a leak. Take
    `v8.writeHeapSnapshot()` after `gc()` at 3 and 8 soak rounds, then diff the object
-   counts by constructor. If the growth is `code:`, `TrustedByteArray`, Vite module
+   counts by constructor with `Baton/scripts/heap-snapshot-diff.mjs`. If the growth is `code:`, `TrustedByteArray`, Vite module
    strings and plain arrays, it is warm-up. SpectroscopyLab's failure was this kind of
    false positive. If a scenery or axon class (`Text`, `Path`, `GridNode`,
    `BooleanProperty`, `StarNode`) grows by a fixed amount each round, that class is
    leaking.
-2. **Find the retaining path.** Run a breadth-first search from the snapshot's GC
-   roots, skipping weak edges, and print the chain to the newest instances, which have
-   the highest node `id`. The long-lived root at the top of the chain is the cause, for
+2. **Find the retaining path.** `Baton/scripts/heap-snapshot-retainers.mjs <snapshot>
+   <Constructor>` runs a breadth-first search from the snapshot's GC roots, skipping
+   weak edges, and prints the chain to the newest instances, which have the highest node
+   `id`. The long-lived root at the top of the chain is the cause, for
    example a `LocalizedStringProperty`, a Colors Property, `stepTimer` or a model
    Property. Nodes that are still in the scene graph appear under `ScreenView._view` and
    are not leaks.
@@ -156,6 +157,18 @@ one does corrupt the pool. Skip `RichText` internals in a helper like that.
    its release with `stepTimer.setTimeout`. A harness that steps only the model and
    view never fires those timeouts, which keeps every clicked button alive. A running
    `Sim` emits `stepTimer` every frame, and the template harness now does the same.
+
+To take the snapshots, put a temporary spec next to the sim's soak. Run it once with
+`SOAK_ROUNDS=3` and once with `SOAK_ROUNDS=8`, then delete it. Each snapshot is
+100–350 MB, so delete the snapshots too.
+
+```bash
+{ echo 'import { afterAll } from "vitest"; import { writeHeapSnapshot } from "node:v8";
+afterAll(() => { globalThis.gc?.(); globalThis.gc?.(); writeHeapSnapshot(process.env["SNAP"]); });'
+  cat tests/soak/headless.soak.ts; } > tests/soak/zzdebug.soak.ts
+SNAP=/tmp/r8.heapsnapshot SOAK_ROUNDS=8 SOAK_SEED=1 \
+  npx vitest run --config vitest.soak.config.ts tests/soak/zzdebug.soak.ts
+```
 
 ## Dynamic collections
 
