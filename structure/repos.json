@@ -23,6 +23,50 @@
       "status": "active"
     },
     {
+      "name": "AcceleratedMotion",
+      "displayName": "Accelerated Motion",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Video analysis of constant-velocity and accelerated motion using Direct Measurement Videos: mark positions frame by frame, graph position and velocity, and fit lines and parabolas.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "kinematics",
+        "accelerated-motion",
+        "video-analysis",
+        "graphs"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "constant-velocity",
+          "title": "Roller Coaster"
+        },
+        {
+          "id": "ball-ramp",
+          "title": "Ball on a Ramp"
+        },
+        {
+          "id": "toy-bus",
+          "title": "Toy Bus"
+        },
+        {
+          "id": "rocket-launch",
+          "title": "Rocket Launch"
+        }
+      ],
+      "status": "draft"
+    },
+    {
       "name": "ACPhasor",
       "displayName": "AC Phasor",
       "type": "simulation",
@@ -397,6 +441,49 @@
       ]
     },
     {
+      "name": "CentripetalMotion",
+      "displayName": "Centripetal Motion",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Video analysis of circular motion using Direct Measurement Videos: a conical pendulum, a spinning disk, a rotating water surface, and a puck leaving a rim.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "centripetal-force",
+        "circular-motion",
+        "video-analysis"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "airplane",
+          "title": "Airplane on a String"
+        },
+        {
+          "id": "spinning-disk",
+          "title": "Spinning Disk"
+        },
+        {
+          "id": "water-tank",
+          "title": "Water Tank"
+        },
+        {
+          "id": "leaving-rim",
+          "title": "Leaving the Rim"
+        }
+      ],
+      "status": "draft"
+    },
+    {
       "name": "ColliderLab",
       "displayName": "Collider Lab",
       "type": "simulation",
@@ -432,6 +519,50 @@
       ],
       "status": "active",
       "shortDescription": "Be the particle detector: read collider events and find resonances in real CMS dimuon data."
+    },
+    {
+      "name": "CollisionVideos",
+      "displayName": "Collision Videos",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Analyse real videos of collisions and momentum: a marble into a wood block, a Gauss gun, two carts pushing apart, and two skaters pulling on a long pole.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "collisions",
+        "momentum",
+        "video-analysis",
+        "conservation-of-momentum"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "marble-block",
+          "title": "Marble and Block"
+        },
+        {
+          "id": "gauss-gun",
+          "title": "Gauss Gun"
+        },
+        {
+          "id": "cart-push-off",
+          "title": "Cart Push-off"
+        },
+        {
+          "id": "two-skaters",
+          "title": "Two Skaters"
+        }
+      ],
+      "status": "draft"
     },
     {
       "name": "CrystalLattice",
@@ -723,6 +854,49 @@
         "general-chemistry",
         "education"
       ]
+    },
+    {
+      "name": "EnergyTransformations",
+      "displayName": "Energy Transformations",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Analyse real high-speed videos of mechanical energy transformations: a cart into a spring, a pendulum's speed at the bottom, a looping coaster, and a trampoline bounce.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "mechanical-energy",
+        "conservation-of-energy",
+        "video-analysis"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "cart-spring",
+          "title": "Cart into Spring"
+        },
+        {
+          "id": "pendulum",
+          "title": "Pendulum"
+        },
+        {
+          "id": "looping-coaster",
+          "title": "Looping Coaster"
+        },
+        {
+          "id": "trampoline",
+          "title": "Trampoline"
+        }
+      ],
+      "status": "draft"
     },
     {
       "name": "EquilibriumLab",
@@ -1045,6 +1219,41 @@
       "status": "active"
     },
     {
+      "name": "HarmonicMotion",
+      "displayName": "Harmonic Motion",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Video analysis of simple harmonic motion using Direct Measurement Videos: a pendulum, a spring glider and a turntable in step, and a disk bouncing on a loudspeaker.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "simple-harmonic-motion",
+        "oscillations",
+        "video-analysis"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "three-oscillators",
+          "title": "Three Oscillators"
+        },
+        {
+          "id": "speaker-disk",
+          "title": "Speaker Disk"
+        }
+      ],
+      "status": "draft"
+    },
+    {
       "name": "HeatTransfer",
       "displayName": "Heat Transfer",
       "type": "simulation",
@@ -1133,6 +1342,46 @@
       ],
       "status": "active",
       "shortDescription": "An HR diagram of real Gaia and Hipparcos stars: place a star and read its radius, compare the nearest and brightest stars, and explore a census within 100 pc."
+    },
+    {
+      "name": "ImpulseTheorem",
+      "displayName": "Impulse Theorem",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Video analysis of three high-speed collisions (hockey slap shot, cart push-off, M&M into a cart) to apply the impulse-momentum theorem: frame timer, calibrated ruler, position marking and best-fit velocity.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "impulse",
+        "momentum",
+        "video-analysis",
+        "collisions"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "slap-shot",
+          "title": "Slap Shot"
+        },
+        {
+          "id": "push-off",
+          "title": "Push-Off"
+        },
+        {
+          "id": "candy-cart",
+          "title": "Candy Cart"
+        }
+      ],
+      "status": "draft"
     },
     {
       "name": "InterferometryLab",
@@ -1683,6 +1932,50 @@
       "status": "active"
     },
     {
+      "name": "NewtonsSecondLaw",
+      "displayName": "Newton's Second Law",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Analyse real high-speed videos to test Newton's second law: a cart pulled by a hanging mass, the force along and perpendicular to a ramp, and a block that slips and slides down an incline.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "newtons-laws",
+        "forces",
+        "video-analysis",
+        "friction"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "hanging-mass",
+          "title": "Hanging Mass"
+        },
+        {
+          "id": "ramp-scale",
+          "title": "Ramp Force Scale"
+        },
+        {
+          "id": "normal-force",
+          "title": "Normal Force"
+        },
+        {
+          "id": "block-friction",
+          "title": "Block on a Ramp"
+        }
+      ],
+      "status": "draft"
+    },
+    {
       "name": "NuclideChart",
       "displayName": "Nuclide Chart",
       "type": "simulation",
@@ -2185,6 +2478,38 @@
       ]
     },
     {
+      "name": "QuantumScattering",
+      "displayName": "Quantum Scattering",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Interactive 1D quantum scattering: plane waves and wave packets meeting steps and barriers, with exact transfer-matrix plane waves and stationary-state spectral wave-packet evolution.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "quantum-mechanics",
+        "scattering",
+        "wave-packets",
+        "tunneling"
+      ],
+      "screens": [
+        {
+          "id": "plane-waves",
+          "title": "Plane Waves"
+        },
+        {
+          "id": "wave-packets",
+          "title": "Wave Packets"
+        }
+      ],
+      "status": "draft"
+    },
+    {
       "name": "QubitSketch",
       "displayName": "Qubit Sketch",
       "type": "simulation",
@@ -2406,6 +2731,46 @@
         }
       ],
       "status": "active"
+    },
+    {
+      "name": "RotationalDynamics",
+      "displayName": "Rotational Dynamics",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Analyse real videos of rotational dynamics: a coasting wheel with coloured dots, a disk spun up by a falling weight, and a bicycle wheel accelerated by a hanging mass.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "rotation",
+        "torque",
+        "angular-momentum",
+        "video-analysis"
+      ],
+      "githubTopics": [
+        "direct-measurement-videos",
+        "video-analysis"
+      ],
+      "screens": [
+        {
+          "id": "rotating-wheel",
+          "title": "Rotating Wheel"
+        },
+        {
+          "id": "torque-disk",
+          "title": "Torque Disk"
+        },
+        {
+          "id": "bicycle-wheel",
+          "title": "Bicycle Wheel"
+        }
+      ],
+      "status": "draft"
     },
     {
       "name": "SceneryStackTemplate",

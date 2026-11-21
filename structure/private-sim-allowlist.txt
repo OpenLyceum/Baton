@@ -1,3 +1,5 @@
-# These simulations are maintained privately and excluded from the fleet catalog and Pages.
-ImpulseTheorem
-QuantumScattering
+# Simulations intentionally kept out of the fleet catalog and Pages while private.
+# Prefer cataloging private sims with status "draft" (or "wip") and deployedUrl null
+# so compliance and template-sync cover them without listing them on the public index.
+# Names listed here are exempt from check-uncataloged.sh only while GitHub reports
+# the repository as private.
