@@ -207,3 +207,15 @@ page() {
   run_pages
   assert_failure
 }
+
+@test "shows Mathematics as a subject filter and groups its simulations" {
+  fixture="$BATS_TEST_TMPDIR/mathematics.json"
+  jq '(.repos[] | select(.name == "betaWave") | .subject) = "mathematics"' "$CATALOG" > "$fixture"
+  CATALOG="$fixture" run_pages
+  assert_success
+  run page
+  assert_output --partial 'data-subject-filter="mathematics" aria-pressed="false">Mathematics <span class="chip-count">1</span>'
+  assert_output --partial '<h2>Mathematics</h2>'
+  assert_output --partial 'data-subject="mathematics" data-collection="original"'
+  assert_output --partial '<span class="card-meta">Mathematics</span>'
+}

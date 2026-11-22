@@ -387,11 +387,12 @@
     <main id="simulations">
       <div class="toolbar" id="sim-toolbar" hidden>
         <div class="chips" role="group" aria-label="Filter by subject">
-          <button type="button" class="chip" data-subject-filter="all" aria-pressed="true">All <span class="chip-count">74</span></button>
+          <button type="button" class="chip" data-subject-filter="all" aria-pressed="true">All <span class="chip-count">75</span></button>
           <button type="button" class="chip" data-subject-filter="physics" aria-pressed="false">Physics <span class="chip-count">48</span></button>
           <button type="button" class="chip" data-subject-filter="chemistry" aria-pressed="false">Chemistry <span class="chip-count">10</span></button>
           <button type="button" class="chip" data-subject-filter="astronomy" aria-pressed="false">Astronomy <span class="chip-count">15</span></button>
           <button type="button" class="chip" data-subject-filter="earth-science" aria-pressed="false">Earth Science <span class="chip-count">1</span></button>
+          <button type="button" class="chip" data-subject-filter="mathematics" aria-pressed="false">Mathematics <span class="chip-count">1</span></button>
         </div>
         <div class="controls">
           <label class="field field-search">
@@ -1340,6 +1341,26 @@
         </a>
         </div>
       </section>
+      <section>
+        <div class="section-head">
+          <h2>Mathematics</h2>
+          <span class="count">1</span>
+        </div>
+        <div class="grid">
+        <a class="card" href="https://openlyceum.github.io/RootFinding/" style="--hue: 43;" data-subject="mathematics" data-collection="original" data-topics="numerical-methods, root-finding">
+          <div class="thumb"><img src="assets/RootFinding.webp" alt="Root Finding simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RF</span></div>
+          <div class="card-body">
+            <span class="card-meta">Mathematics</span>
+            <div class="card-head">
+              <h3>Root Finding</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Explore how six numerical methods approximate the zeros of a function.</p>
+            <div class="tags"><span class="tag">numerical-methods</span><span class="tag">root-finding</span></div>
+          </div>
+        </a>
+        </div>
+      </section>
       </div>
 
       <div class="empty" id="sim-empty" hidden>
@@ -1349,7 +1370,7 @@
     </main>
 
     <footer>
-      <p>74 live simulations &middot; Built with <a href="https://scenerystack.org/">SceneryStack</a> &middot; GNU Affero GPL v3 &middot;
+      <p>75 live simulations &middot; Built with <a href="https://scenerystack.org/">SceneryStack</a> &middot; GNU Affero GPL v3 &middot;
       <a href="https://github.com/OpenLyceum/Baton">OpenLyceum/Baton</a></p>
     </footer>
   </div>
@@ -1359,7 +1380,7 @@
     // in the query string (?subject=chemistry&group=collection&q=orbit) so a
     // filtered view can be shared as a link.
     (() => {
-      const SUBJECTS = [["physics", "Physics"], ["chemistry", "Chemistry"], ["astronomy", "Astronomy"], ["earth-science", "Earth Science"]];
+      const SUBJECTS = [["physics", "Physics"], ["chemistry", "Chemistry"], ["astronomy", "Astronomy"], ["earth-science", "Earth Science"], ["mathematics", "Mathematics"]];
       const COLLECTIONS = [["original", "Core Simulations"], ["phet", "Classic & PhET Ports"], ["naap", "NAAP Astronomy Labs"]];
       const GROUPS = ["subject", "collection", "none"];
 

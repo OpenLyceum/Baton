@@ -57,7 +57,7 @@ all_sims="$(jq -r --arg base "$PAGES_BASE" '
 
 # Display order of the subject groups and filter chips. Keep in step with the
 # subject enum in structure/repos.schema.json; "other" is the fallback bucket.
-SUBJECT_ORDER=(physics chemistry astronomy earth-science other)
+SUBJECT_ORDER=(physics chemistry astronomy earth-science mathematics other)
 COLLECTION_ORDER=(original phet naap)
 
 subject_label() {
@@ -66,6 +66,7 @@ subject_label() {
     chemistry) echo "Chemistry" ;;
     astronomy) echo "Astronomy" ;;
     earth-science) echo "Earth Science" ;;
+    mathematics) echo "Mathematics" ;;
     *) echo "Other" ;;
   esac
 }

@@ -25,7 +25,7 @@ Description:
   characters (truncate with a warning if needed).
 
 Topics (simulations + template only):
-  - Simulations: physics, scenerystack, simulation + kebab-case physicsTopics
+  - Simulations: physics (mathematics for Mathematics), scenerystack, simulation + kebab-case physicsTopics
     + optional githubTopics extras
   - Template:    physics, scenerystack, simulation, template
   Topics are replaced (catalog is source of truth). Non-sim / non-template
@@ -101,7 +101,7 @@ topics_json_for_repo() {
       ["physics", "scenerystack", "simulation", "template"]
     elif .isSimulation == true then
       (
-        ["physics", "scenerystack", "simulation"]
+        [(if .subject == "mathematics" then "mathematics" else "physics" end), "scenerystack", "simulation"]
         + [(.physicsTopics // [])[] | slug | select(length > 0)]
         + [(.githubTopics // [])[]]
       ) | uniq | .[0:20]
