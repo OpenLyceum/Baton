@@ -2,7 +2,12 @@
 
 setup() {
   load 'helpers/common'
-  mkdir "$BATS_TEST_TMPDIR/bin"
+  local fixture="$BATS_TEST_TMPDIR/audit"
+  mkdir -p "$BATS_TEST_TMPDIR/bin" "$fixture/scripts" "$fixture/structure"
+  cp "$BATON_ROOT/scripts/check-uncataloged.sh" "$fixture/scripts/"
+  printf '%s\n' '{"organization":"OpenLyceum","repos":[{"name":"CatalogedSim"}]}' >"$fixture/structure/repos.json"
+  printf '%s\n' 'PrivateExample' >"$fixture/structure/private-sim-allowlist.txt"
+  AUDIT_SCRIPT="$fixture/scripts/check-uncataloged.sh"
   cat >"$BATS_TEST_TMPDIR/bin/gh" <<'SH'
 #!/usr/bin/env bash
 case "$1 $2" in
@@ -15,25 +20,25 @@ SH
   chmod +x "$BATS_TEST_TMPDIR/bin/gh"
   export PATH="$BATS_TEST_TMPDIR/bin:$PATH"
   unset UNCATALOGED_ALLOWLIST UNCATALOGED_ALLOWLIST_FILE FLEET_ORG
-  export FLEET_CATALOG="$BATON_ROOT/structure/repos.json"
+  unset FLEET_CATALOG OPENPHYSICS_CATALOG OPENPHYSICS_ORG
 }
 
 @test "intentional private simulations pass the catalog audit" {
-  export TEST_REPOS='[{"name":"ImpulseTheorem","isPrivate":true},{"name":"QuantumScattering","isPrivate":true}]'
-  run "$BATON_ROOT/scripts/check-uncataloged.sh"
+  export TEST_REPOS='[{"name":"CatalogedSim","isPrivate":true},{"name":"PrivateExample","isPrivate":true}]'
+  run "$AUDIT_SCRIPT"
   assert_success
 }
 
 @test "a formerly private simulation still needs cataloging if it becomes public" {
-  export TEST_REPOS='[{"name":"QuantumScattering","isPrivate":false}]'
-  run "$BATON_ROOT/scripts/check-uncataloged.sh"
+  export TEST_REPOS='[{"name":"PrivateExample","isPrivate":false}]'
+  run "$AUDIT_SCRIPT"
   assert_failure
-  assert_output --partial "  - QuantumScattering"
+  assert_output --partial "  - PrivateExample"
 }
 
 @test "an unknown private simulation still needs a catalog decision" {
   export TEST_REPOS='[{"name":"OtherSim","isPrivate":true}]'
-  run "$BATON_ROOT/scripts/check-uncataloged.sh"
+  run "$AUDIT_SCRIPT"
   assert_failure
   assert_output --partial "  - OtherSim"
 }

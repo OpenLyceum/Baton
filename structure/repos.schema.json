@@ -90,7 +90,7 @@
             { "type": "null" },
             {
               "type": "string",
-              "enum": ["physics", "chemistry", "astronomy", "earth-science"]
+              "enum": ["physics", "chemistry", "astronomy", "earth-science", "mathematics"]
             }
           ]
         },
@@ -177,7 +177,7 @@
             "required": ["subject"],
             "properties": {
               "isSimulation": { "const": true },
-              "subject": { "type": "string", "enum": ["physics", "chemistry", "astronomy", "earth-science"] },
+              "subject": { "type": "string", "enum": ["physics", "chemistry", "astronomy", "earth-science", "mathematics"] },
               "lineage": { "type": "string", "enum": ["original", "phet", "naap"] },
               "physicsTopics": {
                 "type": "array",

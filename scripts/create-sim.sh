@@ -62,7 +62,7 @@ Options:
                        Catalog stores {id, title} (id from kebab: or slug of title).
   --topics LIST        Comma-separated physicsTopics (required with --catalog/--onboard)
   --subject SUBJECT    Landing-page discipline: physics (default), chemistry,
-                       astronomy, or earth-science
+                       astronomy, earth-science, or mathematics
   --github-topics LIST Optional extra GitHub topics (kebab-case), e.g. game,pwa
   --shared-model       Scaffold src/common/model/SharedModel.ts; each screen composes it
   --with-time-model    Keep TimeModel and compose it into screen models (default: off)
@@ -556,9 +556,9 @@ if [[ "$CATALOG" -eq 1 || "$ONBOARD" -eq 1 ]]; then
 fi
 
 case "$SUBJECT" in
-  physics | chemistry | astronomy | earth-science) ;;
+  physics | chemistry | astronomy | earth-science | mathematics) ;;
   *)
-    echo "error: --subject must be physics, chemistry, astronomy, or earth-science (got '$SUBJECT')" >&2
+    echo "error: --subject must be physics, chemistry, astronomy, earth-science, or mathematics (got '$SUBJECT')" >&2
     exit 1
     ;;
 esac

@@ -81,7 +81,7 @@ assert_jq "simulations have lineage + non-empty screens" '
 assert_jq "simulations have a known subject" '
   all(.repos[] | select(.isSimulation);
     (.subject == "physics" or .subject == "chemistry" or .subject == "astronomy"
-     or .subject == "earth-science")
+     or .subject == "earth-science" or .subject == "mathematics")
   )
 '
 

@@ -2693,6 +2693,52 @@
       "status": "active"
     },
     {
+      "name": "RootFinding",
+      "displayName": "Root Finding",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore how six numerical methods approximate the zeros of a function.",
+      "deployedUrl": "https://openlyceum.github.io/RootFinding",
+      "physicsTopics": [
+        "numerical-methods",
+        "root-finding"
+      ],
+      "screens": [
+        {
+          "id": "bisection",
+          "title": "Bisection"
+        },
+        {
+          "id": "newton",
+          "title": "Newton\u2019s Method"
+        },
+        {
+          "id": "false-position",
+          "title": "False Position"
+        },
+        {
+          "id": "secant",
+          "title": "Secant"
+        },
+        {
+          "id": "fixed-point",
+          "title": "Fixed-Point Iteration"
+        },
+        {
+          "id": "brent",
+          "title": "Brent\u2019s Method"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "RotatingSky",
       "displayName": "Rotating Sky",
       "type": "simulation",
