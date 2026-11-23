@@ -484,6 +484,52 @@
       "status": "draft"
     },
     {
+      "name": "CirculationLab",
+      "displayName": "Circulation Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore work, flux, circulation, and the integral theorems of vector calculus.",
+      "deployedUrl": "https://openlyceum.github.io/CirculationLab",
+      "physicsTopics": [
+        "vector-calculus",
+        "line-integrals",
+        "stokes-theorem"
+      ],
+      "screens": [
+        {
+          "id": "work",
+          "title": "Same Destination, Different Work"
+        },
+        {
+          "id": "gate",
+          "title": "Flux Through a Gate"
+        },
+        {
+          "id": "probe",
+          "title": "Divergence vs. Curl"
+        },
+        {
+          "id": "green",
+          "title": "Green’s Theorem by Cancellation"
+        },
+        {
+          "id": "stokes",
+          "title": "One Rim, Two Surfaces"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
+    },
+    {
       "name": "ColliderLab",
       "displayName": "Collider Lab",
       "type": "simulation",
@@ -563,6 +609,36 @@
         }
       ],
       "status": "draft"
+    },
+    {
+      "name": "ContourExplorer",
+      "displayName": "Contour Explorer",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore gradients and directional derivatives on contour maps.",
+      "deployedUrl": "https://openlyceum.github.io/ContourExplorer",
+      "physicsTopics": [
+        "contour-maps",
+        "gradients",
+        "directional-derivatives"
+      ],
+      "screens": [
+        {
+          "id": "explore",
+          "title": "Explore"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
     },
     {
       "name": "CrystalLattice",
@@ -709,6 +785,40 @@
         }
       ],
       "status": "active"
+    },
+    {
+      "name": "DoubleIntegralBuilder",
+      "displayName": "Double Integral Builder",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Estimate volumes and explore the bounds of double integrals.",
+      "deployedUrl": "https://openlyceum.github.io/DoubleIntegralBuilder",
+      "physicsTopics": [
+        "double-integrals",
+        "riemann-sums",
+        "integration-bounds"
+      ],
+      "screens": [
+        {
+          "id": "volume",
+          "title": "Volume"
+        },
+        {
+          "id": "bounds",
+          "title": "Bounds"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
     },
     {
       "name": "ElectricFieldMapper",
