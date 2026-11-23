@@ -1621,6 +1621,39 @@
       "status": "active"
     },
     {
+      "name": "LimitExplorer",
+      "displayName": "Limit Explorer",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore one-sided limits and epsilon\u2013delta bounds at discontinuities.",
+      "deployedUrl": "https://openlyceum.github.io/LimitExplorer",
+      "physicsTopics": [
+        "limits",
+        "continuity"
+      ],
+      "screens": [
+        {
+          "id": "approach",
+          "title": "Approach"
+        },
+        {
+          "id": "epsilon-delta",
+          "title": "Epsilon\u2013Delta"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
+    },
+    {
       "name": "LunarLander",
       "displayName": "Lunar Lander",
       "type": "simulation",
@@ -1688,6 +1721,39 @@
         }
       ],
       "status": "active"
+    },
+    {
+      "name": "MeanValueTheorem",
+      "displayName": "Mean Value Theorem",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Connect average and instantaneous speed to the Mean Value Theorem.",
+      "deployedUrl": "https://openlyceum.github.io/MeanValueTheorem",
+      "physicsTopics": [
+        "derivatives",
+        "mean-value-theorem"
+      ],
+      "screens": [
+        {
+          "id": "drive",
+          "title": "Drive"
+        },
+        {
+          "id": "when-it-applies",
+          "title": "When It Applies"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
     },
     {
       "name": "MercuryElongations",
@@ -2612,6 +2678,48 @@
       "status": "active"
     },
     {
+      "name": "RelatedRates",
+      "displayName": "Related Rates",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Predict how changing measurements are linked by derivatives.",
+      "deployedUrl": "https://openlyceum.github.io/RelatedRates",
+      "physicsTopics": [
+        "related-rates",
+        "chain-rule",
+        "implicit-differentiation"
+      ],
+      "screens": [
+        {
+          "id": "rule-lab",
+          "title": "Rule Lab"
+        },
+        {
+          "id": "conical-tank",
+          "title": "Conical Tank"
+        },
+        {
+          "id": "sliding-ladder",
+          "title": "Sliding Ladder"
+        },
+        {
+          "id": "oil-slick",
+          "title": "Oil Slick"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
+    },
+    {
       "name": "RelativisticDynamics",
       "displayName": "Relativistic Dynamics",
       "type": "simulation",
@@ -2691,6 +2799,39 @@
         }
       ],
       "status": "active"
+    },
+    {
+      "name": "RiemannSumBuilder",
+      "displayName": "Riemann Sum Builder",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Build partitions and compare numerical approximations to definite integrals.",
+      "deployedUrl": "https://openlyceum.github.io/RiemannSumBuilder",
+      "physicsTopics": [
+        "riemann-sums",
+        "integration"
+      ],
+      "screens": [
+        {
+          "id": "build",
+          "title": "Build"
+        },
+        {
+          "id": "convergence",
+          "title": "Convergence"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus"
+      ]
     },
     {
       "name": "RootFinding",

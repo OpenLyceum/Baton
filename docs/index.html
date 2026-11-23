@@ -387,12 +387,12 @@
     <main id="simulations">
       <div class="toolbar" id="sim-toolbar" hidden>
         <div class="chips" role="group" aria-label="Filter by subject">
-          <button type="button" class="chip" data-subject-filter="all" aria-pressed="true">All <span class="chip-count">75</span></button>
+          <button type="button" class="chip" data-subject-filter="all" aria-pressed="true">All <span class="chip-count">79</span></button>
           <button type="button" class="chip" data-subject-filter="physics" aria-pressed="false">Physics <span class="chip-count">48</span></button>
           <button type="button" class="chip" data-subject-filter="chemistry" aria-pressed="false">Chemistry <span class="chip-count">10</span></button>
           <button type="button" class="chip" data-subject-filter="astronomy" aria-pressed="false">Astronomy <span class="chip-count">15</span></button>
           <button type="button" class="chip" data-subject-filter="earth-science" aria-pressed="false">Earth Science <span class="chip-count">1</span></button>
-          <button type="button" class="chip" data-subject-filter="mathematics" aria-pressed="false">Mathematics <span class="chip-count">1</span></button>
+          <button type="button" class="chip" data-subject-filter="mathematics" aria-pressed="false">Mathematics <span class="chip-count">5</span></button>
         </div>
         <div class="controls">
           <label class="field field-search">
@@ -1344,9 +1344,57 @@
       <section>
         <div class="section-head">
           <h2>Mathematics</h2>
-          <span class="count">1</span>
+          <span class="count">5</span>
         </div>
         <div class="grid">
+        <a class="card" href="https://openlyceum.github.io/LimitExplorer/" style="--hue: 280;" data-subject="mathematics" data-collection="original" data-topics="limits, continuity">
+          <div class="thumb"><img src="assets/LimitExplorer.webp" alt="Limit Explorer simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">LE</span></div>
+          <div class="card-body">
+            <span class="card-meta">Mathematics</span>
+            <div class="card-head">
+              <h3>Limit Explorer</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Explore one-sided limits and epsilon–delta bounds at discontinuities.</p>
+            <div class="tags"><span class="tag">limits</span><span class="tag">continuity</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/MeanValueTheorem/" style="--hue: 178;" data-subject="mathematics" data-collection="original" data-topics="derivatives, mean-value-theorem">
+          <div class="thumb"><img src="assets/MeanValueTheorem.webp" alt="Mean Value Theorem simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">MV</span></div>
+          <div class="card-body">
+            <span class="card-meta">Mathematics</span>
+            <div class="card-head">
+              <h3>Mean Value Theorem</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Connect average and instantaneous speed to the Mean Value Theorem.</p>
+            <div class="tags"><span class="tag">derivatives</span><span class="tag">mean-value-theorem</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/RelatedRates/" style="--hue: 136;" data-subject="mathematics" data-collection="original" data-topics="related-rates, chain-rule, implicit-differentiation">
+          <div class="thumb"><img src="assets/RelatedRates.webp" alt="Related Rates simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RR</span></div>
+          <div class="card-body">
+            <span class="card-meta">Mathematics</span>
+            <div class="card-head">
+              <h3>Related Rates</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Predict how changing measurements are linked by derivatives.</p>
+            <div class="tags"><span class="tag">related-rates</span><span class="tag">chain-rule</span><span class="tag">implicit-differentiation</span></div>
+          </div>
+        </a>
+        <a class="card" href="https://openlyceum.github.io/RiemannSumBuilder/" style="--hue: 294;" data-subject="mathematics" data-collection="original" data-topics="riemann-sums, integration">
+          <div class="thumb"><img src="assets/RiemannSumBuilder.webp" alt="Riemann Sum Builder simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RS</span></div>
+          <div class="card-body">
+            <span class="card-meta">Mathematics</span>
+            <div class="card-head">
+              <h3>Riemann Sum Builder</h3>
+              <span class="card-arrow" aria-hidden="true">&rarr;</span>
+            </div>
+            <p>Build partitions and compare numerical approximations to definite integrals.</p>
+            <div class="tags"><span class="tag">riemann-sums</span><span class="tag">integration</span></div>
+          </div>
+        </a>
         <a class="card" href="https://openlyceum.github.io/RootFinding/" style="--hue: 43;" data-subject="mathematics" data-collection="original" data-topics="numerical-methods, root-finding">
           <div class="thumb"><img src="assets/RootFinding.webp" alt="Root Finding simulation screenshot" loading="lazy" decoding="async" width="1154" height="753"><span class="badge">RF</span></div>
           <div class="card-body">
@@ -1370,7 +1418,7 @@
     </main>
 
     <footer>
-      <p>75 live simulations &middot; Built with <a href="https://scenerystack.org/">SceneryStack</a> &middot; GNU Affero GPL v3 &middot;
+      <p>79 live simulations &middot; Built with <a href="https://scenerystack.org/">SceneryStack</a> &middot; GNU Affero GPL v3 &middot;
       <a href="https://github.com/OpenLyceum/Baton">OpenLyceum/Baton</a></p>
     </footer>
   </div>
