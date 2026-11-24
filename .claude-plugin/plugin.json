@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "scenerystack",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Focused SceneryStack topic skills for OpenLyceum sims (axon, WebGPU, CRC, testing, a11y, …). Full index: https://github.com/OpenLyceum/Baton/blob/main/skills/README.md",
   "author": {
     "name": "OpenLyceum"

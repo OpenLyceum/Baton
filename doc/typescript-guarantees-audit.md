@@ -138,3 +138,61 @@ Separate compiler probes rejected an invalid WaveComposer catalog key (TS2820) a
 Several development-server browser runs timed out during navigation or while waiting for the simulation to become visible. A preview pass records a run of the same test suite against the built app. The built-app smoke uses the same 10-second pointer and keyboard modes in a shared Chromium process without video or trace collection.
 
 Several unit suites reported Vitest worker startup or memory-leak timeouts. Browser runs also hit navigation timeouts and an artifact-file collision. The execution environment restarted repeatedly during retries.
+
+## Follow-up review of fallbacks, options, and review safeguards
+
+The final scan parsed 7,557 TypeScript files, including 5,405 production source files, across all 91 cataloged simulations and SceneryStackTemplate. It covered tracked files and new working-tree tests, along with 369 compiler and lint configuration files. The repository table above lists production coverage. The syntax scan found no parse errors, chained production assertions, asserted `Object.keys` lookups, compiler suppression directives, TypeScript enums, or SceneryStack ambient module shims. Context review focused on contracts that can change model results, hide a visible failure, or let a caller override model or view state.
+
+| Repository | Follow-up change |
+| --- | --- |
+| AcceleratedMotion, CentripetalMotion, CollisionVideos, EnergyTransformations, HarmonicMotion, ImpulseTheorem, NewtonsSecondLaw, RotationalDynamics | Reject sparse derivative inputs instead of treating a missing sample as zero. The vendored derivative file remains identical across the eight copies. Other existing vendored differences were preserved. |
+| CalorimetryLab | Keep each body's heat capacity, temperature, and room conductance together. Validate link endpoints and use checked temperatures and integration stages. Missing source power still means no heat source at that body. |
+| CartCollisions | Resolve the plunger setting through one checked lookup shared by the physics and view. |
+| ColliderLab | Require a generated track to have a matching particle and a shuffled event position to have an index. |
+| DataLab | Give curve model reference fixtures a typed row shape and iterate the model IDs directly. |
+| EquilibriumLab | Keep each species, initial concentration, and editable coefficient in one row. Use those rows in calculations and views and publish them before problem listeners run. |
+| FluidDynamics | Return an explicit startup result, roll back partial WebGPU initialization, preserve diagnostics, and enumerate bind layouts with an own-key check. |
+| InterferometryLab, PlateTectonics, StellarWobble | Derive canvas or node options from the parent and keep computed canvas bounds or owned children under component control. |
+| QuantumAtom3D | Check the preset table against the same ordered IDs used by the view. |
+| QuantumPotential | Keep typed parameter/property entries and save values in maps. Select the finite-well fallback from the numerical convergence result. |
+| QubitSketch | Narrow each decoded row once and keep unvalidated array entries typed as unknown. |
+| Resonance | Check the oscillator state vector at the model boundary and destructure its seven named slots. |
+| TrackLab | Validate video durations in the model and expose the duration as a read-only property. Use typed kinematic samples for graph axes and preserve missing derivatives as missing values. |
+
+### Review decisions
+
+- Each root TypeScript configuration retains strict mode, unchecked-index checking, erasable syntax, and the existing `skipLibCheck` setting. Disabling `skipLibCheck` in a template compiler invocation exposed errors in the installed SceneryStack declarations. QuantumPotential's existing accuracy-script exclusion has a separate typecheck project and a documented indexed-access exception. OscillationsAndChaos's declaration file references the Vite client types.
+- Baton coding and review guidance requires a stated rationale and explicit reviewer approval for TypeScript configuration, Biome configuration, or declaration changes. Approval is a reviewer responsibility under the existing CI workflow.
+- Browser and hardware boundary guards, disabled storage handling, and finite-value checks remain where failure or missing data is expected. The final production scan counted 290 postfix assertions across OscillationsAndChaos, Resonance, and TrackLab, concentrated in documented solver, rendering, and ring-buffer paths.
+- The test infrastructure keeps assertions used by partial browser capability mocks and SceneryStack inspection helpers. Syntax matches such as default values and option spreads require context. Numerical fitting and generated geometry still have candidates for more focused review.
+
+### Follow-up verification
+
+Verification used Node 26.13.1 and the member repositories’ existing npm scripts.
+
+| Simulation | Lint | Typecheck | Build | Architecture | Knip | Unit suite | Targeted Chromium checks |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| AcceleratedMotion | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| CalorimetryLab | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| CartCollisions | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| CentripetalMotion | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| ColliderLab | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| CollisionVideos | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| DataLab | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| EnergyTransformations | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| EquilibriumLab | Passed | Passed | Passed | Passed | Passed | Passed | ICE-table keyboard regression passed |
+| FluidDynamics | Passed | Passed | Passed | Passed | Passed | Passed | Unavailable-context and MacCormack transport checks passed |
+| HarmonicMotion | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| ImpulseTheorem | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| InterferometryLab | Passed | Passed | Passed | Passed | Passed | Passed | Fringe rendering and photon-mark smoke passed |
+| NewtonsSecondLaw | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| PlateTectonics | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| QuantumAtom3D | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| QuantumPotential | Passed | Passed | Passed | Passed | Passed | Passed on retry | — |
+| QubitSketch | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| Resonance | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| RotationalDynamics | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| StellarWobble | Passed | Passed | Passed | Passed | Passed | Passed | — |
+| TrackLab | Passed | Passed | Passed | Passed | Passed | Passed | Uploaded WebM metadata and keyboard playback smoke passed |
+
+Baton’s skill validation passed for all 27 skills.

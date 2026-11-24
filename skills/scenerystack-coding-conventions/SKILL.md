@@ -219,6 +219,19 @@ and put the type check where the invariant is established.
   when a helper creates several related values. Use a tuple for required positions and store related
   history values together. For unavoidable assertions in bounded loops, record where the size or
   populated range is established.
+- **Assertions and suppressions.** Check chained casts, immediate assertions from `unknown`, and
+  compiler or lint suppressions for the guarantee they bypass. A typed keys helper is valid only
+  for objects whose runtime keys are known to match the declared keys.
+- **Fallbacks and failures.** Check that every optional access or default corresponds to a supported
+  state. Keep a value and its dependencies together when a missing entry would change a calculation.
+  Catch recoverable boundary failures at their source and preserve diagnostics for unexpected errors.
+- **API ownership.** Derive framework option shapes from the parent declaration and compose them
+  with `optionize` or `combineOptions`. Use `TReadOnlyProperty` for model-owned inputs to observers,
+  `DerivedProperty` for computed observable state, and `NumberProperty` for bounded quantities.
+- **Configuration changes.** Changes to `tsconfig`, Biome configuration, or declaration files
+  require an explicit reviewer approval and a rationale in the change description. Preserve
+  the fleet's strict source checking and current `skipLibCheck` baseline while the installed
+  SceneryStack declarations fail full checking.
 
 ### TSDoc
 
