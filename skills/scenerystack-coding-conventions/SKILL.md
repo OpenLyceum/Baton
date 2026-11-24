@@ -201,6 +201,25 @@ assert && assert( particles.length > 0, "must have at least one particle" );  //
 assert && assert( typeof count === "number" );                                 // ❌ already typed
 ```
 
+### Preserve what the checker can prove
+
+During review, ask which plausible mistake would still compile. Check the source of each asserted value
+and put the type check where the invariant is established.
+
+- **Saved data and parsed input.** Start with `const raw: unknown = JSON.parse(text)`. Check the shape
+  and values, then construct the domain object. Decode legacy values before assigning the current type.
+  For independently stored preferences, let each valid field load even when a sibling is malformed.
+- **Static lookup keys.** Carry the literal key union through the producer and consumer. Index the live
+  string-property group with that union, or check a mapping with `satisfies`. For keys from runtime
+  input, use a checked lookup with an explicit missing-key path.
+- **Related fields.** Keep discriminants and their payloads together. Use a discriminated union for
+  messages and typed decoder outputs for parsed fields. A dynamic dictionary is appropriate while its
+  values are still unknown or when every key has the same independent meaning.
+- **Initialization and indexing.** Assign required fields in the constructor, using a returned bundle
+  when a helper creates several related values. Use a tuple for required positions and store related
+  history values together. For unavoidable assertions in bounded loops, record where the size or
+  populated range is established.
+
 ### TSDoc
 
 Don't duplicate type info in TSDoc and the signature. If you document one `@param`, document **all** of
