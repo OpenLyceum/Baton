@@ -104,6 +104,7 @@
           "title": "Power"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/ACPhasor",
       "status": "active"
     },
     {
@@ -221,6 +222,7 @@
           "title": "Seasons"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/BasicCoordinatesAndSeasons",
       "status": "active"
     },
     {
@@ -354,6 +356,7 @@
           "title": "Multiple Capacitors"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/CapacitorLab",
       "status": "active"
     },
     {
@@ -391,6 +394,7 @@
           "title": "Reversed Cycle"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/CarnotHeatEngine",
       "status": "active"
     },
     {
@@ -685,6 +689,7 @@
           "title": "Aperiodic Order"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/CrystalLattice",
       "status": "active"
     },
     {
@@ -784,6 +789,7 @@
           "title": "Doppler Effect"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/DopplerEffect",
       "status": "active"
     },
     {
@@ -880,6 +886,7 @@
           "title": "Electric Field of Dreams"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/ElectricFieldOfDreams",
       "status": "active"
     },
     {
@@ -1130,6 +1137,7 @@
           "title": "Transit"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/ExtrasolarPlanets",
       "status": "active"
     },
     {
@@ -1160,6 +1168,7 @@
           "title": "Magnetic"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/FieldBoundary",
       "status": "active"
     },
     {
@@ -1193,6 +1202,7 @@
           "title": "Lab"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/FluidDynamics",
       "status": "active"
     },
     {
@@ -1233,6 +1243,7 @@
           "title": "Water Tower"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/FluidPressureAndFlow",
       "status": "active",
       "shortDescription": "PhET Fluid Pressure and Flow recreation: hydrostatic pressure, Bernoulli pipe flow, and a water tower with hose.",
       "githubTopics": [
@@ -1326,6 +1337,7 @@
           "title": "Galactic"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/HabitableZones",
       "status": "active"
     },
     {
@@ -1404,6 +1416,7 @@
           "title": "Materials"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/HeatTransfer",
       "status": "active"
     },
     {
@@ -1527,6 +1540,7 @@
           "title": "Fabry-Perot"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/InterferometryLab",
       "status": "active"
     },
     {
@@ -1561,6 +1575,7 @@
           "title": "Lady Bug"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/LadyBug",
       "status": "active"
     },
     {
@@ -1728,6 +1743,7 @@
           "title": "Lab"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/LightPropagation",
       "status": "active"
     },
     {
@@ -1796,6 +1812,7 @@
           "title": "Lunar Lander"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/LunarLander",
       "status": "active"
     },
     {
@@ -1830,6 +1847,7 @@
           "title": "Maze Game"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/MazeGame",
       "status": "active"
     },
     {
@@ -1981,6 +1999,7 @@
           "title": "Motion Sensor"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/MotionMatch",
       "status": "active",
       "shortDescription": "Match position-time and velocity-time graphs with pointer controls or a PASCO Wireless Motion Sensor over Web Bluetooth.",
       "githubTopics": [
@@ -2017,6 +2036,7 @@
           "title": "Motion Sensor"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/MotionSensor",
       "status": "active",
       "shortDescription": "Record motion with the mouse or a PASCO PS-3219 over Web Bluetooth; plot position, velocity, and acceleration on configurable axes.",
       "githubTopics": [
@@ -2066,6 +2086,7 @@
           "title": "Zodiac"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/MotionsOfTheSun",
       "status": "active"
     },
     {
@@ -2105,6 +2126,7 @@
           "title": "Charts"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/MovingMan",
       "status": "active"
     },
     {
@@ -2199,6 +2221,7 @@
           "title": "Decay Chains"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/NuclideChart",
       "status": "active"
     },
     {
@@ -2239,6 +2262,7 @@
           "title": "Diffraction"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/OpticsLab",
       "status": "active"
     },
     {
@@ -2283,6 +2307,7 @@
           "title": "Double Pendulum"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/OscillationsAndChaos",
       "status": "active"
     },
     {
@@ -2312,6 +2337,7 @@
           "title": "Oscilloscope"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/Oscilloscope",
       "status": "active"
     },
     {
@@ -2515,6 +2541,7 @@
           "title": "Plate Motion"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/PlateTectonics",
       "status": "active"
     },
     {
@@ -2552,6 +2579,7 @@
           "title": "Torque-Free Tumbling"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/Precession",
       "status": "active"
     },
     {
@@ -2714,6 +2742,7 @@
           "title": "Circuit"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/QubitSketch",
       "status": "active"
     },
     {
@@ -2746,6 +2775,7 @@
           "title": "Device"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/RadioactivityAndStatistics",
       "status": "active",
       "shortDescription": "Count radioactive decays (simulated or PASCO PS-3238) and compare the histogram to Poisson and Gaussian theory.",
       "githubTopics": [
@@ -2785,6 +2815,7 @@
           "title": "Radio Waves"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/RadioWaves",
       "status": "active"
     },
     {
@@ -2908,6 +2939,7 @@
           "title": "Chladni Patterns"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/Resonance",
       "status": "active"
     },
     {
@@ -3027,6 +3059,7 @@
           "title": "Explorer"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/RotatingSky",
       "status": "active"
     },
     {
@@ -3169,6 +3202,7 @@
           "title": "Planetary Configurations"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/SolarSystemModels",
       "status": "active"
     },
     {
@@ -3217,6 +3251,7 @@
           "title": "Relativistic Doppler"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/SpecialRelativity",
       "status": "active"
     },
     {
@@ -3309,6 +3344,7 @@
           "title": "Instruments"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/StandingWaves",
       "status": "active"
     },
     {
@@ -3383,6 +3419,7 @@
           "title": "Stern Gerlach"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/SternGerlach",
       "status": "active"
     },
     {
@@ -3423,6 +3460,7 @@
           "title": "More Features"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/TheRamp",
       "status": "active"
     },
     {
@@ -3490,6 +3528,7 @@
           "title": "Track Lab"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/TrackLab",
       "status": "active"
     },
     {
@@ -3583,6 +3622,7 @@
           "title": "Analyzer"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/VariableStarPhotometry",
       "status": "active"
     },
     {
@@ -3621,6 +3661,7 @@
           "title": "Practice"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/VernierScales",
       "status": "active"
     },
     {
@@ -3659,6 +3700,7 @@
           "title": "Voice & Vowels"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/WaveComposer",
       "status": "active"
     },
     {
@@ -3687,6 +3729,7 @@
           "title": "Planetarium"
         }
       ],
+      "deployedUrl": "https://openlyceum.github.io/Zenith",
       "status": "active"
     }
   ]

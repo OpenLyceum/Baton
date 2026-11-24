@@ -108,6 +108,10 @@ in `src/`:
 | `no-inline-color` | literal `new Color(...)` and string `fill`/`stroke` outside `*Colors.ts` | scenerystack-color-profiles |
 | `no-native-tofixed` | `Number.prototype.toFixed` (use `toFixed` from `scenerystack/dot`) | scenerystack-numerics |
 | `no-math-random` | `Math.random()` (use `dotRandom`) | scenerystack-numerics |
+| `no-math-round` | `Math.round()` (use `roundSymmetric` from `scenerystack/dot`) | scenerystack-numerics |
+| `no-native-timer` | bare/`window` `setTimeout`/`setInterval` (prefer `step(dt)` or `stepTimer`) | this skill |
+| `no-window-inner-size` | `window.innerWidth`/`innerHeight` (use `Sim.dimensionProperty` or bounds) | scenerystack-layout |
+| `require-property-suffix` | `const`/`let`/`this.` bindings of `*Property` without a `Property` suffix | scenerystack-axon |
 
 Suppress a deliberate case with `// biome-ignore lint/plugin/<name>: <reason>`. The plugins
 are template-owned; change them in SceneryStackTemplate, not per sim.
@@ -200,6 +204,38 @@ production builds).
 assert && assert( particles.length > 0, "must have at least one particle" );  // ✅
 assert && assert( typeof count === "number" );                                 // ❌ already typed
 ```
+
+### Preserve what the checker can prove
+
+During review, ask which plausible mistake would still compile. Check the source of each asserted value
+and put the type check where the invariant is established.
+
+- **Saved data and parsed input.** Start with `const raw: unknown = JSON.parse(text)`. Check the shape
+  and values, then construct the domain object. Decode legacy values before assigning the current type.
+  For independently stored preferences, let each valid field load even when a sibling is malformed.
+- **Static lookup keys.** Carry the literal key union through the producer and consumer. Index the live
+  string-property group with that union, or check a mapping with `satisfies`. For keys from runtime
+  input, use a checked lookup with an explicit missing-key path.
+- **Related fields.** Keep discriminants and their payloads together. Use a discriminated union for
+  messages and typed decoder outputs for parsed fields. A dynamic dictionary is appropriate while its
+  values are still unknown or when every key has the same independent meaning.
+- **Initialization and indexing.** Assign required fields in the constructor, using a returned bundle
+  when a helper creates several related values. Use a tuple for required positions and store related
+  history values together. For unavoidable assertions in bounded loops, record where the size or
+  populated range is established.
+- **Assertions and suppressions.** Check chained casts, immediate assertions from `unknown`, and
+  compiler or lint suppressions for the guarantee they bypass. A typed keys helper is valid only
+  for objects whose runtime keys are known to match the declared keys.
+- **Fallbacks and failures.** Check that every optional access or default corresponds to a supported
+  state. Keep a value and its dependencies together when a missing entry would change a calculation.
+  Catch recoverable boundary failures at their source and preserve diagnostics for unexpected errors.
+- **API ownership.** Derive framework option shapes from the parent declaration and compose them
+  with `optionize` or `combineOptions`. Use `TReadOnlyProperty` for model-owned inputs to observers,
+  `DerivedProperty` for computed observable state, and `NumberProperty` for bounded quantities.
+- **Configuration changes.** Changes to `tsconfig`, Biome configuration, or declaration files
+  require an explicit reviewer approval and a rationale in the change description. Preserve
+  the fleet's strict source checking and current `skipLibCheck` baseline while the installed
+  SceneryStack declarations fail full checking.
 
 ### TSDoc
 

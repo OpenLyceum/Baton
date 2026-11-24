@@ -166,6 +166,9 @@ What the gate can't judge — check these by eye:
 - [ ] `package.json` has no unused dependencies; no dev-only relaxations left in
   `tsconfig*`/`vite.config.ts`/`vitest.config.ts`/`biome.json` (disabled lint rules, loosened
   `strict`/type checks, debug flags).
+- [ ] Changes to `tsconfig`, Biome configuration, and declaration files have a stated rationale
+  and explicit reviewer approval. Inspect added exclusions and ambient module declarations for
+  their effect on source type coverage.
 - [ ] No stale branches that should be deleted.
 
 ### Coding Conventions
@@ -176,14 +179,18 @@ What the gate can't judge — check these by eye:
   JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
   scenerystack-numerics. The template's `no-native-tofixed` Biome plugin flags native calls in
   `src/`; each `biome-ignore lint/plugin/no-native-tofixed` needs a reason. The same goes for the
-  `no-math-random`, `no-hardcoded-text` and `no-inline-color` plugins.
+  `no-math-random`, `no-math-round`, `no-native-timer`, `no-window-inner-size`,
+  `require-property-suffix`, `no-hardcoded-text` and `no-inline-color` plugins.
 - [ ] `npm run lint` verifies formatting and import order without writing files. It runs with
   `--error-on-warnings`, so a `"warn"` rule fails the same as an error. Every `biome-ignore` states a
   specific reason.
 - [ ] Text uses `PhetFont` (or a shared font constant), not CSS font strings such as
   `"16px sans-serif"`. Canvas `ctx.font` strings are the exception.
-- [ ] No `!` non-null assertions in `src/` without a comment (Biome warns); prefer a narrowing
-  check or a throwing helper (see scenerystack-coding-conventions).
+- [ ] Type assertions, suppressions, and fallbacks preserve the checks the code relies on.
+  Verify the lifetime behind `!`, the size and populated range behind indexed assertions,
+  and the behavior when a value is genuinely missing. See scenerystack-coding-conventions.
+- [ ] Option types preserve parent requirements and component-owned values. Observable outputs
+  expose read-only properties, with writable properties reserved for intended inputs.
 - [ ] Sim preferences reach models and views through constructor/screen options, not a
   `getInstance()` singleton or module-level getter (see scenerystack-preferences).
 
