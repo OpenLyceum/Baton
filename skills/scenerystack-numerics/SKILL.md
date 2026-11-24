@@ -87,6 +87,7 @@ Use `dotRandom` (seedable) rather than `Math.random()` so fuzz runs and replays 
 - Format displayed numbers with `toFixed` / `toFixedNumber` from `scenerystack/dot`, not `Number.toFixed`. The template's `biome-plugins/no-native-tofixed.grit` flags native calls in `src/` (and lint fails on warnings). For a deliberate exception, use `// biome-ignore lint/plugin/no-native-tofixed: <reason>`.
 - Use `dotRandom`, never `Math.random()`, so runs can be seeded. The template's `no-math-random` Biome plugin flags `Math.random()` in `src/`.
 - Use `dotRandom`, not `Math.random()`, anywhere randomness must be reproducible.
+- Prefer `roundSymmetric` from `scenerystack/dot` over `Math.round()` so positive and negative values round the same way. The template's `no-math-round` plugin flags `Math.round()` in `src/`.
 - For oscillators/orbits use semi-implicit Euler or RK4; reserve forward Euler for non-stiff, non-conservative motion.
 
 ## Common mistakes
@@ -95,6 +96,7 @@ Use `dotRandom` (seedable) rather than `Math.random()` so fuzz runs and replays 
 - Baking a time-scale factor into a constant so "real seconds" no longer means seconds.
 - Forward Euler on a spring/orbit → energy creeps up and the sim visibly drifts.
 - `Math.random()` in model code → non-reproducible fuzz failures you can't replay.
+- `Math.round()` for physics or shared display rounding → prefer `roundSymmetric`.
 - Re-implementing clamp/lerp/round inline instead of `Utils`/`LinearFunction`.
 - `value.toFixed(2)` (native) in a readout or a11y string → use `toFixed(value, 2)` from `scenerystack/dot`.
 

@@ -179,7 +179,8 @@ What the gate can't judge — check these by eye:
   JavaScript's native `Number.toFixed` — cross-browser rounding inconsistencies). See
   scenerystack-numerics. The template's `no-native-tofixed` Biome plugin flags native calls in
   `src/`; each `biome-ignore lint/plugin/no-native-tofixed` needs a reason. The same goes for the
-  `no-math-random`, `no-hardcoded-text` and `no-inline-color` plugins.
+  `no-math-random`, `no-math-round`, `no-native-timer`, `no-window-inner-size`,
+  `require-property-suffix`, `no-hardcoded-text` and `no-inline-color` plugins.
 - [ ] `npm run lint` verifies formatting and import order without writing files. It runs with
   `--error-on-warnings`, so a `"warn"` rule fails the same as an error. Every `biome-ignore` states a
   specific reason.

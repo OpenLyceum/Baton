@@ -108,6 +108,10 @@ in `src/`:
 | `no-inline-color` | literal `new Color(...)` and string `fill`/`stroke` outside `*Colors.ts` | scenerystack-color-profiles |
 | `no-native-tofixed` | `Number.prototype.toFixed` (use `toFixed` from `scenerystack/dot`) | scenerystack-numerics |
 | `no-math-random` | `Math.random()` (use `dotRandom`) | scenerystack-numerics |
+| `no-math-round` | `Math.round()` (use `roundSymmetric` from `scenerystack/dot`) | scenerystack-numerics |
+| `no-native-timer` | bare/`window` `setTimeout`/`setInterval` (prefer `step(dt)` or `stepTimer`) | this skill |
+| `no-window-inner-size` | `window.innerWidth`/`innerHeight` (use `Sim.dimensionProperty` or bounds) | scenerystack-layout |
+| `require-property-suffix` | `const`/`let`/`this.` bindings of `*Property` without a `Property` suffix | scenerystack-axon |
 
 Suppress a deliberate case with `// biome-ignore lint/plugin/<name>: <reason>`. The plugins
 are template-owned; change them in SceneryStackTemplate, not per sim.
