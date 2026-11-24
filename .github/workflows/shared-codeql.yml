@@ -14,8 +14,17 @@ permissions:
   security-events: write
 
 jobs:
+  code-security:
+    if: github.event.repository.private == true
+    uses: ./.github/workflows/shared-code-security-availability.yml
+
   analyze:
     name: Analyze JavaScript
+    needs: code-security
+    if: >-
+      !cancelled() &&
+      (github.event.repository.private != true ||
+       (needs.code-security.result == 'success' && needs.code-security.outputs.unavailable == 'false'))
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

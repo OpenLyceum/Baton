@@ -1,0 +1,41 @@
+name: Shared Code Security availability
+
+on:
+  workflow_call:
+    outputs:
+      unavailable:
+        description: Whether GitHub confirmed that Code Security is unavailable
+        value: ${{ jobs.detect.outputs.unavailable }}
+
+permissions:
+  security-events: read
+
+jobs:
+  detect:
+    name: Check Code Security availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      unavailable: ${{ steps.probe.outputs.unavailable }}
+    steps:
+      - name: Check repository code scanning access
+        id: probe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          response=$(mktemp)
+          trap 'rm -f "$response"' EXIT
+          if status=$(curl --silent --show-error --max-time 20 \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --output "$response" --write-out '%{http_code}' \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/code-scanning/analyses?per_page=1"); then
+            if [[ "$status" == 403 ]] && jq -e \
+              '.message == "Advanced Security must be enabled for this repository to use code scanning."' \
+              "$response" >/dev/null; then
+              echo "unavailable=true" >> "$GITHUB_OUTPUT"
+              echo "::notice::GitHub Code Security is unavailable for this private repository."
+              exit 0
+            fi
+          fi
+          echo "unavailable=false" >> "$GITHUB_OUTPUT"
