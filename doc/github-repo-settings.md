@@ -89,3 +89,8 @@ Code scanning **default setup** stays not-configured: sims use Baton’s reusabl
 Private catalog repos (e.g. `Baseline`) still get vulnerability alerts and feature flags
 (wiki/projects off). Secret scanning and private vulnerability reporting may be unavailable
 without GitHub Advanced Security; the checker treats those as out of scope for private repos.
+
+The shared CodeQL and dependency-review workflows check Code Security availability
+for private repositories. They skip their jobs when the code scanning API explicitly
+reports that Advanced Security must be enabled. Both jobs run on public repositories,
+and private repositories run them when GitHub reports access or the probe is inconclusive.
