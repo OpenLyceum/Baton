@@ -1893,6 +1893,61 @@
       ]
     },
     {
+      "name": "LinearTransformations",
+      "displayName": "Linear Transformations",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "See vectors, matrices, eigenvectors, projections and the SVD act on the plane.",
+      "deployedUrl": "https://openlyceum.github.io/LinearTransformations",
+      "physicsTopics": [
+        "linear-algebra",
+        "vectors",
+        "matrices",
+        "linear-transformations",
+        "eigenvectors",
+        "least-squares",
+        "svd"
+      ],
+      "screens": [
+        {
+          "id": "span",
+          "title": "Span"
+        },
+        {
+          "id": "transform",
+          "title": "Transform"
+        },
+        {
+          "id": "systems",
+          "title": "Systems"
+        },
+        {
+          "id": "eigen",
+          "title": "Eigenvectors"
+        },
+        {
+          "id": "projection",
+          "title": "Projection"
+        },
+        {
+          "id": "basis",
+          "title": "Change of Basis"
+        },
+        {
+          "id": "svd",
+          "title": "SVD"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "LockInAmplifier",
       "displayName": "Lock-In Amplifier",
       "type": "simulation",
