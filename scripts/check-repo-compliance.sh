@@ -756,7 +756,8 @@ PY
 
   # index.html theme-color and the manifest agree; manifest has a background_color.
   if [ -f index.html ] && [ -f vite.config.ts ]; then
-    html_theme="$(grep -oE 'name="theme-color"[^>]*content="#[0-9a-fA-F]{6}"' index.html | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]')"
+    # The shared PWA config writes %SIM_THEME_COLOR% instead of a literal color, so no match is normal.
+    html_theme="$(grep -oE 'name="theme-color"[^>]*content="#[0-9a-fA-F]{6}"' index.html | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]' || true)"
     # Template vite.config.ts reads the colors from sim.config.json; a carved-out config inlines them.
     if [ -f sim.config.json ]; then
       manifest_theme="$(jq -r '.themeColor // empty' sim.config.json | tr '[:upper:]' '[:lower:]')"
