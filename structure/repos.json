@@ -3154,6 +3154,40 @@
       "status": "template"
     },
     {
+      "name": "SeismologyLab",
+      "displayName": "Seismology Lab",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "earth-science",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Locate an earthquake's epicenter from P–S arrival-time differences on real seismograms.",
+      "deployedUrl": "https://openlyceum.github.io/SeismologyLab",
+      "physicsTopics": [
+        "seismology",
+        "seismic waves",
+        "earthquakes",
+        "triangulation",
+        "travel-time curves",
+        "geophysics"
+      ],
+      "screens": [
+        {
+          "id": "regional",
+          "title": "Regional"
+        },
+        {
+          "id": "global",
+          "title": "Global"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "SimplifiedMRI",
       "displayName": "Simplified MRI",
       "type": "simulation",
