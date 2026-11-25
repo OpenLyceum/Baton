@@ -12,7 +12,7 @@ conformant by default.
 
 > **Scope:** every active SceneryStack TypeScript simulation in
 > [`structure/repos.json`](structure/repos.json) (`isSimulation` + `framework: SceneryStack`)
-> plus `SceneryStackTemplate`. As of 2026-11-25 that is 88 sims including ACPhasor, CirculationLab, ContourExplorer, DoubleIntegralBuilder, HabitableZones, LimitExplorer, OpticsLab, QubitSketch, TrackLab, Zenith.
+> plus `SceneryStackTemplate`. As of 2026-11-25 that is 90 sims including ACPhasor, CirculationLab, ContourExplorer, DoubleIntegralBuilder, HabitableZones, LimitExplorer, OpticsLab, QubitSketch, TrackLab, Zenith.
 > BasicCoordinatesAndSeasons, CapacitorLab, CarnotHeatEngine, HabitableZones, LightPropagation,
 > MercuryElongations, MotionsOfTheSun, Oscilloscope, Precession, QuantumPotential,
 > SpecialRelativity, SternGerlach, and Zenith.
