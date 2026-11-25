@@ -3499,6 +3499,52 @@
       "shortDescription": "Find an exoplanet with the radial-velocity method: Doppler-shifted spectral lines, the star's wobble, viewing geometry and minimum mass, and fitting noisy data."
     },
     {
+      "name": "Stereochemistry",
+      "displayName": "Stereochemistry",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "chemistry",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Explore chirality, assign R/S configurations with CIP priorities, and relate Newman projections and cyclohexane chairs to conformational energy.",
+      "deployedUrl": "https://openlyceum.github.io/Stereochemistry",
+      "physicsTopics": [
+        "chemistry",
+        "stereochemistry",
+        "chirality",
+        "cip-rules",
+        "conformational-analysis",
+        "cyclohexane"
+      ],
+      "screens": [
+        {
+          "id": "chirality",
+          "title": "Chirality"
+        },
+        {
+          "id": "configuration",
+          "title": "R/S"
+        },
+        {
+          "id": "conformations",
+          "title": "Conformations"
+        },
+        {
+          "id": "cyclohexane",
+          "title": "Cyclohexane"
+        },
+        {
+          "id": "challenge",
+          "title": "Challenge"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "SternGerlach",
       "displayName": "Stern\u2013Gerlach",
       "type": "simulation",
