@@ -1329,6 +1329,43 @@
       "status": "active"
     },
     {
+      "name": "GravitationalWaves",
+      "displayName": "Gravitational Waves",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Watch a gravitational wave stretch space, measure it with a laser interferometer, and dig a black-hole chirp out of detector noise.",
+      "deployedUrl": "https://openlyceum.github.io/GravitationalWaves",
+      "physicsTopics": [
+        "gravitational waves",
+        "interferometry",
+        "relativity",
+        "signal processing",
+        "noise"
+      ],
+      "screens": [
+        {
+          "id": "waves",
+          "title": "Waves"
+        },
+        {
+          "id": "interferometer",
+          "title": "Interferometer"
+        },
+        {
+          "id": "chirp",
+          "title": "Chirp"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "HabitabilityLab",
       "displayName": "Habitability Lab",
       "type": "simulation",
