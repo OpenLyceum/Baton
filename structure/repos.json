@@ -3235,6 +3235,45 @@
       ]
     },
     {
+      "name": "SlopeFields",
+      "displayName": "Slope Fields",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "mathematics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Sketch slope fields, step through Euler's method, and model growth with separable equations.",
+      "deployedUrl": "https://openlyceum.github.io/SlopeFields",
+      "physicsTopics": [
+        "slope-fields",
+        "eulers-method",
+        "separable-equations"
+      ],
+      "screens": [
+        {
+          "id": "slope-field",
+          "title": "Slope Field"
+        },
+        {
+          "id": "euler",
+          "title": "Euler's Method"
+        },
+        {
+          "id": "growth-models",
+          "title": "Growth Models"
+        }
+      ],
+      "status": "active",
+      "githubTopics": [
+        "calculus",
+        "differential-equations"
+      ]
+    },
+    {
       "name": "SolarSystemModels",
       "displayName": "Solar System Models",
       "type": "simulation",
