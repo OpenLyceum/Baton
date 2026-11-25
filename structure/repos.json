@@ -1257,6 +1257,37 @@
       ]
     },
     {
+      "name": "GravitationalLensing",
+      "displayName": "Gravitational Lensing",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "astronomy",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Move a foreground galaxy to form arcs and Einstein rings, then follow a stellar microlensing light curve.",
+      "deployedUrl": "https://openlyceum.github.io/GravitationalLensing",
+      "physicsTopics": [
+        "gravitational-lensing",
+        "galaxies",
+        "microlensing"
+      ],
+      "screens": [
+        {
+          "id": "galaxy",
+          "title": "Galaxy Lensing"
+        },
+        {
+          "id": "microlensing",
+          "title": "Microlensing"
+        }
+      ],
+      "status": "active"
+    },
+    {
       "name": "HabitabilityLab",
       "displayName": "Habitability Lab",
       "type": "simulation",
