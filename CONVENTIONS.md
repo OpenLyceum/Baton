@@ -152,6 +152,9 @@ tsconfig.test.json          extends tsconfig.json; include: ["tests", "src/**/*.
   Vitest by hand (`vitest.soak.config.ts`), `*.spec.ts` Playwright. Folders say what for:
   `tests/` unit tests plus `memory-leak.test.ts`, `tests/soak/` leak soaks, `tests/fuzz/` fuzz
   smoke, `tests/browser/` sim-specific Playwright only.
+- Sims with browser specs use `npm run test:browser` (`playwright test --project=chromium tests/browser`).
+  Set `run-browser-tests: true` in the reusable CI caller to run that suite in CI. Record the
+  workflow override in the sim's compliance carve-outs.
 
 ## 6. Documentation
 

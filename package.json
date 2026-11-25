@@ -11,6 +11,7 @@
     "refresh": "bash scripts/refresh-screenshots.sh"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
     "bats": "^1.13.0",
     "bats-assert": "^2.2.4",
     "bats-support": "^0.3.0",

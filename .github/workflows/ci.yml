@@ -23,6 +23,10 @@ on:
         # String (not boolean) so "unset" is distinguishable from "off".
         type: string
         default: ""
+      run-browser-tests:
+        description: Run the caller's sim-specific Chromium regression tests.
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -33,6 +37,31 @@ permissions:
 # caller's run and kill the reusable call at startup, so the build never runs.
 
 jobs:
+  browser:
+    if: inputs.run-browser-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Run browser regression tests
+        run: npm run test:browser
+      - name: Upload browser failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: browser-test-failure
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+
   unused:
     if: inputs.unused-mode != 'off'
     runs-on: ubuntu-latest

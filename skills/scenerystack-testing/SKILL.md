@@ -200,10 +200,10 @@ Health runs `test:fuzz:quick` for every sim, so a fuzz failure is a fleet-visibl
 an optional extra. The Playwright config also fixes a geolocation and enables WebGPU so
 sims that need either run deterministically.
 
-`test:fuzz` runs **only** `tests/fuzz/`. Put any other browser spec (WebGPU engines,
-focus routing, screenshot checks) in `tests/browser/` and run it with `npx playwright test
-tests/browser`. Keep it out of the fuzz smoke so a slow engine suite cannot time out Fleet
-Health.
+`test:fuzz` runs **only** `tests/fuzz/`. Put sim-specific browser specs (WebGPU engines,
+focus routing, screenshot checks) in `tests/browser/` and run them with `npm run test:browser`.
+The script uses `playwright test --project=chromium tests/browser`. The reusable CI browser
+job is opt-in via `run-browser-tests: true`.
 
 Duration is **30 seconds** by default. Change it without editing the spec:
 
@@ -217,11 +217,23 @@ FUZZ_DURATION=90 npm run test:fuzz
 FUZZ_PORT=5181 npm run test:fuzz  # parallel runs need distinct dev-server ports
 ```
 
-`scripts/test-fuzz.ts` forwards extra Playwright args (`npm run test:fuzz -- 60 --headed`).
+`scripts/test-fuzz.ts` forwards Playwright options and filters within the fuzz suite
+(`npm run test:fuzz -- 60 --headed`, `npm run test:fuzz -- --grep keyboard`).
 The Playwright test timeout is `FUZZ_DURATION + 120s` so a long run is not killed by the
 default 5-minute cap. Always include `&ea` in a fuzz URL; without it assertions are silent.
 A CSP error in the console fails fuzz too. The template's `script-src-attr` hashes exist for
 exactly that reason (see its `vite.config.ts`).
+
+## Axe accessibility pilot
+
+Fleet Health scans the default state of each simulation screen in OpticsLab, Resonance,
+and LadyBug. It uses the sim's Playwright config and publishes JSON results and an HTML report.
+Rule violations appear in the report without failing the job. Browser and scan errors fail it.
+The scan retains shared framework findings alongside sim-specific findings for baseline review.
+
+Run `bash scripts/test-axe.sh ../OpticsLab` from Baton after installing dependencies in both
+repos and installing the sim's Playwright Chromium. Reports go to the sim's
+`test-results/axe/`. Set `AXE_STRICT=1` to exit unsuccessfully on violations.
 
 ## WebGPU / GPU sims in Playwright
 

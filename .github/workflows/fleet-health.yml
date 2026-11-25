@@ -1,8 +1,8 @@
 name: Fleet Health
 
 # Org-wide health check: clone every active simulation and run lint, type-check,
-# architecture, Knip, build, unit tests and the fuzz smoke, then publish a pass/fail table to the
-# job summary. Catches a sim that a shared-workflow or dependency change quietly
+# architecture, Knip, build, unit tests and the fuzz smoke, then publish a pass/fail table and
+# retain artifacts for failed fuzz runs. Catches a sim that a shared-workflow or dependency change quietly
 # broke. Read-only — uses the default token to clone public repos.
 #
 # Runs one sim per matrix job so they execute in parallel with isolated logs;
@@ -31,6 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.list.outputs.matrix }}
+      axe_matrix: ${{ steps.list.outputs.axe_matrix }}
     steps:
       - uses: actions/checkout@v7.0.1
 
@@ -46,6 +47,8 @@ jobs:
             matrix=$(jq -c '[.repos[] | select(.isSimulation == true and .status == "active") | .name]' structure/repos.json)
           fi
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          axe_matrix=$(jq -c 'map(select(. == "OpticsLab" or . == "Resonance" or . == "LadyBug"))' <<< "$matrix")
+          echo "axe_matrix=$axe_matrix" >> "$GITHUB_OUTPUT"
 
   health:
     needs: discover
@@ -78,6 +81,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SIM: ${{ matrix.sim }}
+          PLAYWRIGHT_HTML_ONLY_FAILURES: '1'
         run: |
           set -uo pipefail
 
@@ -116,7 +120,7 @@ jobs:
           status=0
 
           if ! gh repo clone "${{ github.repository_owner }}/$SIM" "$dir" -- --depth 1 --quiet; then
-            row="| $SIM | ❌ clone | — | — | — | — | — | — | — |"
+            row="| $SIM | ❌ clone | — | — | — | — | — | — | — | — |"
             status=1
           else
             # Reproducible install when a lockfile is present; fall back otherwise.
@@ -127,7 +131,7 @@ jobs:
             fi
 
             if [ "$inst" -ne 0 ]; then
-              row="| $SIM | $(icon 1) | — | — | — | — | — | — | — |"
+              row="| $SIM | $(icon 1) | — | — | — | — | — | — | — | — |"
               status=1
             else
               run_script "$dir" lint;  case $? in 0) lint=0 ;; 2) lint=2 ;; *) lint=1; status=1 ;; esac
@@ -144,9 +148,33 @@ jobs:
               # 10 s pointer + 10 s keyboard fuzz with assertions on (?ea); catches runtime
               # errors no unit test reaches (it found a NumberSpinner range bug on first run).
               # Chromium comes from the sim's own Playwright so the browser revision matches.
-              ( cd "$dir" && npx playwright install --with-deps chromium >/dev/null 2>&1 ) || true
-              run_script "$dir" test:fuzz:quick; case $? in 0) fz=0 ;; 2) fz=2 ;; *) fz=1; status=1 ;; esac
-              row="| $SIM | $(icon "$inst") | $(icon "$lint") | $(icon "$chk") | $(icon "$arch") | $(icon "$knip") | $(icon "$bld") | $(icon "$tst") | $(icon "$fz") |"
+              if ( cd "$dir" && npx --no-install playwright install --with-deps chromium ) > "$dir/browser-install.log" 2>&1; then
+                browser=0
+                run_script "$dir" test:fuzz:quick
+                case $? in
+                  0) fz=0 ;;
+                  2) fz=2 ;;
+                  *)
+                    fz=1
+                    status=1
+                    mkdir -p "$RUNNER_TEMP/fuzz-artifacts"
+                    for path in playwright-report test-results; do
+                      if [ -d "$dir/$path" ]; then
+                        cp -R -- "$dir/$path" "$RUNNER_TEMP/fuzz-artifacts/"
+                      fi
+                    done
+                    ;;
+                esac
+              else
+                echo "::group::Playwright Chromium installation failed (last 80 lines)"
+                tail -n 80 "$dir/browser-install.log"
+                echo "::endgroup::"
+                echo "::error title=$SIM Playwright install::Chromium or its system dependencies failed to install"
+                browser=1
+                fz=2
+                status=1
+              fi
+              row="| $SIM | $(icon "$inst") | $(icon "$lint") | $(icon "$chk") | $(icon "$arch") | $(icon "$knip") | $(icon "$bld") | $(icon "$tst") | $(icon "$browser") | $(icon "$fz") |"
             fi
           fi
 
@@ -162,6 +190,53 @@ jobs:
           name: health-row-${{ matrix.sim }}
           path: row-${{ matrix.sim }}.md
           if-no-files-found: ignore
+
+      - name: Upload fuzz failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: health-fuzz-${{ matrix.sim }}
+          path: ${{ runner.temp }}/fuzz-artifacts/
+          if-no-files-found: ignore
+
+  axe-pilot:
+    needs: discover
+    if: needs.discover.outputs.axe_matrix != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        sim: ${{ fromJson(needs.discover.outputs.axe_matrix) }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '26'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Run axe accessibility pilot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SIM: ${{ matrix.sim }}
+        run: |
+          set -euo pipefail
+          sim_dir="$(mktemp -d)"
+          trap 'rm -rf -- "$sim_dir"' EXIT
+          gh repo clone "${GITHUB_REPOSITORY_OWNER}/$SIM" "$sim_dir" -- --depth 1 --quiet
+          (
+            cd "$sim_dir"
+            npm ci --no-audit --no-fund
+            npx --no-install playwright install --with-deps chromium
+          )
+          bash scripts/test-axe.sh "$sim_dir" "$RUNNER_TEMP/axe-report"
+      - name: Upload axe results
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: axe-report-${{ matrix.sim }}
+          path: ${{ runner.temp }}/axe-report/
+          if-no-files-found: warn
 
   report:
     needs: [discover, health]
@@ -181,8 +256,8 @@ jobs:
           {
             echo "# Fleet health report"
             echo
-            echo "| Repo | Install | Lint | Type-check | Architecture | Knip | Build | Test | Fuzz |"
-            echo "|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
+            echo "| Repo | Install | Lint | Type-check | Architecture | Knip | Build | Test | Browser install | Fuzz |"
+            echo "|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|"
             find rows -name '*.md' -exec cat {} + 2>/dev/null | sort || true
           } >> "$GITHUB_STEP_SUMMARY"
 

@@ -84,6 +84,7 @@
       "scripts/rename-sim.ts",
       "scripts/scaffold-screens.ts",
       "tests/generators.test.ts",
+      "tests/fuzz-runner.test.ts",
       "doc/multi-screen.md",
       "doc/improvement-recommendations.md"
     ],
