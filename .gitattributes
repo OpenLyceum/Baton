@@ -6,17 +6,17 @@
 *.tsx text eol=lf
 *.js text eol=lf
 *.mjs text eol=lf
-*.cjs text eol=lf
 *.json text eol=lf
 *.css text eol=lf
 *.html text eol=lf
 *.md text eol=lf
 *.svg text eol=lf
+*.wgsl text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
 
-# Executable scripts (must run on WSL/Linux)
-*.sh text eol=lf
+# Git hooks (SceneryStack sims use .githooks/)
+.githooks/* text eol=lf
 
 # Binary files (no conversion)
 *.png binary
@@ -25,6 +25,15 @@
 *.gif binary
 *.webp binary
 *.ico binary
+*.mp4 binary
+*.webm binary
+*.ogg binary
+*.wav binary
 *.woff binary
 *.woff2 binary
 *.ttf binary
+*.wasm binary
+
+# CommonJS configs and shell scripts
+*.cjs text eol=lf
+*.sh text eol=lf
