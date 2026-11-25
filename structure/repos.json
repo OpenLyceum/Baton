@@ -1269,7 +1269,7 @@
       ],
       "framework": "SceneryStack",
       "description": "See how a lens takes a spatial Fourier transform, then edit apertures and filters in the Fourier plane and watch the image rebuild.",
-      "deployedUrl": null,
+      "deployedUrl": "https://openlyceum.github.io/FourierOptics",
       "physicsTopics": [
         "fourier optics",
         "spatial frequency",
@@ -1295,7 +1295,7 @@
           "title": "4f Optical System"
         }
       ],
-      "status": "wip"
+      "status": "active"
     },
     {
       "name": "GravitationalLensing",
