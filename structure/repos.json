@@ -1257,6 +1257,47 @@
       ]
     },
     {
+      "name": "FourierOptics",
+      "displayName": "Fourier Optics",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "See how a lens takes a spatial Fourier transform, then edit apertures and filters in the Fourier plane and watch the image rebuild.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "fourier optics",
+        "spatial frequency",
+        "diffraction",
+        "spatial filtering",
+        "4f system"
+      ],
+      "screens": [
+        {
+          "id": "spatial-frequencies",
+          "title": "Spatial Frequencies"
+        },
+        {
+          "id": "fourier-transform",
+          "title": "Fourier Transform"
+        },
+        {
+          "id": "spatial-filtering",
+          "title": "Spatial Filtering"
+        },
+        {
+          "id": "four-f-optical-system",
+          "title": "4f Optical System"
+        }
+      ],
+      "status": "wip"
+    },
+    {
       "name": "GravitationalLensing",
       "displayName": "Gravitational Lensing",
       "type": "simulation",
@@ -1813,6 +1854,51 @@
       "githubTopics": [
         "calculus"
       ]
+    },
+    {
+      "name": "LockInAmplifier",
+      "displayName": "Lock-In Amplifier",
+      "type": "simulation",
+      "isSimulation": true,
+      "lineage": "original",
+      "subject": "physics",
+      "upstream": null,
+      "language": [
+        "TypeScript"
+      ],
+      "framework": "SceneryStack",
+      "description": "Recover a sinusoidal signal buried in noise by multiplying it by a reference signal and low-pass filtering the product, as a lock-in amplifier does.",
+      "deployedUrl": null,
+      "physicsTopics": [
+        "lock-in detection",
+        "signal processing",
+        "noise",
+        "phase-sensitive detection",
+        "low-pass filtering"
+      ],
+      "screens": [
+        {
+          "id": "signal-and-noise",
+          "title": "Signal and Noise"
+        },
+        {
+          "id": "mixing",
+          "title": "Mixing"
+        },
+        {
+          "id": "filtering",
+          "title": "Filtering"
+        },
+        {
+          "id": "phase",
+          "title": "Phase Detection"
+        },
+        {
+          "id": "lab",
+          "title": "Virtual Experiment"
+        }
+      ],
+      "status": "wip"
     },
     {
       "name": "LunarLander",
