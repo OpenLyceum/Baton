@@ -1868,7 +1868,7 @@
       ],
       "framework": "SceneryStack",
       "description": "Recover a sinusoidal signal buried in noise by multiplying it by a reference signal and low-pass filtering the product, as a lock-in amplifier does.",
-      "deployedUrl": null,
+      "deployedUrl": "https://openlyceum.github.io/LockInAmplifier",
       "physicsTopics": [
         "lock-in detection",
         "signal processing",
@@ -1898,7 +1898,7 @@
           "title": "Virtual Experiment"
         }
       ],
-      "status": "wip"
+      "status": "active"
     },
     {
       "name": "LunarLander",
