@@ -47,9 +47,8 @@ jobs:
           GITHUB_REPOSITORY="$OWNER/$REPO" \
             bash .org-compliance/scripts/check-repo-compliance.sh "$PWD"
 
-      # Template drift is advisory in a sim's own CI: a template change would otherwise
-      # turn every sim red until it is propagated. The weekly fleet audit below fails
-      # on drift instead, which is the signal to run check-template-drift.sh --fix.
+      # Architecture policy must match the template. Other template files can
+      # catch up through the weekly audit and template-sync PRs.
       - name: Check out SceneryStackTemplate for the drift check
         if: hashFiles('src/main.ts') != ''
         uses: actions/checkout@v7.0.1
@@ -85,6 +84,16 @@ jobs:
         run: |
           REPO="${INPUT_REPO:-$CALLER_REPO}"
           node .org-compliance/scripts/check-skill-conformance.mjs --dir "$PWD" --name "$REPO"
+
+      - name: Verify shared architecture policy
+        # Template changes are validated by its own architecture regression suite.
+        if: hashFiles('src/main.ts') != '' && github.repository != format('{0}/SceneryStackTemplate', github.repository_owner)
+        env:
+          INPUT_REPO: ${{ inputs.repo-name }}
+          CALLER_REPO: ${{ github.event.repository.name }}
+        run: |
+          REPO="${INPUT_REPO:-$CALLER_REPO}"
+          node .org-compliance/scripts/check-template-drift.mjs --architecture --template .org-template --dir "$PWD" --name "$REPO"
 
   # Org-wide audit (dispatch/schedule). Fan out one sim per runner so they audit in
   # parallel with isolated logs, mirroring fleet-health.yml: `discover` builds the

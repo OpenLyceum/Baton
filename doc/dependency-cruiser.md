@@ -1,7 +1,7 @@
 # Architecture checks with dependency-cruiser
 
 Every SceneryStack simulation and SceneryStackTemplate provides
-`npm run check:architecture` (`depcruise src`). Run it inside the member repo after
+`npm run check:architecture` (`depcruise --config .dependency-cruiser.cjs src`). Run it inside the member repo after
 `npm ci`, using the fleet's Node 26 runtime.
 
 It validates import boundaries that Biome and TypeScript do not enforce:
@@ -18,6 +18,7 @@ It validates import boundaries that Biome and TypeScript do not enforce:
 | `no-model-to-view-transitive` | error | Model code must not reach views or preferences nodes through helpers or barrels |
 | `no-circular` | error | Runtime circular dependencies are prohibited |
 | `no-model-to-view` | error | Code under `model/` must not import `view/` |
+| `no-root-to-screen` | error | Only `src/main.ts` may import screen packages from the root of `src/` |
 | `no-common-to-screen` | error | `src/common/` must not import screen packages |
 | `no-preferences-to-screen` | error | `src/preferences/` must not import screen packages |
 | `no-i18n-to-screen` | error | `src/i18n/` must not import screen packages |
@@ -49,13 +50,19 @@ The deprecation warning uses installed package metadata, not a live npm registry
 
 SceneryStack sims and the template enforce architecture checks in **pre-push**,
 **release**, and **CI**. Each sim's reusable Baton CI caller sets
-`run-architecture: true`. The reusable input defaults to false for other callers
-and repos that have not yet adopted this infrastructure.
+`run-architecture: true`. The reusable input defaults to false for other callers.
+The compliance job also requires the architecture config, dependency-cruiser
+fixtures, and both architecture scripts to match SceneryStackTemplate. A local
+carve-out cannot replace those files or commands. The explicit `--config` keeps
+dependency-cruiser from discovering a different configuration file.
 
 For a new sim or older checkout, adopt the template config, hook, regression fixtures,
 package scripts and CI caller together. Deploy the reusable Baton workflow before
-merging callers that use the new input. Keep these files synchronized through
-`config/template-manifest.json`; review fixes from `check-template-drift.sh --fix <Sim>`.
+merging callers that use the new input. The required check compares against
+SceneryStackTemplate's default branch. When changing architecture policy, publish
+the template update and propagate it promptly with Baton's template-sync workflow.
+To sync only the required architecture files and scripts in the local fleet, run
+`Baton/scripts/check-template-drift.sh --architecture --all --fix` from the workspace.
 
 `npm run test:architecture` runs CLI regression fixtures for forbidden imports, legitimate
 imports, and overlay failures. CI runs these before checking the application graph.
@@ -81,7 +88,7 @@ sim-local overlay rather than weakening the fleet rules.
 
 ## Local overlays
 
-The template owns `.dependency-cruiser.cjs` (exact match in
+The template owns `.dependency-cruiser.cjs` (listed under `architecture` in
 `config/template-manifest.json`). A sim may commit `.dependency-cruiser.local.cjs`:
 
 ```js

@@ -19,6 +19,7 @@
  *   node scripts/check-template-drift.mjs <Sim> [<Sim> …]
  *   node scripts/check-template-drift.mjs --all          # every local simulation in the catalog
  *   node scripts/check-template-drift.mjs --fix <Sim>    # copy exact/owned files and scripts, remove forbidden files
+ *   node scripts/check-template-drift.mjs --architecture [--fix] <Sim>  # only architecture files and scripts
  *   node scripts/check-template-drift.mjs --dir <path> [--name <Repo>]   # a checkout outside the workspace (CI)
  *   options: --json, --quiet (only print sims with drift), --template <dir>
  *
@@ -41,6 +42,7 @@ let fix = false;
 let json = false;
 let quiet = false;
 let all = false;
+let architectureOnly = false;
 let templateDir = join(workspace, manifest.template);
 let simDirOverride = null;
 let simNameOverride = null;
@@ -51,6 +53,7 @@ for (let i = 0; i < args.length; i++) {
   else if (a === "--json") json = true;
   else if (a === "--quiet") quiet = true;
   else if (a === "--all") all = true;
+  else if (a === "--architecture") architectureOnly = true;
   else if (a === "--template") templateDir = resolve(args[++i] ?? "");
   else if (a === "--dir") simDirOverride = resolve(args[++i] ?? "");
   else if (a === "--name") simNameOverride = args[++i] ?? null;
@@ -74,7 +77,7 @@ if (simDirOverride) {
   sims.push(simNameOverride ?? basename(simDirOverride));
 }
 if (sims.length === 0) {
-  console.error("usage: check-template-drift.mjs [--fix] [--json] [--quiet] (--all | --dir <path> | <Sim> …)");
+  console.error("usage: check-template-drift.mjs [--architecture] [--fix] [--json] [--quiet] (--all | --dir <path> | <Sim> …)");
   process.exit(2);
 }
 if (!existsSync(join(templateDir, "package.json"))) {
@@ -141,8 +144,28 @@ function git(simDir, ...a) {
 
 // ── checks ────────────────────────────────────────────────────────────────────
 const templatePkg = JSON.parse(readFileSync(join(templateDir, "package.json"), "utf8"));
+const { files: requiredArchitectureFiles = [], scripts: architectureScripts = [] } = manifest.architecture ?? {};
+if (architectureOnly && (!requiredArchitectureFiles.length || !architectureScripts.length)) {
+  console.error("The template manifest must list the required architecture files and scripts.");
+  process.exit(2);
+}
+const architectureFiles = new Map();
+for (const rel of requiredArchitectureFiles) {
+  const content = readText(join(templateDir, rel));
+  if (content === null) {
+    console.error(`Required architecture file is missing from the template: ${rel}`);
+    process.exit(2);
+  }
+  architectureFiles.set(rel, content);
+}
+for (const name of architectureScripts) {
+  if (!templatePkg.scripts?.[name]) {
+    console.error(`Required architecture script is missing from the template: ${name}`);
+    process.exit(2);
+  }
+}
 const lockfile = "package-lock.json";
-const matchLockVersions = manifest.packageJson.matchDirectDependencyLockVersions;
+const matchLockVersions = !architectureOnly && manifest.packageJson.matchDirectDependencyLockVersions;
 
 function readLockedPackages(dir) {
   const raw = readText(join(dir, lockfile));
@@ -175,6 +198,42 @@ function checkSim(repoName) {
   const pkgText = readText(join(simDir, "package.json"));
   if (!pkgText) return { sim: repoName, issues: [{ kind: "missing", path: "package.json", detail: "no package.json" }], fixed };
   const pkg = JSON.parse(pkgText);
+  let pkgChanged = false;
+
+  // Architecture exceptions belong in the overlay. Keep the shared policy and its
+  // regression fixtures byte-identical, regardless of file/script carve-outs.
+  for (const [rel, expected] of architectureFiles) {
+    const current = readText(join(simDir, rel));
+    if (current === expected) continue;
+    if (fix) {
+      mkdirSync(dirname(join(simDir, rel)), { recursive: true });
+      writeFileSync(join(simDir, rel), expected);
+      fixed.push(rel);
+    } else {
+      issues.push({
+        kind: current === null ? "missing" : "differs",
+        path: rel,
+        detail: current === null ? "required architecture file missing" : "differs from template architecture file",
+      });
+    }
+  }
+  for (const name of architectureScripts) {
+    const expected = templatePkg.scripts[name];
+    if (pkg.scripts?.[name] === expected) continue;
+    if (fix) {
+      pkg.scripts ??= {};
+      pkg.scripts[name] = expected;
+      pkgChanged = true;
+      fixed.push(`script ${name}`);
+    } else {
+      issues.push({ kind: "package", path: name, detail: `package.json script must be: ${expected}` });
+    }
+  }
+  if (architectureOnly) {
+    if (pkgChanged) writeFileSync(join(simDir, "package.json"), `${JSON.stringify(pkg, null, 2)}\n`);
+    return { sim: repoName, issues, fixed };
+  }
+
   const sim = { repoName, packageName: pkg.name };
   const approved = carveOuts(simDir);
   const isTemplate = repoName === manifest.template;
@@ -268,7 +327,6 @@ function checkSim(repoName) {
   // package.json — shared scripts, dependency instances, and key order match the template.
   // Sim-specific scripts are appended after the shared block (extras sorted); dependencies are fully alphabetical.
   const pj = manifest.packageJson;
-  let pkgChanged = false;
   const templateScriptOrder = Object.keys(templatePkg.scripts).filter(
     (name) => isTemplate || !manifest.templateOnly.scripts.includes(name),
   );
@@ -287,6 +345,7 @@ function checkSim(repoName) {
 
   if (pj.requiredScriptsFromTemplate) {
     for (const name of templateScriptOrder) {
+      if (architectureScripts.includes(name)) continue; // checked above without carve-outs
       const cmd = templatePkg.scripts[name];
       const cur = pkg.scripts?.[name];
       if (cur === cmd || approved.has(name)) continue;
@@ -414,7 +473,8 @@ if (json) {
   }
   if (results.length > 1) {
     const bad = results.filter((r) => r.issues.length).length;
-    console.log(`\n${results.length - bad}/${results.length} sims match the template.`);
+    const scope = architectureOnly ? "the template architecture policy" : "the template";
+    console.log(`\n${results.length - bad}/${results.length} sims match ${scope}.`);
   }
 }
 process.exit(results.some((r) => r.issues.length) ? 1 : 0);

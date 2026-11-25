@@ -242,6 +242,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 | Manifest key | Rule |
 |---|---|
 | `exact` | File identical to the template after substituting the sim's package / repo name |
+| `architecture` | Dependency-cruiser files and architecture scripts must match the template. CI requires this comparison even if a carve-out names a file or script. |
 | `ownedIfPresent` | Optional starter (e.g. `src/common/TimeModel.ts`): a sim may delete it, but a kept copy must match `exact`ly — configure it, don't fork it |
 | `linesSuperset` | Every template line present (`.gitignore`; extra lines allowed) |
 | `jsonExtend` | JSON equal to the template except the listed paths, whose arrays may only grow |
@@ -254,6 +255,7 @@ Compares sims against the local `SceneryStackTemplate` checkout using
 scripts/check-template-drift.sh --all --quiet     # fleet report, exit 1 on drift
 scripts/check-template-drift.sh LadyBug           # one sim
 scripts/check-template-drift.sh --fix LadyBug     # copy exact files + scripts, drop template-only/forbidden files
+scripts/check-template-drift.sh --architecture --all --fix # sync only architecture files and scripts
 ```
 
 A sim approves a deviation by naming the path (or script) in backticks under its
