@@ -468,18 +468,22 @@ PY
     fail "vite.config.ts is missing (PWA plugin lives there)"
   else
     pwa_ok=1
+    pwa_config=vite.config.ts
+    if grep -q "pwaOptions(" vite.config.ts; then
+      pwa_config=scripts/pwa-config.ts
+    fi
     grep -q 'vite-plugin-pwa' vite.config.ts || { fail "vite.config.ts must import vite-plugin-pwa"; pwa_ok=0; }
-    grep -qE 'registerType:\s*"autoUpdate"' vite.config.ts || { fail "VitePWA registerType must be autoUpdate"; pwa_ok=0; }
-    grep -qE '^\s*id:\s*("|name,)' vite.config.ts || { fail "PWA manifest is missing id"; pwa_ok=0; }
-    grep -q 'categories: \["education", "science"\]' vite.config.ts || { fail "PWA manifest categories must be [\"education\", \"science\"]"; pwa_ok=0; }
-    grep -q 'display_override' vite.config.ts || { fail "PWA manifest is missing display_override"; pwa_ok=0; }
-    grep -q 'screenshots:' vite.config.ts || { fail "PWA manifest is missing screenshots"; pwa_ok=0; }
-    if grep -qE 'orientation:\s*"' vite.config.ts; then
+    grep -qE 'registerType:\s*"(prompt|autoUpdate)"' "$pwa_config" || { fail "VitePWA registerType must be prompt (autoUpdate is accepted during rollout)"; pwa_ok=0; }
+    grep -qE '^\s*id:\s*("|name,|simConfig.pwaId)' "$pwa_config" || { fail "PWA manifest is missing id"; pwa_ok=0; }
+    grep -q 'categories: \["education", "science"\]' "$pwa_config" || { fail "PWA manifest categories must be [\"education\", \"science\"]"; pwa_ok=0; }
+    grep -q 'display_override' "$pwa_config" || { fail "PWA manifest is missing display_override"; pwa_ok=0; }
+    grep -q 'screenshots:' "$pwa_config" || { fail "PWA manifest is missing screenshots"; pwa_ok=0; }
+    if grep -qE 'orientation:\s*"' "$pwa_config"; then
       fail "PWA manifest must omit orientation (do not force landscape)"
       pwa_ok=0
     fi
-    grep -q 'icons/icon-192.png' vite.config.ts && grep -q 'icons/icon-512.png' vite.config.ts && grep -q 'icons/icon.svg' vite.config.ts || { fail "PWA manifest icons must include icon-192.png, icon-512.png, and icon.svg"; pwa_ok=0; }
-    grep -q 'screenshots/wide.png' vite.config.ts && grep -q 'screenshots/narrow.png' vite.config.ts || { fail "PWA manifest screenshots must include wide.png and narrow.png"; pwa_ok=0; }
+    grep -q 'icons/icon-192.png' "$pwa_config" && grep -q 'icons/icon-512.png' "$pwa_config" && grep -q 'icons/icon.svg' "$pwa_config" || { fail "PWA manifest icons must include icon-192.png, icon-512.png, and icon.svg"; pwa_ok=0; }
+    grep -q 'screenshots/wide.png' "$pwa_config" && grep -q 'screenshots/narrow.png' "$pwa_config" || { fail "PWA manifest screenshots must include wide.png and narrow.png"; pwa_ok=0; }
     [ "$pwa_ok" -eq 1 ] && pass "VitePWA manifest matches fleet pattern"
   fi
 
@@ -760,6 +764,9 @@ PY
     else
       manifest_theme="$(grep -oE 'theme_color:\s*"#[0-9a-fA-F]{6}"' vite.config.ts | grep -oE '#[0-9a-fA-F]{6}' | head -1 | tr '[:upper:]' '[:lower:]' || true)"
       has_background="$(grep -oE 'background_color:\s*"' vite.config.ts || true)"
+    fi
+    if grep -q "pwaOptions(" vite.config.ts && grep -q 'content="%SIM_THEME_COLOR%"' index.html; then
+      html_theme="$manifest_theme"
     fi
     if [ -z "$manifest_theme" ] || [ "$html_theme" != "$manifest_theme" ]; then
       new_rule "index.html theme-color ($html_theme) must equal the manifest theme_color ($manifest_theme)"

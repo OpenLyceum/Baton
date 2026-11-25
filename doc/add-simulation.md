@@ -173,7 +173,7 @@ WebP is still missing).
 
 Commit in the **sim** repo:
 
-- `assets/screenshot.png` (from `generate-screenshots.sh`)
+- `assets/screenshot.png` and `public/screenshots/{wide,narrow}.png` (from `generate-screenshots.sh`)
 
 Commit in **Baton** at least:
 
@@ -307,7 +307,7 @@ independently.
 
 - [ ] Created from `SceneryStackTemplate` via `create-sim.sh` or Use this template + rename + scaffold-screens
 - [ ] CI + Pages deploy wired; first deploy succeeded
-- [ ] `assets/screenshot.png` committed (via `Baton/scripts/generate-screenshots.sh`)
+- [ ] Gallery and PWA install screenshots committed (via `Baton/scripts/generate-screenshots.sh`)
 - [ ] `scripts/check-repo-compliance.sh` passes
 
 **Baton**

@@ -66,6 +66,7 @@ jobs:
       # the service worker serves index.html in its place to returning visitors.
       # Callers pin @main, so this step can never fail the Pages deploy.
       - name: Add single-file build
+        id: single
         continue-on-error: true
         env:
           DIST: ${{ inputs.dist-path }}
@@ -81,6 +82,12 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v6.0.0
+
+      - name: Check Pages PWA
+        uses: OpenLyceum/Baton/.github/actions/check-pwa@main
+        with:
+          dist-path: ${{ inputs.dist-path }}
+          check-single: ${{ steps.single.outcome == 'success' }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5.0.0

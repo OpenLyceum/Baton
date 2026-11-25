@@ -31,11 +31,11 @@
  */
 
 import { chromium } from "playwright";
-import { createServer } from "node:http";
-import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
-import { extname, join, normalize, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { homedir } from "node:os";
+import { startDistServer } from "./lib/serve-dist.mjs";
 
 // ── argument parsing ─────────────────────────────────────────────────────────
 function parseArgs(argv) {
@@ -63,53 +63,6 @@ function parseArgs(argv) {
     }
   }
   return out;
-}
-
-// ── minimal static file server for the dist directory ────────────────────────
-const MIME = {
-  ".html": "text/html; charset=utf-8",
-  ".js": "text/javascript; charset=utf-8",
-  ".mjs": "text/javascript; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".json": "application/json; charset=utf-8",
-  ".webmanifest": "application/manifest+json; charset=utf-8",
-  ".svg": "image/svg+xml",
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".gif": "image/gif",
-  ".ico": "image/x-icon",
-  ".wasm": "application/wasm",
-  ".wav": "audio/wav",
-  ".mp3": "audio/mpeg",
-  ".woff": "font/woff",
-  ".woff2": "font/woff2",
-  ".ttf": "font/ttf",
-};
-
-function startServer(root) {
-  const rootAbs = resolve(root);
-  return new Promise((resolvePromise) => {
-    const server = createServer((req, res) => {
-      let urlPath = decodeURIComponent(new URL(req.url, "http://x").pathname);
-      if (urlPath === "/" || urlPath === "") urlPath = "/index.html";
-      const filePath = normalize(join(rootAbs, urlPath));
-      // Prevent path traversal outside the served root.
-      if (!filePath.startsWith(rootAbs) || !existsSync(filePath) || statSync(filePath).isDirectory()) {
-        res.writeHead(404).end("Not found");
-        return;
-      }
-      res.writeHead(200, {
-        "Content-Type": MIME[extname(filePath).toLowerCase()] || "application/octet-stream",
-        // Permissive cross-origin policy so any embedded resource loads.
-        "Cross-Origin-Resource-Policy": "cross-origin",
-      });
-      createReadStream(filePath).pipe(res);
-    });
-    server.listen(0, "127.0.0.1", () => {
-      resolvePromise({ server, port: server.address().port });
-    });
-  });
 }
 
 // ── locate a usable Chromium binary ──────────────────────────────────────────
@@ -162,7 +115,7 @@ async function main() {
     return 2;
   }
 
-  const { server, port } = await startServer(opts.dist);
+  const { server, port } = await startDistServer(opts.dist, { crossOrigin: true });
   const executablePath = findChromium();
   const browser = await chromium.launch({
     ...(executablePath ? { executablePath } : {}),

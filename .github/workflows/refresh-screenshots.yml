@@ -12,6 +12,10 @@ on:
         description: "Optional space/comma-separated sim names (default: all active sims)"
         type: string
         required: false
+      install-screenshots:
+        description: "Also open PWA install screenshot PRs for the named sims"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -44,7 +48,7 @@ jobs:
           ONLY: ${{ inputs.repos }}
         run: |
           set -euo pipefail
-          mkdir -p screenshots
+          mkdir -p screenshots "$RUNNER_TEMP/live-captures"
           mapfile -t SIMS < <(node -e '
             const catalog = require("./structure/repos.json");
             const only = (process.env.ONLY || "").split(/[\s,]+/).filter(Boolean);
@@ -60,11 +64,18 @@ jobs:
           for sim in "${SIMS[@]}"; do
             url="${PAGES_BASE}/${sim}/?screens=1"
             echo "Capturing ${sim} from ${url}"
-            npx playwright screenshot \
+            if npx playwright screenshot \
               --browser chromium \
               --viewport-size=1154,753 \
-              --wait-for-timeout=4000 \
-              "$url" "screenshots/${sim}.png" || echo "::warning::Failed to capture ${sim}"
+              --wait-for-selector="#sim" \
+              --wait-for-timeout=1000 \
+              --timeout=20000 \
+              "$url" "$RUNNER_TEMP/live-captures/${sim}.png"; then
+              cp "$RUNNER_TEMP/live-captures/${sim}.png" "screenshots/${sim}.png"
+            else
+              rm -f "$RUNNER_TEMP/live-captures/${sim}.png"
+              echo "::warning::Failed to capture ${sim}"
+            fi
           done
 
       - name: Make card thumbnails
@@ -89,3 +100,37 @@ jobs:
             - Regenerated `docs/index.html` via `generate-pages-index.sh`
           branch: chore/refresh-screenshots
           delete-branch: true
+
+      - name: Refresh install screenshots for selected sims
+        if: inputs.install-screenshots
+        env:
+          GH_TOKEN: ${{ secrets.FLEET_PAT }}
+          ONLY: ${{ inputs.repos }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::Install screenshot PRs require FLEET_PAT"
+            exit 1
+          fi
+          read -r -a sims <<< "${ONLY//,/ }"
+          if [[ ${#sims[@]} -eq 0 ]]; then
+            echo "::error::Specify the sims that need install screenshot PRs"
+            exit 1
+          fi
+          export CAPTURES="$RUNNER_TEMP/live-captures"
+          for sim in "${sims[@]}"; do
+            if [[ ! "$sim" =~ ^[a-zA-Z0-9._-]+$ || ! -s "$CAPTURES/$sim.png" ]]; then
+              echo "::error::No new capture for $sim"
+              exit 1
+            fi
+            # shellcheck disable=SC2016
+            scripts/fleet-exec.sh --simulation --only "$sim" --apply --replace \
+              --branch chore/refresh-install-screenshots --title "chore: refresh PWA install screenshots" \
+              --body "Refresh the install screenshots from the deployed simulation." -- bash -ec '
+                grep -Fq -- --screenshots-only scripts/generate-icons.ts
+                npm ci
+                mkdir -p assets
+                cp "$CAPTURES/$REPO_NAME.png" assets/screenshot.png
+                node scripts/generate-icons.ts --screenshots-from-assets --screenshots-only
+              '
+          done

@@ -1,0 +1,49 @@
+name: Check built PWA
+description: Verify the production artifact and service worker under the GitHub Pages subpath.
+
+inputs:
+  dist-path:
+    description: Directory containing the production build.
+    default: dist
+  check-single:
+    description: Check the single-file download after it has been added to the Pages artifact.
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: Detect PWA
+      id: project
+      shell: bash
+      run: |
+        node --input-type=commonjs -e '
+          const { appendFileSync } = require("node:fs");
+          const pkg = require("./package.json");
+          const enabled = Boolean(pkg.devDependencies?.["vite-plugin-pwa"] ?? pkg.dependencies?.["vite-plugin-pwa"]);
+          appendFileSync(process.env.GITHUB_OUTPUT, "enabled=" + enabled + "\n");
+        '
+
+    - name: Install Chromium
+      if: steps.project.outputs.enabled == 'true'
+      shell: bash
+      run: npx --no-install playwright install --with-deps chromium
+
+    - name: Check manifest, offline launch and cache size
+      if: steps.project.outputs.enabled == 'true'
+      shell: bash
+      env:
+        DIST: ${{ inputs.dist-path }}
+        CHECK_SINGLE: ${{ inputs.check-single }}
+        REPO: ${{ github.event.repository.name }}
+      run: |
+        args=(--dist "$DIST" --repo "$REPO")
+        if [[ "$CHECK_SINGLE" == "true" ]]; then args+=(--check-single); fi
+        node "$GITHUB_ACTION_PATH/../../../scripts/check-pwa.mjs" "${args[@]}"
+
+    - name: Check the template's service worker update
+      if: steps.project.outputs.enabled == 'true' && github.event.repository.name == 'SceneryStackTemplate'
+      shell: bash
+      run: |
+        if [[ -f scripts/pwa-config.ts ]]; then
+          node "$GITHUB_ACTION_PATH/../../../scripts/test-pwa-update.mjs"
+        fi

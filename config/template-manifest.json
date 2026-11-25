@@ -21,6 +21,7 @@
     "vitest.soak.config.ts",
     "playwright.config.ts",
     "scripts/generate-icons.ts",
+    "scripts/pwa-config.ts",
     "scripts/test-fuzz.ts",
     "tests/setup.ts",
     "tests/fuzz/fuzz.spec.ts",

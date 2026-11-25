@@ -45,7 +45,8 @@ the monorepo checkout.
 | [`retrofit-template-hardening.sh`](retrofit-template-hardening.sh) | Run [`retrofit-template-hardening.mjs`](retrofit-template-hardening.mjs) in the current sim (or under `fleet-exec`): idempotently ports hardening from SceneryStackTemplate; `SKIP_NPM_INSTALL`, `SKIP_ICONS`, `SKIP_CHECK` env switches |
 | [`generate-pages-index.sh`](generate-pages-index.sh) | Build `docs/index.html` simulation landing page |
 | [`make-thumbnails.mjs`](make-thumbnails.mjs) | Downscale `screenshots/*.png` to `docs/assets/*.webp` with sharp |
-| [`generate-screenshots.sh`](generate-screenshots.sh) | Capture each sim's screen to `<sim>/assets/screenshot.png` |
+| [`generate-screenshots.sh`](generate-screenshots.sh) | Capture each sim’s gallery and PWA install screenshots |
+| [`check-pwa.mjs`](check-pwa.mjs) | Verify the built PWA in Chromium and report precache size |
 | [`refresh-screenshots.sh`](refresh-screenshots.sh) | **One-command full refresh** — chains capture → thumbnails → index (keep the Pages landing page in sync) |
 | [`screenshot.mjs`](screenshot.mjs) | Playwright driver behind `generate-screenshots.sh` |
 | [`../.github/workflows/refresh-screenshots.yml`](../.github/workflows/refresh-screenshots.yml) | Weekly/manual Pages thumbnail refresh → PR |
@@ -354,6 +355,15 @@ uncataloged repo is found. Also exits 1 when the token's private-repo listing is
 than the org's `total_private_repos` (the default `GITHUB_TOKEN` is public-only — use
 `FLEET_PAT` in CI, as `baton-selfcheck` does).
 
+## check-pwa.mjs
+
+From a sim checkout with its npm dependencies and Chromium installed, run
+`node ../Baton/scripts/check-pwa.mjs --repo <Repo>` after `npm run build`.
+Use `--dist <dir>` for a custom output directory. Add `--check-single` once the
+deployment artifact contains `<Repo>-single.html`. Shared CI and deploy call the
+same check. From SceneryStackTemplate, use `node ../Baton/scripts/test-pwa-update.mjs`
+to exercise an update across two releases.
+
 ## generate-screenshots.sh
 
 Captures a screenshot of every SceneryStack simulation into `<sim>/assets/screenshot.png`.
@@ -393,11 +403,15 @@ build, or a system Chromium); override with `PLAYWRIGHT_CHROMIUM_EXECUTABLE`.
 
 ## refresh-screenshots.sh
 
+The GitHub screenshot workflow also accepts `install-screenshots: true` with
+explicit sim names. It uses those fresh live captures to open per-sim install
+screenshot PRs with `FLEET_PAT`. The weekly run refreshes gallery assets.
+
 One-command, end-to-end refresh of every screenshot and the landing page. It chains the three
 pipeline scripts so the step that copies captures into Baton (`make-thumbnails.mjs`) can't be
 forgotten — which is otherwise the easy way to leave `https://openlyceum.github.io/Baton/` stale:
 
-1. [`generate-screenshots.sh`](generate-screenshots.sh) — capture `<sim>/assets/screenshot.png`
+1. [`generate-screenshots.sh`](generate-screenshots.sh) — capture `<sim>/assets/screenshot.png` and refresh `public/screenshots/`
 2. [`make-thumbnails.mjs`](make-thumbnails.mjs) — copy sibling shots → `screenshots/<sim>.png` + `docs/assets/<sim>.webp`
 3. [`generate-pages-index.sh`](generate-pages-index.sh) — regenerate `docs/index.html`
 
@@ -412,7 +426,7 @@ scripts/refresh-screenshots.sh Resonance OscillationsAndChaos   # just these sim
 It accepts the same capture options/positional sims as `generate-screenshots.sh` (`--build`,
 `--screen`, `--width`, `--height`) and forwards sim names to both the capture and thumbnail
 steps. At the end it prints the exact `git` commands to commit — `assets/screenshot.png` in each
-changed sim repo, and `screenshots/` + `docs/` in Baton. Pushing those to `main` auto-deploys:
+changed sim repo along with `public/screenshots/`, and `screenshots/` + `docs/` in Baton. Pushing those to `main` auto-deploys:
 `screenshots/**` runs [`optimize-assets.yml`](../.github/workflows/optimize-assets.yml) and
 `docs/**` runs [`pages.yml`](../.github/workflows/pages.yml).
 

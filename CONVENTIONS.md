@@ -178,10 +178,10 @@ License / Contributing` (enforced by Baton's compliance check). Do **not** add a
 | `.github/workflows/deploy.yml` | calls `OpenLyceum/Baton` reusable Pages deploy; `on: push` to `main` **and** `workflow_dispatch` |
 | `.github/dependabot.yml` | present (synced from `Baton/config/dependabot-npm.yml`) |
 
-**PWA** (`vite-plugin-pwa`) is fleet-standard. Copy the template's `VitePWA({…})` block, `scripts/generate-icons.ts`, and `index.html` meta; only `id` / `name` / `short_name` / `description` / `theme_color` / screenshot `label` change per sim.
+**PWA** (`vite-plugin-pwa`) is fleet-standard. `scripts/pwa-config.ts` and `scripts/generate-icons.ts` are template-owned. Custom Vite builds call the same PWA helper and document their overrides.
 
 ```
-scripts/generate-icons.ts
+scripts/generate-icons.ts  scripts/pwa-config.ts
 public/favicon.ico
 public/icons/icon.svg  icon-192.png  icon-512.png  apple-touch-icon.png
 public/screenshots/wide.png  narrow.png   ← 1280×720 and 720×1280; placeholders from `npm run icons`
@@ -190,11 +190,15 @@ public/screenshots/wide.png  narrow.png   ← 1280×720 and 720×1280; placehold
 | Piece | Standard |
 |---|---|
 | `package.json` | `vite-plugin-pwa ^2`, `sharp` + `png-to-ico`, the shared keyword set above, `icons` script runs `node scripts/generate-icons.ts` (a `generate-svg-icon &&` prefix is allowed) |
-| `vite.config.ts` | Template-owned (drift-checked; never edit per sim). Per-sim values live in `sim.config.json` (`title`, `shortName`, `themeColor`, `backgroundColor`, `allowPermissions`, `connectSrc`, `precacheExtensions`), validated strictly at build time. The build fails on bundler warnings from project code. Fixed content: `registerType: "autoUpdate"`; `includeAssets: ["favicon.ico", "icons/apple-touch-icon.png"]`; manifest `id` (= `package.json` `name`), `categories: ["education", "science"]`, `display: "standalone"`, `display_override: ["window-controls-overlay", "standalone"]`, **no** `orientation`; PNG 192/512 + SVG `purpose: "maskable"`; `screenshots` wide + narrow; Workbox `maximumFileSizeToCacheInBytes` + `globPatterns` including `js,css,html,svg,png,woff2` |
-| `index.html` | `mobile-web-app-capable`, `apple-mobile-web-app-capable`, `theme-color` (must match `theme_color`), `description`, Open Graph + Twitter meta (`og:image` / `twitter:image` → `./icons/icon-512.png`), favicon + SVG icon + apple-touch-icon |
+| PWA configuration | `vite.config.ts` calls `scripts/pwa-config.ts` with `sim.config.json` and `package.json` metadata. The manifest uses `display: "standalone"`, allows device rotation, and includes regular icons, a maskable icon, and wide and narrow screenshots. |
+| `index.html` | `mobile-web-app-capable`, `apple-mobile-web-app-capable`, `theme-color` using `%SIM_THEME_COLOR%`, `description`, Open Graph + Twitter meta (`og:image` / `twitter:image` → `./icons/icon-512.png`), favicon + SVG icon + apple-touch-icon |
 | Single-file mode | `vite build --mode single` skips `VitePWA` (inlines into one HTML file). Omit this only when the bundle cannot be self-contained (document in `AGENTS.md`) |
 
-`theme_color` / icon art may be sim-specific (`themeColor` in `sim.config.json`). `background_color` is `#000000` unless the play area is light (document it). Extra precache extensions (audio) go in `precacheExtensions`; `globIgnores` / `runtimeCaching` (large WASM) need a `vite.config.ts` carve-out.
+`sim.config.json` supplies the theme color for the built HTML, manifest, and screenshot background. Placeholders from `npm run icons` are replaced when Baton captures a sim during onboarding or refresh.
+
+- Preserve the deployed manifest identity when renaming a package. Before changing `package.json` `name`, set `sim.config.json` `pwaId` to the previous manifest ID or its equivalent origin-relative path. Keep the worker and the start URL under the sim’s Pages directory. See the [manifest ID specification](https://www.w3.org/TR/appmanifest/#id-member).
+- A new worker waits until all tabs and installed windows for the old release close. This keeps an open session and its lazy-loaded assets on the same release. The template update test exercises this with two Vite builds. See the [Workbox lifecycle](https://developer.chrome.com/docs/workbox/service-worker-lifecycle/).
+- Precache the shell and assets needed for the first offline launch. Use `precacheExtensions` for required file types such as bundled audio. Install screenshots and LMS downloads stay outside the precache. Keep large optional assets on demand and document first-use network requirements. Shared CI reports the total precache size and checks the app under a Pages-style subpath. The deploy workflow also checks the published single-file route.
 
 **Documented-as-allowed variations** (not violations — note each in the sim's `AGENTS.md`):
 sim-specific `vite.config.ts` plugins (e.g. TrackLab's OpenCV/video serving; a carve-out of the template-owned file), `biome.json` /
@@ -256,7 +260,7 @@ rest are a quick manual scan.
 - [ ] `README.md` follows the six-section outline and its Tech Stack versions match `package.json`; no local `CONTRIBUTING.md` / `LICENSE`. *(auto)*
 - [ ] Template-owned files (configs, fuzz, setup, bootstrap `assert`/`brand`/`splash`, workflows) match the template: `Baton/scripts/check-template-drift.sh <Sim>`. *(auto)*
 - [ ] Root layout matches the template (extra top-level entries listed under `AGENTS.md` → `## Compliance carve-outs`). *(auto)*
-- [ ] PWA `theme_color` equals `index.html` theme-color and the manifest has `background_color`. *(auto)*
+- [ ] The built PWA has matching HTML and manifest theme colors, valid manifest assets, and a working offline launch. *(shared CI/deploy)*
 - [ ] `biome.json` `$schema` matches the pinned `@biomejs/biome` (resync with `npx @biomejs/biome migrate --write`); `npm run lint` is green. *(auto)*
 - [ ] Any deliberate deviation is documented in the sim's `AGENTS.md`. *(manual)*
 

@@ -138,3 +138,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Check built PWA
+        uses: OpenLyceum/Baton/.github/actions/check-pwa@main

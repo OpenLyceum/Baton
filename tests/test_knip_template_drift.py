@@ -1,4 +1,4 @@
-"""Template drift for Knip starter entries, exact files, and locked dependencies."""
+"""Template drift for standard files, starter entries, and locked dependencies."""
 import json
 import os
 from pathlib import Path
@@ -96,6 +96,32 @@ class KnipTemplateDriftTests(unittest.TestCase):
         code, issues = self.check()
         self.assertEqual(code, 1)
         self.assertEqual(issues[0]["path"], "vite.config.ts")
+
+    def test_theme_migration_only_changes_the_theme_meta(self):
+        config = "export default pwaOptions();"
+        self.prepare_exact_file(config, config)
+        legacy = '<meta name="theme-color" content="#123456"><title>Custom sim</title>\n'
+        updated = legacy.replace("#123456", "%SIM_THEME_COLOR%")
+        (self.template / "index.html").write_text(updated)
+        (self.sim / "index.html").write_text(legacy)
+
+        code, issues = self.check()
+        self.assertEqual(code, 1)
+        self.assertEqual(issues[0]["path"], "index.html")
+        self.assertEqual(self.check(flags=("--fix",)), (0, []))
+        self.assertEqual((self.sim / "index.html").read_text(), updated)
+        self.assertEqual(self.check(), (0, []))
+
+    def test_legacy_vite_carve_out_keeps_its_literal_theme(self):
+        self.prepare_exact_file("export default pwaOptions();", "export default customConfig;")
+        (self.sim / "AGENTS.md").write_text(
+            "## Compliance carve-outs\n\n- `vite.config.ts`: custom PWA configuration\n"
+        )
+        legacy = '<meta name="theme-color" content="#123456">'
+        (self.template / "index.html").write_text(legacy.replace("#123456", "%SIM_THEME_COLOR%"))
+        (self.sim / "index.html").write_text(legacy)
+        self.assertEqual(self.check(flags=("--fix",)), (0, []))
+        self.assertEqual((self.sim / "index.html").read_text(), legacy)
 
     def prepare_owned_file(self, template_text, sim_text=None):
         manifest = json.loads(self.manifest.read_text())

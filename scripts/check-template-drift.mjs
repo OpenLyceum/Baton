@@ -200,6 +200,23 @@ function checkSim(repoName) {
     } else add(cur === null ? "missing" : "differs", rel, cur === null ? "template-owned file missing" : "differs from template");
   }
 
+  // index.html is sim-owned. Sync just the theme placeholder when the template uses it.
+  const themePlaceholder = "%SIM_THEME_COLOR%";
+  const htmlPath = join(simDir, "index.html");
+  const html = readText(htmlPath);
+  if (html !== null && !approved.has("index.html") &&
+      readText(join(templateDir, "index.html"))?.includes(themePlaceholder) &&
+      readText(join(simDir, "vite.config.ts"))?.includes("pwaOptions(")) {
+    const updated = html.replace(/(<meta\s+name="theme-color"\s+content=")#[0-9a-f]{6}(?=")/i,
+      (_match, prefix) => prefix + themePlaceholder);
+    if (updated !== html) {
+      if (fix) {
+        writeFileSync(htmlPath, updated);
+        fixed.push("index.html theme-color");
+      } else add("differs", "index.html", "use %SIM_THEME_COLOR% to source the theme from sim.config.json");
+    }
+  }
+
   // .gitignore-style files: every template line must be present
   for (const rel of manifest.linesSuperset) {
     const tpl = readText(join(templateDir, rel));

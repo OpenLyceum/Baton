@@ -85,27 +85,20 @@ changed_sims=()
 for sim in "${candidates[@]}"; do
   d="$WORKSPACE/$sim"
   [[ -d "$d" ]] || continue
-  if [[ -n "$(git -C "$d" status --porcelain -- assets/screenshot.png 2>/dev/null)" ]]; then
+  if [[ -n "$(git -C "$d" status --porcelain -- assets/screenshot.png public/screenshots 2>/dev/null)" ]]; then
     changed_sims+=("$sim")
-    # Keep the PWA install screenshots in step with the new capture (template
-    # generate-icons.ts --screenshots-from-assets); skipped for sims on an older
-    # generator that lacks the flag.
-    if grep -q -- '--screenshots-from-assets' "$d/scripts/generate-icons.ts" 2>/dev/null; then
-      ( cd "$d" && npm run icons -- --screenshots-from-assets >/dev/null ) \
-        || echo "warning: $sim: could not rebuild public/screenshots from the capture" >&2
-    fi
   fi
 done
 
 echo
 echo "── next steps ──────────────────────────────────────"
 if [[ ${#changed_sims[@]} -gt 0 ]]; then
-  echo "Changed screenshot.png — commit in each sim repo (and push):"
+  echo "Changed gallery or install screenshots. Commit these in each sim repo:"
   for sim in "${changed_sims[@]}"; do
     printf '  ( cd "%s/%s" && git add assets/screenshot.png public/screenshots \\\n        && git commit -m "chore: refresh the landing-page and PWA screenshots" && git push )\n' "$WORKSPACE" "$sim"
   done
 else
-  echo "No sim-repo screenshot.png changes detected."
+  echo "No sim-repo screenshot changes detected."
 fi
 
 if [[ -n "$(git -C "$REPO_ROOT" status --porcelain -- screenshots docs 2>/dev/null || true)" ]]; then

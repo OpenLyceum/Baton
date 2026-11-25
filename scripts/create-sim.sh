@@ -155,10 +155,10 @@ run_onboard_assets() {
   if ! (cd "$BATON_ROOT" && npx playwright install chromium >/dev/null 2>&1); then
     echo "warning: playwright chromium install failed; screenshot may fail" >&2
   fi
-  "$SCRIPT_DIR/generate-screenshots.sh" --build "$REPO"
+  "$SCRIPT_DIR/generate-screenshots.sh" --build --checkout "$TARGET_PATH" "$REPO"
   (cd "$BATON_ROOT" && npm run thumbnails -- "$REPO")
   (cd "$BATON_ROOT" && npm run pages)
-  echo "  assets: screenshot + WebP + docs/index.html ready"
+  echo "  assets: gallery capture, install screenshots, WebP, and docs/index.html ready"
 }
 
 run_onboard_github() {
