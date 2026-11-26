@@ -54,6 +54,26 @@ self_wants() {
   return 1
 }
 
+# True when <dir>/AGENTS.md approves a deviation for <path>: a bullet under
+# "## Compliance carve-outs" that starts with `path`, or a "**Template drift"
+# bullet naming it. Same rule as check-template-drift.mjs, so a sim that keeps
+# its own Dependabot config (e.g. a monthly one on a private repo) isn't clobbered.
+has_carve_out() {
+  local agents="$1/AGENTS.md" path="$2"
+  [ -f "$agents" ] || return 1
+  awk -v tok="\`$path\`" '
+    /^## Compliance carve-outs?[[:space:]]*$/ { inside = 1; next }
+    /^## / { inside = 0 }
+    inside && /^[[:space:]]*[-*] +/ {
+      line = $0
+      sub(/^[[:space:]]*[-*] +/, "", line)
+      if (index(line, tok) == 1) found = 1
+      if (line ~ /^\*\*[Tt]emplate drift/ && index(line, tok)) found = 1
+    }
+    END { exit !found }
+  ' "$agents"
+}
+
 sync_file() {
   local template="$1"
   local target="$2"
@@ -100,6 +120,11 @@ for repo in "${NPM_REPOS[@]}"; do
   dir="$WORKSPACE/$repo"
   if [ ! -d "$dir" ]; then
     echo "SKIP $repo (not checked out at $dir)"
+    npm_skipped=$((npm_skipped + 1))
+    continue
+  fi
+  if has_carve_out "$dir" ".github/dependabot.yml"; then
+    echo "SKIP $repo (AGENTS.md carve-out for .github/dependabot.yml)"
     npm_skipped=$((npm_skipped + 1))
     continue
   fi
