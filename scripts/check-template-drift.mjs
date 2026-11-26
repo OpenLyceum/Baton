@@ -333,7 +333,7 @@ function checkSim(repoName) {
   const byName = (a, b) => a.localeCompare(b);
   const npmOrder = (a, b) => a.localeCompare(b, "en");
   const applyOrder = (label, current, ordered) => {
-    if (stable(current ?? {}) === stable(ordered)) return;
+    if (approved.has(label) || stable(current ?? {}) === stable(ordered)) return;
     if (fix) {
       pkgChanged = true;
       fixed.push(`${label} order`);
