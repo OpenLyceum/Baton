@@ -1340,14 +1340,15 @@
         "TypeScript"
       ],
       "framework": "SceneryStack",
-      "description": "Watch a gravitational wave stretch space, measure it with a laser interferometer, and dig a black-hole chirp out of detector noise.",
+      "description": "Watch a gravitational wave stretch space, measure it with a laser interferometer, dig a black-hole chirp out of detector noise, and locate the source on the sky with a detector network.",
       "deployedUrl": "https://openlyceum.github.io/GravitationalWaves",
       "physicsTopics": [
         "gravitational waves",
         "interferometry",
         "relativity",
         "signal processing",
-        "noise"
+        "noise",
+        "sky localization"
       ],
       "screens": [
         {
@@ -1361,6 +1362,10 @@
         {
           "id": "chirp",
           "title": "Chirp"
+        },
+        {
+          "id": "network",
+          "title": "Network"
         }
       ],
       "status": "active"
